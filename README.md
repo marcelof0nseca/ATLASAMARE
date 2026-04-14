@@ -82,7 +82,7 @@ Tornar a jornada da paciente:
 
 ---
 
-### 👤 Gestão de Usuários
+### Gestão de Usuários
 - Perfis:
   - Paciente  
   - Médico  
