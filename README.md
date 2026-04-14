@@ -1,6 +1,6 @@
-# 🌼 AMARE — Plataforma Clínica de Fertilidade
+# AMARE — Plataforma Clínica de Fertilidade
 
-## 🚀 Visão Geral
+## Visão Geral
 
 O **AMARE** é uma plataforma digital desenvolvida para clínicas de fertilização, com o objetivo de centralizar o tratamento, a rotina e a comunicação entre paciente, médico e clínica.
 
@@ -10,7 +10,7 @@ A proposta é transformar uma jornada complexa e emocionalmente difícil em uma 
 
 ---
 
-## 🎯 Problema
+## Problema
 
 O tratamento de fertilidade é:
 
@@ -20,7 +20,7 @@ O tratamento de fertilidade é:
 
 ---
 
-## 💡 Missão
+## Missão
 
 Tornar a jornada da paciente:
 
@@ -30,28 +30,28 @@ Tornar a jornada da paciente:
 
 ---
 
-## 👥 Usuários
+## Usuários
 
-### 👩 Paciente
+### Paciente
 - Acompanha o tratamento  
 - Organiza rotina (consultas, exames, medicações)  
 - Tira dúvidas  
 
-### 🧑‍⚕️ Médico
+### Médico
 - Acompanha pacientes  
 - Atualiza tratamentos  
 - Analisa exames  
 
-### 🛠️ Supervisor (Admin)
+### Supervisor (Admin)
 - Gerencia o sistema  
 - Controla acessos  
 - Resolve problemas  
 
 ---
 
-## ⭐ Funcionalidades Principais
+## Funcionalidades Principais
 
-### 🧠 Tratamento
+### Tratamento
 - Timeline interativa  
 - Status das etapas:
   - Pendente  
@@ -61,21 +61,21 @@ Tornar a jornada da paciente:
 
 ---
 
-### 📅 Rotina
+### Rotina
 - Agenda (consultas + exames)  
 - Controle de medicação  
 - Lembretes automáticos  
 
 ---
 
-### 🤖 Assistente Maya
+### Assistente Maya
 - Responde dúvidas frequentes  
 - Explica etapas do tratamento  
 - Interface conversacional simples  
 
 ---
 
-### 📁 Documentos
+### Documentos
 - Upload de exames  
 - Organização por categoria  
 - Compartilhamento com médicos  
@@ -91,7 +91,7 @@ Tornar a jornada da paciente:
 
 ---
 
-### 🔔 Notificações
+### Notificações
 - Consultas  
 - Medicação  
 - Alertas personalizados  
@@ -99,7 +99,7 @@ Tornar a jornada da paciente:
 
 ---
 
-## 🧱 Arquitetura Técnica
+## Arquitetura Técnica
 
 - **Backend:** Django  
 - **API:** Django REST Framework  
@@ -107,7 +107,7 @@ Tornar a jornada da paciente:
 
 ---
 
-## 🧩 Estrutura do Projeto
+## Estrutura do Projeto
 
 ```bash
 users/
