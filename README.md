@@ -1,4 +1,9 @@
+<p align="center">
+  <img src="static/images/logoamare.png" alt="Logo da Clínica AMARE" width="360">
+</p>
+
 # Clinica AMARE
+
 
 Base de MVP para uma plataforma digital de fertilidade com foco em clareza, acolhimento e baixa carga cognitiva.
 
