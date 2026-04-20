@@ -1,0 +1,95 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --canvas: #fbf7f4;
+    --surface: #fffdfc;
+    --rose: #b97874;
+    --rose-soft: #ebcfcb;
+    --lavender-soft: #dccfe2;
+    --text-strong: #3f3634;
+    --text-muted: #746a67;
+    --success: #7fa287;
+    --warning: #d5a86c;
+    --danger: #c98b8b;
+    --border-soft: #e9deda;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-canvas text-text-strong font-sans antialiased;
+    min-height: 100vh;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply tracking-tight text-text-strong;
+  }
+
+  input,
+  select,
+  textarea {
+    @apply min-h-11 rounded-2xl border border-border bg-white/90 px-4 py-3 text-sm text-text-strong shadow-sm transition;
+  }
+
+  input:focus,
+  select:focus,
+  textarea:focus {
+    @apply border-rose outline-none;
+    box-shadow: 0 0 0 4px rgba(235, 207, 203, 0.7);
+  }
+
+  button:focus-visible,
+  a:focus-visible {
+    @apply outline-none ring-2 ring-rose-soft ring-offset-2 ring-offset-canvas;
+  }
+}
+
+@layer components {
+  .amare-shell {
+    @apply mx-auto min-h-screen max-w-6xl px-4 pb-24 pt-6 sm:px-6 lg:px-8;
+  }
+
+  .amare-card {
+    @apply rounded-3xl border border-border bg-surface shadow-serene;
+  }
+
+  .amare-section-title {
+    @apply text-lg font-semibold text-text-strong;
+  }
+
+  .amare-section-copy {
+    @apply text-sm leading-6 text-text-muted;
+  }
+
+  .amare-chip {
+    @apply inline-flex items-center gap-2 rounded-full border border-white/70 bg-white/70 px-3 py-1 text-xs font-medium text-text-strong;
+  }
+
+  .amare-button-primary {
+    @apply inline-flex min-h-11 items-center justify-center rounded-2xl bg-rose px-4 py-3 text-sm font-semibold text-white transition hover:bg-[#9f6763];
+  }
+
+  .amare-button-secondary {
+    @apply inline-flex min-h-11 items-center justify-center rounded-2xl border border-border bg-white px-4 py-3 text-sm font-semibold text-text-strong transition hover:border-rose-soft;
+  }
+
+  .amare-button-secondary:hover {
+    background-color: rgba(235, 207, 203, 0.2);
+  }
+
+  .amare-status-pill {
+    @apply inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-xs font-semibold;
+  }
+
+  .amare-skeleton {
+    @apply animate-pulse rounded-2xl bg-white/60;
+  }
+}

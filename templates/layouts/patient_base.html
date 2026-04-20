@@ -1,0 +1,30 @@
+{% extends "layouts/base.html" %}
+
+{% block body %}
+  <main class="amare-shell">
+    <header class="mb-8 flex items-start justify-between gap-4">
+      <div>
+        {% include "components/site_logo.html" with href="/dashboard/" wrapper_class="rounded-[1.4rem] border border-white/70 bg-white/78 px-4 py-3 shadow-serene" image_class="block h-auto w-full max-w-[11.5rem] object-contain" %}
+        <p class="mt-4 text-sm text-text-muted">Olá, {{ request.user.full_name|default:"paciente" }}.</p>
+        <h1 class="mt-2 text-3xl font-semibold">{% block page_title %}{% endblock %}</h1>
+        <p class="mt-2 max-w-2xl text-sm leading-6 text-text-muted">{% block page_intro %}{% endblock %}</p>
+      </div>
+      <form method="post" action="{% url 'users:logout' %}" class="hidden sm:block">
+        {% csrf_token %}
+        <button class="amare-button-secondary">Sair</button>
+      </form>
+    </header>
+
+    {% block content %}{% endblock %}
+  </main>
+
+  <nav class="fixed inset-x-4 bottom-4 z-30 rounded-[1.75rem] border border-border bg-surface/95 p-2 shadow-serene backdrop-blur sm:left-1/2 sm:max-w-xl sm:-translate-x-1/2">
+    <ul class="grid grid-cols-5 gap-1 text-center text-xs font-medium text-text-muted">
+      <li><a class="block rounded-2xl px-2 py-3 {% if active_nav == 'home' %}bg-rose-soft/40 text-text-strong{% endif %}" href="{% url 'core:dashboard' %}">Início</a></li>
+      <li><a class="block rounded-2xl px-2 py-3 {% if active_nav == 'treatment' %}bg-rose-soft/40 text-text-strong{% endif %}" href="{% url 'treatments:timeline' %}">Tratamento</a></li>
+      <li><a class="block rounded-2xl px-2 py-3 {% if active_nav == 'routine' %}bg-rose-soft/40 text-text-strong{% endif %}" href="{% url 'appointments:list' %}">Rotina</a></li>
+      <li><a class="block rounded-2xl px-2 py-3 {% if active_nav == 'maya' %}bg-rose-soft/40 text-text-strong{% endif %}" href="{% url 'assistant:chat' %}">Maya</a></li>
+      <li><a class="block rounded-2xl px-2 py-3 {% if active_nav == 'profile' %}bg-rose-soft/40 text-text-strong{% endif %}" href="{% url 'users:profile' %}">Perfil</a></li>
+    </ul>
+  </nav>
+{% endblock %}

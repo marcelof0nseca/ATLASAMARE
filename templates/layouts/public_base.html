@@ -1,0 +1,28 @@
+{% extends "layouts/base.html" %}
+
+{% block body %}
+  <main class="amare-shell flex min-h-screen items-center justify-center">
+    <div class="grid w-full max-w-5xl gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
+      <section class="hidden lg:block">
+        {% include "components/site_logo.html" with wrapper_class="mb-6 rounded-[1.75rem] border border-white/70 bg-white/78 px-6 py-5 shadow-serene" image_class="block h-auto w-full max-w-[18rem] object-contain" %}
+        <h1 class="max-w-xl text-4xl font-semibold leading-tight">Um espaço digital para tornar o tratamento mais claro, organizado e leve.</h1>
+        <p class="mt-5 max-w-xl text-base leading-7 text-text-muted">
+          Cada tela foi pensada para responder rapidamente onde você está, qual é o próximo passo e como seguir com mais tranquilidade.
+        </p>
+        <div class="mt-8 grid max-w-xl gap-4 sm:grid-cols-2">
+          <article class="amare-card p-5">
+            <p class="text-sm font-semibold text-text-strong">Tratamento visível</p>
+            <p class="mt-2 text-sm leading-6 text-text-muted">A etapa atual e o próximo passo aparecem com clareza desde a primeira dobra.</p>
+          </article>
+          <article class="amare-card p-5">
+            <p class="text-sm font-semibold text-text-strong">Rotina organizada</p>
+            <p class="mt-2 text-sm leading-6 text-text-muted">Consultas, exames e medicações ficam em um fluxo simples, previsível e leve.</p>
+          </article>
+        </div>
+      </section>
+      <section class="amare-card mx-auto w-full max-w-lg p-6 sm:p-8">
+        {% block public_content %}{% endblock %}
+      </section>
+    </div>
+  </main>
+{% endblock %}

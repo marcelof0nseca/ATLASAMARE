@@ -1,0 +1,7 @@
+<section class="amare-card p-6 sm:p-8">
+  <p class="text-sm font-semibold text-text-strong">{{ title }}</p>
+  <p class="mt-3 max-w-lg text-sm leading-6 text-text-muted">{{ copy }}</p>
+  {% if action_url and action_label %}
+    <a href="{{ action_url }}" class="amare-button-secondary mt-5">{{ action_label }}</a>
+  {% endif %}
+</section>

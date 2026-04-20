@@ -1,0 +1,57 @@
+{% extends "layouts/patient_base.html" %}
+
+{% block title %}Medicações | Clínica AMARE{% endblock %}
+{% block page_title %}Sua rotina de medicações{% endblock %}
+{% block page_intro %}O foco aqui é simples: o que tomar agora, o que ainda acontece hoje e o que já está previsto para os próximos horários.{% endblock %}
+
+{% block content %}
+  <div class="flex gap-3 text-sm">
+    <a href="{% url 'appointments:list' %}" class="rounded-2xl border border-border bg-white px-4 py-2 text-text-strong">Agenda</a>
+    <a href="{% url 'medications:list' %}" class="rounded-2xl bg-rose px-4 py-2 text-white">Medicações</a>
+  </div>
+
+  <section class="mt-5 grid gap-5 lg:grid-cols-[1.1fr_0.9fr]">
+    <div class="space-y-5">
+      <article class="amare-card p-6">
+        <h2 class="text-lg font-semibold">Agora</h2>
+        <p class="mt-2 text-sm leading-6 text-text-muted">Estas são as doses que merecem sua atenção primeiro.</p>
+        <div class="mt-4 space-y-3">
+          {% if now_items %}
+            {% for medication in now_items %}
+              {% include "patient/partials/medication_row.html" with medication=medication %}
+            {% endfor %}
+          {% else %}
+            <p class="text-sm leading-6 text-text-muted">Não há nenhuma dose urgente neste momento. Você pode olhar a programação completa de hoje logo abaixo.</p>
+          {% endif %}
+        </div>
+      </article>
+
+      <article class="amare-card p-6">
+        <h2 class="text-lg font-semibold">Hoje</h2>
+        <div class="mt-4 space-y-3">
+          {% if today_items %}
+            {% for medication in today_items %}
+              {% include "patient/partials/medication_row.html" with medication=medication %}
+            {% endfor %}
+          {% else %}
+            <p class="text-sm leading-6 text-text-muted">Hoje não há doses cadastradas.</p>
+          {% endif %}
+        </div>
+      </article>
+    </div>
+
+    <article class="amare-card p-6">
+      <h2 class="text-lg font-semibold">Próximas</h2>
+      <p class="mt-2 text-sm leading-6 text-text-muted">Uma visão leve do que já está planejado para os próximos dias.</p>
+      <div class="mt-4 space-y-3">
+        {% if upcoming_items %}
+          {% for medication in upcoming_items %}
+            {% include "patient/partials/medication_row.html" with medication=medication %}
+          {% endfor %}
+        {% else %}
+          <p class="text-sm leading-6 text-text-muted">Nenhuma dose futura cadastrada no momento.</p>
+        {% endif %}
+      </div>
+    </article>
+  </section>
+{% endblock %}

@@ -1,0 +1,44 @@
+{% extends "layouts/patient_base.html" %}
+
+{% block title %}Perfil | Clínica AMARE{% endblock %}
+{% block page_title %}Seu perfil{% endblock %}
+{% block page_intro %}Aqui ficam seus dados básicos e uma preferência simples de lembrete dentro do aplicativo.{% endblock %}
+
+{% block content %}
+  <section class="grid gap-5 lg:grid-cols-[0.9fr_1.1fr]">
+    <article class="amare-card p-6">
+      <p class="text-sm font-semibold text-text-strong">Resumo da conta</p>
+      <dl class="mt-5 space-y-4 text-sm">
+        <div>
+          <dt class="text-text-muted">Nome</dt>
+          <dd class="mt-1 font-medium text-text-strong">{{ request.user.full_name }}</dd>
+        </div>
+        <div>
+          <dt class="text-text-muted">Email</dt>
+          <dd class="mt-1 font-medium text-text-strong">{{ request.user.email }}</dd>
+        </div>
+        <div>
+          <dt class="text-text-muted">Papel</dt>
+          <dd class="mt-1 font-medium text-text-strong">{{ request.user.get_role_display }}</dd>
+        </div>
+      </dl>
+    </article>
+
+    <article class="amare-card p-6">
+      <form method="post" class="space-y-4">
+        {% csrf_token %}
+        <div>
+          <label for="{{ form.full_name.id_for_label }}" class="mb-2 block text-sm font-medium text-text-strong">Nome</label>
+          {{ form.full_name }}
+        </div>
+        <div class="rounded-2xl border border-border bg-white px-4 py-4">
+          <label for="{{ form.wants_in_app_reminders.id_for_label }}" class="flex items-start gap-3 text-sm leading-6 text-text-strong">
+            {{ form.wants_in_app_reminders }}
+            <span>Quero continuar recebendo lembretes dentro do aplicativo para acompanhar minha rotina.</span>
+          </label>
+        </div>
+        <button type="submit" class="amare-button-primary">Salvar preferências</button>
+      </form>
+    </article>
+  </section>
+{% endblock %}

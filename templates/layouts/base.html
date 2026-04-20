@@ -1,0 +1,24 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}Clínica AMARE{% endblock %}</title>
+    <meta name="description" content="Clareza e acolhimento para a jornada de fertilidade.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/app.css' %}">
+    <script src="https://unpkg.com/htmx.org@1.9.12" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.1/dist/cdn.min.js" defer></script>
+    <script src="{% static 'js/amare.js' %}" defer></script>
+  </head>
+  <body class="relative overflow-x-hidden">
+    <div class="pointer-events-none absolute inset-x-0 top-0 h-80 bg-gradient-to-b from-rose-soft/40 via-lavender-soft/20 to-transparent"></div>
+    <div id="toast-root" class="fixed right-4 top-4 z-50 w-[min(24rem,calc(100vw-2rem))]"></div>
+    <div id="modal-root" class="pointer-events-none fixed inset-0 z-40"></div>
+    {% include "components/message_stack.html" %}
+    {% block body %}{% endblock %}
+  </body>
+</html>

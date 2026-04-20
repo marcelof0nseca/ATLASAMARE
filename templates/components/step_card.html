@@ -1,0 +1,22 @@
+<article class="relative rounded-3xl border p-5 sm:p-6 {% if step.status == 'in_progress' %}border-rose bg-rose-soft/30 shadow-serene{% elif step.status == 'completed' %}border-success/30 bg-success/10{% else %}border-border bg-white{% endif %}">
+  <div class="flex flex-wrap items-start justify-between gap-3">
+    <div>
+      <p class="text-xs font-semibold uppercase tracking-[0.2em] text-text-muted">Etapa {{ step.order }}</p>
+      <h3 class="mt-2 text-lg font-semibold">{{ step.name }}</h3>
+      {% if step.status == "in_progress" %}
+        <p class="mt-2 text-sm text-text-muted">Você está nesta etapa do tratamento.</p>
+      {% elif step.status == "completed" %}
+        <p class="mt-2 text-sm text-text-muted">Essa parte já foi concluída e está registrada com segurança.</p>
+      {% else %}
+        <p class="mt-2 text-sm text-text-muted">Ela já aparece aqui para que você consiga visualizar o caminho com antecedência.</p>
+      {% endif %}
+    </div>
+    {% include "components/status_badge.html" with status=step.status %}
+  </div>
+  {% if next_step and next_step.id == step.id %}
+    <div class="mt-4 rounded-2xl bg-white/80 px-4 py-3 text-sm text-text-strong">
+      <span class="font-semibold">Seu próximo passo é este.</span>
+    </div>
+  {% endif %}
+  {% block step_actions %}{% endblock %}
+</article>

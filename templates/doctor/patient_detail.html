@@ -1,0 +1,72 @@
+{% extends "layouts/doctor_base.html" %}
+
+{% block title %}Paciente | Clínica AMARE{% endblock %}
+{% block page_title %}{{ patient.full_name }}{% endblock %}
+{% block page_intro %}Uma leitura objetiva do tratamento atual, do próximo passo e dos próximos compromissos desta paciente.{% endblock %}
+
+{% block content %}
+  <section class="grid gap-5 xl:grid-cols-[0.85fr_1.15fr]">
+    <aside class="space-y-5">
+      <article class="amare-card p-6">
+        <p class="text-sm font-semibold text-text-strong">Dados essenciais</p>
+        <dl class="mt-4 space-y-4 text-sm">
+          <div>
+            <dt class="text-text-muted">Email</dt>
+            <dd class="mt-1 font-medium text-text-strong">{{ patient.email }}</dd>
+          </div>
+          <div>
+            <dt class="text-text-muted">Etapa atual</dt>
+            <dd class="mt-1 font-medium text-text-strong">{% if current_step %}{{ current_step.name }}{% else %}Ainda não iniciada{% endif %}</dd>
+          </div>
+          <div>
+            <dt class="text-text-muted">Próxima etapa</dt>
+            <dd class="mt-1 font-medium text-text-strong">{% if next_step %}{{ next_step.name }}{% else %}Sem nova etapa pendente{% endif %}</dd>
+          </div>
+        </dl>
+      </article>
+
+      <article class="amare-card p-6">
+        <p class="text-sm font-semibold text-text-strong">Próximos compromissos</p>
+        <div class="mt-4 space-y-3">
+          {% for appointment in appointments %}
+            {% include "components/appointment_item.html" with appointment=appointment %}
+          {% empty %}
+            <p class="text-sm leading-6 text-text-muted">Sem compromissos próximos cadastrados.</p>
+          {% endfor %}
+        </div>
+      </article>
+    </aside>
+
+    <section class="space-y-4">
+      {% if treatment %}
+        {% for step in treatment.steps.all %}
+          <article class="relative rounded-3xl border p-5 sm:p-6 {% if step.status == 'in_progress' %}border-rose bg-rose-soft/30{% elif step.status == 'completed' %}border-success/30 bg-success/10{% else %}border-border bg-white{% endif %}">
+            <div class="flex flex-wrap items-start justify-between gap-3">
+              <div>
+                <p class="text-xs font-semibold uppercase tracking-[0.2em] text-text-muted">Etapa {{ step.order }}</p>
+                <h2 class="mt-2 text-lg font-semibold">{{ step.name }}</h2>
+              </div>
+              {% include "components/status_badge.html" with status=step.status %}
+            </div>
+
+            <div class="mt-4 flex flex-wrap gap-3">
+              {% if current_step and current_step.id == step.id %}
+                <form method="post" action="{% url 'treatments:doctor-step-complete' treatment.id step.id %}">
+                  {% csrf_token %}
+                  <button class="amare-button-primary">Concluir etapa atual</button>
+                </form>
+              {% elif not current_step and next_step and next_step.id == step.id %}
+                <form method="post" action="{% url 'treatments:doctor-step-start' treatment.id step.id %}">
+                  {% csrf_token %}
+                  <button class="amare-button-secondary">Iniciar etapa</button>
+                </form>
+              {% endif %}
+            </div>
+          </article>
+        {% endfor %}
+      {% else %}
+        {% include "components/empty_state.html" with title="Sem tratamento ativo" copy="Quando um tratamento estiver ativo para esta paciente, as etapas aparecerão aqui com as ações válidas para o momento." %}
+      {% endif %}
+    </section>
+  </section>
+{% endblock %}

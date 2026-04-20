@@ -1,0 +1,28 @@
+{% extends "layouts/base.html" %}
+
+{% block body %}
+  <main class="amare-shell pb-10">
+    <header class="mb-8 flex flex-col gap-4 rounded-3xl border border-border bg-surface/80 p-5 shadow-serene backdrop-blur sm:flex-row sm:items-center sm:justify-between">
+      <div>
+        {% include "components/site_logo.html" with href="/doctor/patients/" wrapper_class="rounded-[1.4rem] border border-white/70 bg-white/85 px-4 py-3 shadow-serene" image_class="block h-auto w-full max-w-[11.5rem] object-contain" subtitle="Área médica" %}
+        <h1 class="mt-4 text-3xl font-semibold">{% block page_title %}{% endblock %}</h1>
+        <p class="mt-2 max-w-3xl text-sm leading-6 text-text-muted">{% block page_intro %}{% endblock %}</p>
+      </div>
+      <div class="flex items-center gap-3">
+        <span class="hidden text-sm text-text-muted sm:inline">Dr(a). {{ request.user.full_name }}</span>
+        <form method="post" action="{% url 'users:logout' %}">
+          {% csrf_token %}
+          <button class="amare-button-secondary">Sair</button>
+        </form>
+      </div>
+    </header>
+
+    <div class="mb-6 flex gap-3 text-sm">
+      <a href="{% url 'users:doctor-patient-list' %}" class="rounded-2xl px-4 py-2 {% if active_nav == 'patients' %}bg-rose text-white{% else %}border border-border bg-white text-text-strong{% endif %}">
+        Pacientes
+      </a>
+    </div>
+
+    {% block content %}{% endblock %}
+  </main>
+{% endblock %}

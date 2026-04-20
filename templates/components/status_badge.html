@@ -1,0 +1,7 @@
+{% if status == "completed" %}
+  <span class="amare-status-pill bg-success/15 text-success">Concluído</span>
+{% elif status == "in_progress" %}
+  <span class="amare-status-pill bg-rose-soft/50 text-text-strong">Em andamento</span>
+{% else %}
+  <span class="amare-status-pill bg-white text-text-muted border border-border">Pendente</span>
+{% endif %}

@@ -1,0 +1,28 @@
+{% extends "layouts/doctor_base.html" %}
+
+{% block title %}Pacientes | Clínica AMARE{% endblock %}
+{% block page_title %}Pacientes sob seu cuidado{% endblock %}
+{% block page_intro %}Uma visão limpa para encontrar rapidamente cada paciente e atualizar o tratamento sem ruído desnecessário.{% endblock %}
+
+{% block content %}
+  <section class="amare-card p-6">
+    <form method="get" class="flex flex-col gap-3 sm:flex-row">
+      <input type="search" name="q" value="{{ query }}" placeholder="Buscar por nome ou email">
+      <button class="amare-button-secondary">Buscar</button>
+    </form>
+
+    <div class="mt-6 space-y-3">
+      {% for patient in patients %}
+        <a href="{% url 'users:doctor-patient-detail' patient.id %}" class="flex flex-col gap-3 rounded-3xl border border-border bg-white p-4 transition hover:border-rose-soft sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <p class="text-sm font-semibold text-text-strong">{{ patient.full_name }}</p>
+            <p class="mt-1 text-sm text-text-muted">{{ patient.email }}</p>
+          </div>
+          <span class="amare-chip">Abrir detalhe</span>
+        </a>
+      {% empty %}
+        {% include "components/empty_state.html" with title="Nenhuma paciente encontrada" copy="A lista ficará visível aqui quando houver pacientes sob sua responsabilidade ou quando a busca encontrar alguém." %}
+      {% endfor %}
+    </div>
+  </section>
+{% endblock %}

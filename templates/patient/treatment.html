@@ -1,0 +1,17 @@
+{% extends "layouts/patient_base.html" %}
+
+{% block title %}Tratamento | Clínica AMARE{% endblock %}
+{% block page_title %}Acompanhamento do tratamento{% endblock %}
+{% block page_intro %}Cada etapa aparece em ordem para que você visualize o momento atual e o que vem a seguir sem excesso de informação.{% endblock %}
+
+{% block content %}
+  {% if treatment %}
+    <section class="space-y-4">
+      {% for step in treatment.steps.all %}
+        {% include "components/step_card.html" with step=step next_step=next_step %}
+      {% endfor %}
+    </section>
+  {% else %}
+    {% include "components/empty_state.html" with title="Ainda não há um tratamento ativo" copy="Quando a clínica iniciar sua jornada, as etapas vão aparecer aqui em ordem, com o destaque certo para o momento atual." %}
+  {% endif %}
+{% endblock %}

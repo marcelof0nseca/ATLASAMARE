@@ -1,0 +1,21 @@
+<div class="pointer-events-auto flex min-h-screen items-end justify-center bg-text-strong/40 p-4 sm:items-center">
+  <div class="amare-card w-full max-w-md p-6">
+    <p class="text-sm font-semibold text-rose">Confirmar medicação</p>
+    <h2 class="mt-3 text-2xl font-semibold">{{ medication.name }}</h2>
+    <p class="mt-3 text-sm leading-6 text-text-muted">
+      Horário previsto: {{ medication.scheduled_for|date:"d/m \\à\\s H:i" }}. Se estiver tudo certo, confirme abaixo para registrar essa dose.
+    </p>
+    <form
+      method="post"
+      action="{% url 'medications:complete' medication.id %}"
+      hx-post="{% url 'medications:complete' medication.id %}"
+      hx-target="#medication-row-{{ medication.id }}"
+      hx-swap="outerHTML"
+      class="mt-6 space-y-3"
+    >
+      {% csrf_token %}
+      <button type="submit" class="amare-button-primary w-full">Tudo certo, marcar agora</button>
+      <button type="button" class="amare-button-secondary w-full" onclick="document.getElementById('modal-root').innerHTML=''">Voltar</button>
+    </form>
+  </div>
+</div>

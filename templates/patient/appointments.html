@@ -1,0 +1,29 @@
+{% extends "layouts/patient_base.html" %}
+
+{% block title %}Agenda | Clínica AMARE{% endblock %}
+{% block page_title %}Sua agenda com leitura simples{% endblock %}
+{% block page_intro %}Consultas e exames aparecem em ordem cronológica para reduzir esforço e facilitar a organização do dia.{% endblock %}
+
+{% block content %}
+  <div class="grid gap-5">
+    <div class="flex gap-3 text-sm">
+      <a href="{% url 'appointments:list' %}" class="rounded-2xl bg-rose px-4 py-2 text-white">Agenda</a>
+      <a href="{% url 'medications:list' %}" class="rounded-2xl border border-border bg-white px-4 py-2 text-text-strong">Medicações</a>
+    </div>
+
+    {% if appointments_by_date %}
+      {% for date, items in appointments_by_date.items %}
+        <section class="amare-card p-6">
+          <h2 class="text-lg font-semibold">{{ date|date:"l, d \\d\\e F" }}</h2>
+          <div class="mt-4 space-y-3">
+            {% for appointment in items %}
+              {% include "components/appointment_item.html" with appointment=appointment %}
+            {% endfor %}
+          </div>
+        </section>
+      {% endfor %}
+    {% else %}
+      {% include "components/empty_state.html" with title="Sua agenda está tranquila por enquanto" copy="Não há consultas ou exames cadastrados neste momento. Quando surgir algo novo, ele aparecerá aqui em ordem." %}
+    {% endif %}
+  </div>
+{% endblock %}

@@ -1,0 +1,168 @@
+{% extends "layouts/patient_base.html" %}
+
+{% block title %}Início | Clínica AMARE{% endblock %}
+{% block page_title %}Seu cuidado começa com clareza{% endblock %}
+{% block page_intro %}Aqui você vê rapidamente em que etapa está, qual é o próximo passo e o que merece atenção hoje.{% endblock %}
+
+{% block content %}
+  <section class="grid gap-5 xl:grid-cols-[1.28fr_0.92fr] xl:items-start">
+    <article class="amare-card overflow-hidden p-6 sm:p-8">
+      {% if treatment and current_step %}
+        <div class="grid gap-6 lg:grid-cols-[1.2fr_0.8fr] lg:items-start">
+          <div>
+            <p class="text-sm font-semibold text-rose">Visão do tratamento</p>
+            <h2 class="mt-3 max-w-2xl text-3xl font-semibold leading-tight">{{ current_step.name }}</h2>
+            <p class="mt-3 max-w-xl text-sm leading-6 text-text-muted">
+              Você está nesta etapa do tratamento. Este painel foi organizado para mostrar primeiro onde você está e o que vem em seguida.
+            </p>
+          </div>
+
+          <div class="rounded-3xl border border-white/70 bg-white/80 p-5">
+            <p class="text-xs font-semibold uppercase tracking-[0.2em] text-text-muted">Hoje</p>
+            <div class="mt-4 space-y-4">
+              <div>
+                <p class="text-xs font-semibold uppercase tracking-[0.2em] text-text-muted">Próximo compromisso</p>
+                <p class="mt-2 text-sm font-semibold text-text-strong">
+                  {% if appointments %}
+                    {{ appointments.0.get_type_display }} em {{ appointments.0.scheduled_at|date:"d/m" }} às {{ appointments.0.scheduled_at|date:"H:i" }}
+                  {% else %}
+                    Nenhum compromisso próximo
+                  {% endif %}
+                </p>
+              </div>
+              <div class="border-t border-border pt-4">
+                <p class="text-xs font-semibold uppercase tracking-[0.2em] text-text-muted">Próxima medicação</p>
+                <p class="mt-2 text-sm font-semibold text-text-strong">
+                  {% if next_medication %}
+                    {{ next_medication.name }} às {{ next_medication.scheduled_for|date:"H:i" }}
+                  {% else %}
+                    Nenhuma dose pendente para agora
+                  {% endif %}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-7 grid gap-4 sm:grid-cols-2">
+          <div class="rounded-3xl border border-border bg-white p-5">
+            <p class="text-xs font-semibold uppercase tracking-[0.2em] text-text-muted">Você está aqui</p>
+            <p class="mt-3 text-lg font-semibold text-text-strong">{{ current_step.name }}</p>
+            <p class="mt-2 text-sm leading-6 text-text-muted">Você está nesta etapa do tratamento.</p>
+          </div>
+          <div class="rounded-3xl border border-border bg-white p-5">
+            <p class="text-xs font-semibold uppercase tracking-[0.2em] text-text-muted">Próximo passo</p>
+            <p class="mt-3 text-lg font-semibold text-text-strong">
+              {% if next_step %}{{ next_step.name }}{% else %}Sem nova etapa pendente{% endif %}
+            </p>
+            <p class="mt-2 text-sm leading-6 text-text-muted">
+              {% if next_step %}
+                Seu caminho já está visível para que você consiga se organizar com mais tranquilidade.
+              {% else %}
+                Quando houver uma nova atualização do tratamento, ela vai aparecer aqui primeiro.
+              {% endif %}
+            </p>
+          </div>
+        </div>
+
+        <div class="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center">
+          <a href="{% url 'treatments:timeline' %}" class="amare-button-secondary">Ver timeline completa</a>
+          <a href="{% url 'appointments:list' %}" class="text-sm font-medium text-text-strong underline decoration-rose-soft underline-offset-4">Ver rotina de hoje</a>
+        </div>
+      {% elif treatment %}
+        <div class="grid gap-6 lg:grid-cols-[1.15fr_0.85fr] lg:items-start">
+          <div>
+            <p class="text-sm font-semibold text-rose">Visão do tratamento</p>
+            <h2 class="mt-3 text-3xl font-semibold leading-tight">Tratamento preparado para começar</h2>
+            <p class="mt-3 max-w-xl text-sm leading-6 text-text-muted">
+              As etapas já estão organizadas. Assim que a primeira for iniciada, você verá esse avanço com destaque aqui.
+            </p>
+            <a href="{% url 'treatments:timeline' %}" class="amare-button-secondary mt-6">Ver estrutura do tratamento</a>
+          </div>
+
+          <div class="rounded-3xl border border-white/70 bg-white/80 p-5">
+            <p class="text-xs font-semibold uppercase tracking-[0.2em] text-text-muted">Enquanto isso</p>
+            <p class="mt-3 text-base font-semibold text-text-strong">Sua rotina continua visível por aqui.</p>
+            <p class="mt-2 text-sm leading-6 text-text-muted">
+              Você pode acompanhar agenda, medicações e conversar com a Maya sempre que precisar de uma orientação geral.
+            </p>
+          </div>
+        </div>
+      {% else %}
+        {% include "components/empty_state.html" with title="Seu tratamento ainda não começou por aqui" copy="Quando a equipe ativar sua jornada, você verá a etapa atual e o próximo passo logo nesta área." action_url=request.path action_label="Atualizar página" %}
+      {% endif %}
+    </article>
+
+    <aside class="space-y-5">
+      <article class="amare-card p-6">
+        <p class="text-sm font-semibold text-text-strong">Seu dia com mais previsibilidade</p>
+        <div class="mt-4 grid gap-3">
+          <div class="rounded-3xl border border-border bg-white p-4">
+            <p class="text-xs font-semibold uppercase tracking-[0.2em] text-text-muted">Compromissos</p>
+            <p class="mt-2 text-lg font-semibold text-text-strong">{{ appointments|length }}</p>
+            <p class="mt-1 text-sm text-text-muted">compromisso{{ appointments|length|pluralize }} previsto{{ appointments|length|pluralize:"s" }} a partir de agora</p>
+          </div>
+          <div class="rounded-3xl border border-border bg-white p-4">
+            <p class="text-xs font-semibold uppercase tracking-[0.2em] text-text-muted">Medicações de hoje</p>
+            <p class="mt-2 text-lg font-semibold text-text-strong">{{ medications_today|length }}</p>
+            <p class="mt-1 text-sm text-text-muted">dose{{ medications_today|length|pluralize }} programada{{ medications_today|length|pluralize:"s" }} para hoje</p>
+          </div>
+        </div>
+      </article>
+
+      <article class="amare-card p-6">
+        <div class="flex items-start justify-between gap-4">
+          <div>
+            <p class="text-sm font-semibold text-text-strong">Próximos compromissos</p>
+            <p class="mt-2 text-sm leading-6 text-text-muted">Uma leitura simples para você saber o que vem primeiro.</p>
+          </div>
+          <a href="{% url 'appointments:list' %}" class="text-sm font-medium text-text-strong underline decoration-rose-soft underline-offset-4">Ver agenda</a>
+        </div>
+        {% if appointments %}
+          <div class="mt-4 space-y-3">
+            {% for appointment in appointments %}
+              {% include "components/appointment_item.html" with appointment=appointment %}
+            {% endfor %}
+          </div>
+        {% else %}
+          <p class="mt-4 text-sm leading-6 text-text-muted">Não há compromissos por aqui agora. Quando algo novo for agendado, você verá aqui.</p>
+        {% endif %}
+      </article>
+    </aside>
+  </section>
+
+  <section class="mt-5 grid gap-5 lg:grid-cols-[1fr_1fr]">
+    <article class="amare-card flex h-full flex-col p-6">
+      <div class="flex items-start justify-between gap-4">
+        <div>
+          <p class="text-sm font-semibold text-text-strong">Medicações de hoje</p>
+          <p class="mt-2 text-sm leading-6 text-text-muted">Tudo o que você precisa enxergar hoje, com menos esforço para decidir o próximo movimento.</p>
+        </div>
+        <a href="{% url 'medications:list' %}" class="text-sm font-medium text-text-strong underline decoration-rose-soft underline-offset-4">Ver rotina</a>
+      </div>
+      {% if medications_today %}
+        <div class="mt-4 space-y-3">
+          {% for medication in medications_today %}
+            {% include "patient/partials/medication_row.html" with medication=medication %}
+          {% endfor %}
+        </div>
+      {% else %}
+        <p class="mt-4 text-sm leading-6 text-text-muted">Hoje não há medicações cadastradas aqui. Se algo novo for adicionado, você verá nesta área.</p>
+      {% endif %}
+    </article>
+
+    <article class="amare-card flex h-full flex-col justify-between gap-5 p-6 sm:p-7">
+      <div>
+        <p class="text-sm font-semibold text-text-strong">Quer revisar uma dúvida geral?</p>
+        <h2 class="mt-3 text-2xl font-semibold leading-tight">A Maya pode ajudar com explicações simples e acolhedoras.</h2>
+        <p class="mt-3 text-sm leading-6 text-text-muted">
+          Use este espaço para entender melhor etapas do tratamento, exames comuns e a organização da rotina, sempre sem substituir sua equipe médica.
+        </p>
+      </div>
+      <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <p class="text-sm text-text-muted">Em caso de dúvidas médicas específicas, fale com sua equipe.</p>
+        <a href="{% url 'assistant:chat' %}" class="amare-button-primary">Falar com Maya</a>
+      </div>
+    </article>
+  </section>
+{% endblock %}
