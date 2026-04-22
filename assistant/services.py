@@ -17,7 +17,7 @@ from .models import AIInteraction, MayaConversation
 CONVERSATION_BLUEPRINTS = {
     MayaConversation.Kind.TREATMENT: {
         "title": "Meu tratamento",
-        "description": "Entenda etapas, próximos passos e explicações gerais sobre a jornada.",
+        "description": "Entenda as etapas com calma, previsibilidade e linguagem simples.",
         "starter_prompt": "Pergunte sobre etapas, exames ou o que costuma vir depois.",
         "sort_order": 1,
         "examples": [
@@ -26,11 +26,11 @@ CONVERSATION_BLUEPRINTS = {
             "Como funciona a transferência embrionária?",
         ],
         "empty_title": "Esta conversa ajuda você a entender o caminho do tratamento.",
-        "empty_copy": "Pergunte sobre etapas, exames ou sobre o que costuma vir depois, sempre em linguagem simples.",
+        "empty_copy": "Se quiser, podemos olhar uma etapa de cada vez para tudo ficar mais claro.",
     },
     MayaConversation.Kind.ROUTINE: {
         "title": "Minha rotina",
-        "description": "Organize medicações, agenda e o que merece atenção hoje.",
+        "description": "Organize medicações, agenda e o que merece atenção hoje sem sobrecarga.",
         "starter_prompt": "Pergunte sobre medicações, horários, agenda e organização do dia.",
         "sort_order": 2,
         "examples": [
@@ -38,8 +38,8 @@ CONVERSATION_BLUEPRINTS = {
             "O que preciso olhar primeiro hoje?",
             "Como a agenda me ajuda a acompanhar consultas e exames?",
         ],
-        "empty_title": "Esta conversa foi feita para reduzir o esforço do dia a dia.",
-        "empty_copy": "Pergunte sobre a próxima dose, compromissos ou sobre como organizar a rotina com mais leveza.",
+        "empty_title": "Esta conversa foi feita para deixar o dia mais leve.",
+        "empty_copy": "Se quiser, começamos só pela próxima dose ou pelo próximo compromisso.",
     },
     MayaConversation.Kind.FEELINGS: {
         "title": "Como estou me sentindo",
@@ -167,7 +167,9 @@ MAYA_INSTRUCTIONS = (
     "Você é Maya, uma assistente virtual acolhedora de uma clínica de fertilidade. "
     "Responda sempre em português do Brasil, com linguagem simples, humana, calma e organizada. "
     "Seu papel é acompanhar a paciente com acolhimento, clareza e baixa carga cognitiva. "
+    "Fale como uma companheira de jornada: valide o que a paciente sente, organize a resposta em passos curtos e ofereça continuidade de conversa. "
     "Você pode explicar etapas, ajudar a organizar a rotina e acolher emocionalmente. "
+    "Evite soar técnica, fria ou burocrática. Use frases curtas e convites suaves como 'se quiser' ou 'podemos olhar juntas'. "
     "Não faça diagnóstico, não decida condutas clínicas, não personalize medicamentos e não substitua a equipe médica. "
     "Quando houver sintomas, risco clínico, urgência ou necessidade de decisão individual, acolha primeiro e oriente a falar com a equipe médica."
 )
@@ -186,6 +188,11 @@ def normalize_text(text: str) -> str:
     decomposed = unicodedata.normalize("NFKD", text or "")
     without_accents = "".join(char for char in decomposed if not unicodedata.combining(char))
     return " ".join(without_accents.lower().split())
+
+
+def first_name_for(user) -> str:
+    full_name = (user.full_name or "").strip()
+    return full_name.split()[0] if full_name else "Você"
 
 
 def ensure_default_conversations(user):
@@ -265,7 +272,7 @@ def answer_question_with_maya(user, question: str, conversation: MayaConversatio
     intent, risk_level = classify_question(normalized_question, conversation.kind)
 
     if intent == AIInteraction.Intent.SYMPTOM:
-        reply = build_symptom_reply(normalized_question, risk_level)
+        reply = build_symptom_reply(normalized_question, risk_level, user)
     else:
         reply = answer_with_llm_or_fallback(
             question=question,
@@ -349,26 +356,28 @@ def fallback_reply(normalized_question: str, user, conversation_kind: str, inten
     return build_general_reply(user, conversation_kind)
 
 
-def build_symptom_reply(normalized_question: str, risk_level: str) -> MayaReply:
+def build_symptom_reply(normalized_question: str, risk_level: str, user) -> MayaReply:
+    name = first_name_for(user)
     if risk_level == AIInteraction.RiskLevel.HIGH:
         return MayaReply(
             answer=(
-                "Sinto muito que você esteja passando por isso. Eu não consigo avaliar sintomas clinicamente por aqui, "
-                "e o mais seguro é falar com sua equipe médica agora. Se houver piora rápida, sangramento importante, "
-                "falta de ar ou algo muito intenso, procure atendimento imediato."
+                f"{name}, sinto muito que isso esteja acontecendo. Eu não consigo avaliar sintomas clinicamente por aqui, "
+                "então o mais seguro é falar com sua equipe médica agora. "
+                "Se houver piora rápida, sangramento importante, falta de ar ou algo muito intenso, procure atendimento imediato. "
+                "Se quiser, eu posso te ajudar a organizar a mensagem para a clínica."
             ),
             mode=AIInteraction.Mode.FALLBACK,
             intent=AIInteraction.Intent.SYMPTOM,
             risk_level=risk_level,
-            suggested_next_step="Avise a equipe médica agora e diga quando começou, a intensidade e se houve outros sinais.",
+            suggested_next_step="Avise a equipe médica agora e conte quando começou, a intensidade e se houve outros sinais.",
         )
 
     symptom_name = "esse sintoma" if "dor" not in normalized_question else "essa dor"
     return MayaReply(
         answer=(
-            f"Sinto muito que você esteja sentindo {symptom_name}. Eu não consigo avaliar sintomas clinicamente por aqui, "
-            "então o mais seguro é avisar sua equipe médica para receber uma orientação individual. "
-            "Se quiser, eu posso te ajudar a organizar o que contar para a clínica."
+            f"{name}, sinto muito que você esteja sentindo {symptom_name}. Eu não consigo avaliar sintomas clinicamente por aqui, "
+            "mas o mais seguro é avisar sua equipe médica para receber uma orientação individual. "
+            "Se quiser, eu fico com você nessa parte e posso te ajudar a organizar o que contar para a clínica."
         ),
         mode=AIInteraction.Mode.FALLBACK,
         intent=AIInteraction.Intent.SYMPTOM,
@@ -378,17 +387,18 @@ def build_symptom_reply(normalized_question: str, risk_level: str) -> MayaReply:
 
 
 def build_feelings_reply(user) -> MayaReply:
+    name = first_name_for(user)
     anchor = build_support_anchor(user)
     return MayaReply(
         answer=(
-            "Sinto muito que este momento esteja pesado. Você não precisa resolver tudo de uma vez. "
-            "O tratamento pode mexer com o corpo e com as emoções ao mesmo tempo, e isso não significa fraqueza. "
-            f"{anchor} Se quiser, eu posso continuar aqui com você para organizar o resto do dia ou explicar o próximo passo com calma."
+            f"{name}, sinto muito que este momento esteja pesado. Você não precisa dar conta de tudo agora. "
+            "Vamos por partes. O tratamento pode mexer com o corpo e com as emoções ao mesmo tempo, e isso não significa fraqueza. "
+            f"{anchor} Se quiser, eu continuo aqui com você e podemos olhar uma coisa de cada vez."
         ),
         mode=AIInteraction.Mode.FALLBACK,
         intent=AIInteraction.Intent.FEELINGS,
         risk_level=AIInteraction.RiskLevel.LOW,
-        suggested_next_step="Escolha apenas um próximo passo concreto para agora e siga por partes.",
+        suggested_next_step="Escolha só um próximo passo pequeno agora. Se quiser, continue me contando o que está pesando mais.",
     )
 
 
@@ -404,21 +414,22 @@ def build_routine_reply(normalized_question: str, user) -> MayaReply:
     if any(keyword in normalized_question for keyword in ["agenda", "consulta", "exame", "compromisso"]):
         if upcoming_appointment:
             answer = (
-                "Uma forma leve de acompanhar a agenda é olhar primeiro o que vem mais cedo. "
+                "Você não precisa organizar o dia inteiro de uma vez. Vamos olhar só o que vem primeiro. "
                 f"No momento, o próximo compromisso é {upcoming_appointment.get_type_display().lower()} "
-                f"em {timezone.localtime(upcoming_appointment.scheduled_at).strftime('%d/%m às %H:%M')}."
+                f"em {timezone.localtime(upcoming_appointment.scheduled_at).strftime('%d/%m às %H:%M')}. "
+                "Depois disso, se quiser, eu posso te ajudar a revisar o resto com calma."
             )
         else:
             answer = (
-                "A agenda foi pensada para mostrar consultas e exames por ordem de data. "
-                "Quando houver um novo compromisso, ele aparece primeiro para facilitar a leitura."
+                "Podemos deixar isso bem leve. A agenda foi pensada para mostrar consultas e exames por ordem de data, "
+                "então você pode olhar só o próximo compromisso quando ele aparecer."
             )
         return MayaReply(
             answer=answer,
             mode=AIInteraction.Mode.FALLBACK,
             intent=AIInteraction.Intent.ROUTINE,
             risk_level=AIInteraction.RiskLevel.LOW,
-            suggested_next_step="Abra sua agenda e olhe apenas o próximo compromisso.",
+            suggested_next_step="Abra sua agenda e olhe apenas o próximo compromisso. Se quiser, depois voltamos para o restante.",
         )
 
     if doses_today.exists():
@@ -429,21 +440,21 @@ def build_routine_reply(normalized_question: str, user) -> MayaReply:
             else "As doses de hoje já foram registradas no aplicativo."
         )
         answer = (
-            "Uma forma simples de se organizar é olhar primeiro a próxima dose, depois as medicações de hoje e, por fim, as próximas. "
+            "Para ficar mais leve, vamos olhar só a próxima dose primeiro e deixar o resto para depois. "
             f"Hoje há {total_doses} dose{'s' if total_doses != 1 else ''} programada{'s' if total_doses != 1 else ''}. {pending_sentence} "
             "Se a dúvida for sobre mudar dose, horário ou uso, fale com a equipe médica."
         )
     else:
         answer = (
-            "Uma forma simples de se organizar é olhar primeiro o que precisa acontecer hoje e depois o que vem a seguir. "
-            "Quando houver medicações cadastradas, a rotina do aplicativo ajuda a acompanhar isso de um jeito leve."
+            "Podemos simplificar isso juntas. Olhe primeiro o que precisa acontecer hoje e depois o que vem a seguir. "
+            "Quando houver medicações cadastradas, a rotina do aplicativo ajuda a acompanhar tudo sem exigir que você segure tudo de cabeça."
         )
     return MayaReply(
         answer=answer,
         mode=AIInteraction.Mode.FALLBACK,
         intent=AIInteraction.Intent.ROUTINE,
         risk_level=AIInteraction.RiskLevel.LOW,
-        suggested_next_step="Comece pela próxima dose ou pelo próximo compromisso do dia.",
+        suggested_next_step="Comece pela próxima dose ou pelo próximo compromisso do dia. Se quiser, eu posso seguir com você depois disso.",
     )
 
 
@@ -453,33 +464,42 @@ def build_treatment_reply(normalized_question: str, user) -> MayaReply:
     next_step = treatment.next_step if treatment else None
 
     if "coleta" in normalized_question:
-        answer = "Após a coleta, os óvulos seguem para o laboratório e os embriões passam a ser acompanhados pela equipe médica."
+        answer = (
+            "Depois da coleta, os óvulos seguem para o laboratório e os embriões passam a ser acompanhados pela equipe médica. "
+            "Se quiser, eu também posso te explicar o que costuma vir depois dessa etapa."
+        )
     elif any(keyword in normalized_question for keyword in ["embriao", "embrioes", "fertilizacao"]):
-        answer = "Depois da fertilização, os embriões são observados pela equipe para entender a melhor evolução de cada etapa."
+        answer = (
+            "Depois da fertilização, os embriões são observados pela equipe para entender a evolução de cada etapa. "
+            "Podemos olhar isso juntas com calma, uma fase por vez."
+        )
     elif "transferencia" in normalized_question:
-        answer = "Na transferência, o embrião é colocado no útero em um momento planejado pela equipe médica."
+        answer = (
+            "Na transferência, o embrião é colocado no útero em um momento planejado pela equipe médica. "
+            "Se quiser, eu posso te contar também o que costuma acontecer antes e depois dessa fase."
+        )
     elif any(keyword in normalized_question for keyword in ["proximo passo", "proxima etapa", "o que vem depois", "o que vem a seguir"]):
         if next_step:
             answer = (
-                f"De forma geral, o próximo passo costuma ser {next_step.name.lower()}. "
+                f"Vamos olhar só o próximo passo. De forma geral, ele costuma ser {next_step.name.lower()}. "
                 "Ele aparece na timeline para ajudar você a acompanhar o caminho com mais previsibilidade."
             )
         elif current_step:
             answer = (
                 f"No momento, a etapa em destaque é {current_step.name.lower()}. "
-                "Quando houver uma nova atualização do tratamento, o próximo passo vai aparecer na timeline."
+                "Quando houver uma nova atualização do tratamento, o próximo passo vai aparecer na timeline e eu posso te ajudar a entender essa mudança."
             )
         else:
-            answer = "As etapas do tratamento já estão organizadas. Assim que a primeira começar, o próximo passo ficará mais claro."
+            answer = "As etapas do tratamento já estão organizadas. Assim que a primeira começar, o próximo passo ficará mais claro e visível para você."
     elif current_step:
         answer = (
             f"Hoje a etapa em destaque é {current_step.name.lower()}. "
-            "Se quiser, eu posso explicar melhor o que costuma acontecer nesta fase ou no passo seguinte."
+            "Se quiser, eu posso continuar com você nessa fase e explicar o que costuma acontecer agora ou no passo seguinte."
         )
     else:
         answer = (
-            "Posso ajudar com uma visão geral do tratamento. "
-            "Se quiser, me pergunte sobre etapas, exames ou sobre o que costuma vir depois."
+            "Posso te acompanhar com uma visão geral do tratamento. "
+            "Se quiser, começamos pela etapa atual ou pelo que costuma vir depois."
         )
 
     return MayaReply(
@@ -487,7 +507,7 @@ def build_treatment_reply(normalized_question: str, user) -> MayaReply:
         mode=AIInteraction.Mode.FALLBACK,
         intent=AIInteraction.Intent.TREATMENT,
         risk_level=AIInteraction.RiskLevel.LOW,
-        suggested_next_step="Abra a timeline para ver a etapa atual e o próximo passo lado a lado.",
+        suggested_next_step="Abra a timeline para ver a etapa atual e o próximo passo lado a lado. Se quiser, eu posso te explicar cada um deles.",
     )
 
 
@@ -506,32 +526,38 @@ def build_support_anchor(user) -> str:
         status=Medication.Status.PENDING,
     ).order_by("scheduled_for").first()
     if next_dose:
-        return f"Se ajudar, você pode olhar apenas a próxima dose de {next_dose.name} às {timezone.localtime(next_dose.scheduled_for).strftime('%H:%M')}."
+        return (
+            f"Se ajudar, podemos começar só pela próxima dose de {next_dose.name} "
+            f"às {timezone.localtime(next_dose.scheduled_for).strftime('%H:%M')}."
+        )
 
     next_appointment = Appointment.objects.filter(
         patient=user,
         scheduled_at__date__gte=timezone.localdate(),
     ).order_by("scheduled_at").first()
     if next_appointment:
-        return f"Talvez o próximo passo concreto de hoje seja revisar {next_appointment.get_type_display().lower()} em {timezone.localtime(next_appointment.scheduled_at).strftime('%d/%m às %H:%M')}."
+        return (
+            "Talvez o passo mais concreto de agora seja revisar "
+            f"{next_appointment.get_type_display().lower()} em {timezone.localtime(next_appointment.scheduled_at).strftime('%d/%m às %H:%M')}."
+        )
 
     treatment = Treatment.objects.filter(patient=user, is_active=True).prefetch_related("steps").first()
     if treatment and treatment.next_step:
-        return f"Se quiser, eu posso te ajudar a olhar só a próxima etapa: {treatment.next_step.name.lower()}."
+        return f"Se quiser, podemos olhar só a próxima etapa: {treatment.next_step.name.lower()}."
 
     return "Podemos ir por partes e olhar apenas o próximo passo concreto do seu dia."
 
 
 def suggested_next_step_for_intent(user, conversation_kind: str, intent: str, risk_level: str) -> str:
     if intent == AIInteraction.Intent.SYMPTOM:
-        return "Avise sua equipe médica e conte quando começou, a intensidade e se houve outros sinais."
+        return "Avise sua equipe médica e conte quando começou, a intensidade e se houve outros sinais. Se quiser, eu posso te ajudar a organizar essa mensagem."
     if intent == AIInteraction.Intent.FEELINGS:
-        return "Escolha um próximo passo pequeno e concreto para agora."
+        return "Escolha só um próximo passo pequeno agora. Se quiser, continue me contando o que está pesando mais."
     if intent == AIInteraction.Intent.ROUTINE:
-        return "Olhe primeiro a próxima dose ou o próximo compromisso."
+        return "Olhe primeiro a próxima dose ou o próximo compromisso. Depois, se quiser, voltamos para o restante."
     if intent == AIInteraction.Intent.TREATMENT:
-        return "Confira a timeline para ver a etapa atual e o que vem depois."
-    return "Siga por partes e, se precisar, pergunte novamente com mais contexto."
+        return "Confira a timeline para ver a etapa atual e o que vem depois. Se quiser, eu posso te explicar cada parte."
+    return "Siga por partes e, se quiser, me conte um pouco mais para eu te acompanhar melhor."
 
 
 def build_safe_context_summary(user) -> str:

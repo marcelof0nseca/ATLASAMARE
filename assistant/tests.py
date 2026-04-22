@@ -72,7 +72,7 @@ class MayaConversationTests(TestCase):
             },
         )
 
-    def test_routine_question_uses_routine_conversation_and_specific_fallback(self):
+    def test_routine_question_uses_routine_conversation_and_supportive_fallback(self):
         interaction = answer_question_with_maya(
             self.patient,
             "Como posso me organizar melhor com as medicações?",
@@ -81,10 +81,11 @@ class MayaConversationTests(TestCase):
         self.assertEqual(interaction.mode, AIInteraction.Mode.FALLBACK)
         self.assertEqual(interaction.conversation.kind, MayaConversation.Kind.ROUTINE)
         self.assertEqual(interaction.intent, AIInteraction.Intent.ROUTINE)
+        self.assertIn("vamos olhar", interaction.answer.lower())
         self.assertIn("próxima dose", interaction.answer.lower())
-        self.assertIn("próximo compromisso", interaction.suggested_next_step.lower())
+        self.assertIn("se quiser", interaction.suggested_next_step.lower())
 
-    def test_next_step_question_mentions_next_step(self):
+    def test_next_step_question_mentions_next_step_with_companion_tone(self):
         interaction = answer_question_with_maya(
             self.patient,
             "Qual é o próximo passo do tratamento?",
@@ -92,9 +93,11 @@ class MayaConversationTests(TestCase):
         )
         self.assertEqual(interaction.mode, AIInteraction.Mode.FALLBACK)
         self.assertEqual(interaction.intent, AIInteraction.Intent.TREATMENT)
+        self.assertIn("vamos olhar", interaction.answer.lower())
         self.assertIn("acompanhamento embrionário", interaction.answer.lower())
+        self.assertIn("se quiser", interaction.suggested_next_step.lower())
 
-    def test_feelings_conversation_returns_supportive_answer(self):
+    def test_feelings_conversation_returns_more_companion_like_answer(self):
         interaction = answer_question_with_maya(
             self.patient,
             "Estou me sentindo muito ansiosa hoje.",
@@ -102,10 +105,11 @@ class MayaConversationTests(TestCase):
         )
         self.assertEqual(interaction.mode, AIInteraction.Mode.FALLBACK)
         self.assertEqual(interaction.intent, AIInteraction.Intent.FEELINGS)
-        self.assertIn("você não precisa resolver tudo de uma vez", interaction.answer.lower())
-        self.assertIn("próximo passo", interaction.suggested_next_step.lower())
+        self.assertIn("vamos por partes", interaction.answer.lower())
+        self.assertIn("continuo aqui com você", interaction.answer.lower())
+        self.assertIn("continue me contando", interaction.suggested_next_step.lower())
 
-    def test_sensitive_symptom_in_feelings_conversation_redirects_to_team(self):
+    def test_sensitive_symptom_in_feelings_conversation_redirects_to_team_with_support(self):
         interaction = answer_question_with_maya(
             self.patient,
             "Estou com dor forte, devo mudar o remédio?",
@@ -115,6 +119,7 @@ class MayaConversationTests(TestCase):
         self.assertEqual(interaction.intent, AIInteraction.Intent.SYMPTOM)
         self.assertEqual(interaction.risk_level, AIInteraction.RiskLevel.HIGH)
         self.assertIn("equipe médica", interaction.answer.lower())
+        self.assertIn("se quiser", interaction.answer.lower())
 
     def test_send_route_resolves_to_send_view(self):
         match = resolve("/maya/send/")
