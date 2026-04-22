@@ -92,4 +92,12 @@
   .amare-skeleton {
     @apply animate-pulse rounded-2xl bg-white/60;
   }
+
+  .amare-contact-link {
+    @apply inline-flex items-center gap-3 rounded-2xl border border-border bg-white px-4 py-3 text-sm text-text-strong shadow-sm transition hover:border-rose-soft;
+  }
+
+  .amare-contact-icon {
+    @apply inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-canvas text-success;
+  }
 }

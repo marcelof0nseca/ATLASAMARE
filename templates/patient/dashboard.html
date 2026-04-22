@@ -195,6 +195,7 @@
         <div class="mt-4 grid gap-3">
           <p class="text-sm text-text-muted">Em caso de dúvidas médicas específicas, fale com sua equipe.</p>
           <a href="{% url 'assistant:chat' %}" class="amare-button-primary w-full">Falar com Maya</a>
+          {% include "components/clinic_whatsapp_link.html" with label="WhatsApp da clínica" caption="+55 81 99800-3535" class_name="amare-contact-link w-full justify-start" %}
         </div>
       </article>
     </section>
@@ -264,7 +265,10 @@
         </p>
       </div>
       <div class="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-        <p class="text-sm text-text-muted">Em caso de dúvidas médicas específicas, fale com sua equipe.</p>
+        <div class="max-w-md space-y-3">
+          <p class="text-sm text-text-muted">Em caso de dúvidas médicas específicas, fale com sua equipe.</p>
+          {% include "components/clinic_whatsapp_link.html" with label="Falar com a clínica" caption="WhatsApp direto da Clínica AMARE" %}
+        </div>
         <a href="{% url 'assistant:chat' %}" class="amare-button-primary">Falar com Maya</a>
       </div>
     </article>
