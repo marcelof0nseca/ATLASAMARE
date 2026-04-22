@@ -92,24 +92,4 @@
   .amare-skeleton {
     @apply animate-pulse rounded-2xl bg-white/60;
   }
-
-  .amare-dashboard-stack {
-    @apply flex h-full flex-col;
-  }
-
-  .amare-dashboard-card {
-    @apply rounded-3xl border border-border bg-white p-5;
-  }
-
-  .amare-dashboard-card-soft {
-    @apply rounded-3xl border border-white/70 bg-white/80 p-5;
-  }
-
-  .amare-dashboard-meta {
-    @apply text-xs font-semibold uppercase tracking-[0.2em] text-text-muted;
-  }
-
-  .amare-dashboard-header {
-    @apply flex items-start justify-between gap-4;
-  }
 }
