@@ -1,11 +1,45 @@
 <p align="center">
-  <img src="static/images/logoamare.png" alt="Logo da Clínica AMARE" width="360">
+  <img src="static/images/logoamare.png" alt="Logo da Clinica AMARE" width="360">
 </p>
 
 # Clinica AMARE
 
+Sistema Web para Acompanhamento da Jornada de Fertilidade
 
-Base de MVP para uma plataforma digital de fertilidade com foco em clareza, acolhimento e baixa carga cognitiva.
+## Sobre o Projeto
+
+A Clinica AMARE e uma aplicacao web desenvolvida para apoiar pacientes e equipe medica no acompanhamento da jornada de fertilidade com mais clareza, acolhimento e baixa carga cognitiva.
+
+## Integrantes
+
+- MARIA CLARA SAMPAIO - `mcsm@cesar.school`
+- MARCELO FONSECA - `maf@cesar.school`
+- VINICIUS CEZAR - `vcrc@cesar.school`
+- MARIA YVNA TAVARES - `mytra@cesar.school`
+- PEDRO COUTINHO - `pcs4@cesar.school`
+- MATEUS REINAUX - `mrbm@cesar.school`
+- GUILHERME LINDEMBERG - `gllb@cesar.school`
+- LUIZ VIEIRA - `lhcv@cesar.school`
+- EDUARDO ESTEVES - `eea@cesar.school`
+- ARTHUR QUEIROZ - `aqs@cesar.school`
+- GUILHERME BALTAR - `gcb@cesar.school`
+
+## Links Uteis
+
+- Jira (Gerenciamento do Projeto): [Quadro do Jira](https://amareatlas.atlassian.net/jira/software/projects/SCRUM/boards/1/backlog?atlOrigin=eyJpIjoiNmRmNTk3YjE2ZWUzNDYxZWI1NzAzN2UzNjU2MjU4ZDUiLCJwIjoiaiJ9)
+- Prototipo no Figma: [Figma](https://www.figma.com/board/0drDpxBiH4rUQTa6yFmHH8/Projeto-2--Desk-Research?t=9AgZTqvyzbBd5Blc-1)
+- Documento do Projeto: [Docs](https://docs.google.com/document/d/1Z7tOHnQnHAWp8qSUGCK6GjeTYqohZI3kN0sLbOmQRzI/edit?usp=sharing)
+- Link deploy: Em breve
+
+## Entregas do Projeto
+
+- SR1
+- SR2
+
+## Licenca
+
+Projeto academico desenvolvido para fins educacionais.  
+Disciplina: Projetos 2
 
 ## O que ja esta implementado
 
