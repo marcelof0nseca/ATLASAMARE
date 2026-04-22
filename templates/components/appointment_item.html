@@ -1,12 +1,12 @@
 <article class="rounded-3xl border border-border bg-white p-4">
   <div class="flex flex-wrap items-start justify-between gap-3">
-    <div>
-      <p class="text-sm font-semibold text-text-strong">{{ appointment.get_type_display }}</p>
-      <p class="mt-1 text-sm text-text-muted">{{ appointment.scheduled_at|date:"d \\d\\e F" }} às {{ appointment.scheduled_at|date:"H:i" }}</p>
+    <div class="min-w-0 flex-1">
+      <p class="break-words text-sm font-semibold text-text-strong">{{ appointment.get_type_display }}</p>
+      <p class="mt-1 break-words text-sm text-text-muted">{{ appointment.scheduled_at|date:"d \\d\\e F" }} às {{ appointment.scheduled_at|date:"H:i" }}</p>
       {% if appointment.details %}
-        <p class="mt-2 text-sm leading-6 text-text-muted">{{ appointment.details }}</p>
+        <p class="mt-2 break-words text-sm leading-6 text-text-muted">{{ appointment.details }}</p>
       {% endif %}
     </div>
-    <span class="amare-chip">{{ appointment.get_type_display }}</span>
+    <span class="amare-chip hidden sm:inline-flex">{{ appointment.get_type_display }}</span>
   </div>
 </article>
