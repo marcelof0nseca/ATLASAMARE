@@ -49,3 +49,34 @@ class ProfileForm(forms.ModelForm):
             "full_name": "Nome",
             "wants_in_app_reminders": "Receber lembretes dentro do aplicativo",
         }
+
+
+class DoctorPatientCreateForm(forms.ModelForm):
+    initial_password = forms.CharField(
+        label="Senha inicial",
+        min_length=8,
+        widget=forms.PasswordInput(attrs={"autocomplete": "new-password"}),
+        help_text="A paciente pode trocar a senha depois pelo fluxo da clinica.",
+    )
+
+    class Meta:
+        model = User
+        fields = ["full_name", "email", "wants_in_app_reminders"]
+        labels = {
+            "full_name": "Nome completo",
+            "email": "Email",
+            "wants_in_app_reminders": "Receber lembretes dentro do aplicativo",
+        }
+
+    def __init__(self, *args, doctor=None, **kwargs):
+        self.doctor = doctor
+        super().__init__(*args, **kwargs)
+
+    def save(self, commit=True):
+        patient = super().save(commit=False)
+        patient.role = User.Role.PATIENT
+        patient.primary_doctor = self.doctor
+        patient.set_password(self.cleaned_data["initial_password"])
+        if commit:
+            patient.save()
+        return patient

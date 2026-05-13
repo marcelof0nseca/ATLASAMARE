@@ -9,7 +9,7 @@ from django.views.generic import DetailView, FormView, ListView, UpdateView, Vie
 
 from core.mixins import DoctorRequiredMixin
 
-from .forms import LoginForm, PasswordResetRequestForm, ProfileForm
+from .forms import DoctorPatientCreateForm, LoginForm, PasswordResetRequestForm, ProfileForm
 from .models import User
 from .services import build_doctor_patient_context, get_managed_patient
 
@@ -88,6 +88,26 @@ class DoctorPatientListView(DoctorRequiredMixin, ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["query"] = self.request.GET.get("q", "").strip()
+        context["active_nav"] = "patients"
+        return context
+
+
+class DoctorPatientCreateView(DoctorRequiredMixin, FormView):
+    template_name = "doctor/patient_form.html"
+    form_class = DoctorPatientCreateForm
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs["doctor"] = self.request.user
+        return kwargs
+
+    def form_valid(self, form):
+        patient = form.save()
+        messages.success(self.request, "Paciente cadastrada e vinculada a voce.")
+        return HttpResponseRedirect(reverse("users:doctor-patient-detail", args=[patient.id]))
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
         context["active_nav"] = "patients"
         return context
 

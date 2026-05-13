@@ -1,0 +1,65 @@
+{% extends "layouts/doctor_base.html" %}
+
+{% block title %}Nova paciente | Clinica AMARE{% endblock %}
+{% block page_title %}Nova paciente{% endblock %}
+{% block page_intro %}Cadastre uma paciente e vincule automaticamente ao seu acompanhamento medico.{% endblock %}
+
+{% block content %}
+  <section class="grid gap-5 lg:grid-cols-[0.85fr_1.15fr]">
+    <article class="amare-card p-6">
+      <p class="text-sm font-semibold text-text-strong">Vinculo do cadastro</p>
+      <dl class="mt-5 space-y-4 text-sm">
+        <div>
+          <dt class="text-text-muted">Medica responsavel</dt>
+          <dd class="mt-1 font-medium text-text-strong">{{ request.user.full_name }}</dd>
+        </div>
+        <div>
+          <dt class="text-text-muted">Area da paciente</dt>
+          <dd class="mt-1 font-medium text-text-strong">Acesso por email e senha inicial</dd>
+        </div>
+      </dl>
+    </article>
+
+    <article class="amare-card p-6">
+      <form method="post" class="space-y-4">
+        {% csrf_token %}
+        {% if form.non_field_errors %}
+          <div class="rounded-2xl border border-danger bg-white px-4 py-3 text-sm text-text-strong">
+            {{ form.non_field_errors }}
+          </div>
+        {% endif %}
+
+        <div>
+          <label for="{{ form.full_name.id_for_label }}" class="mb-2 block text-sm font-medium text-text-strong">Nome completo</label>
+          {{ form.full_name }}
+          {% for error in form.full_name.errors %}<p class="mt-2 text-sm text-danger">{{ error }}</p>{% endfor %}
+        </div>
+
+        <div>
+          <label for="{{ form.email.id_for_label }}" class="mb-2 block text-sm font-medium text-text-strong">Email</label>
+          {{ form.email }}
+          {% for error in form.email.errors %}<p class="mt-2 text-sm text-danger">{{ error }}</p>{% endfor %}
+        </div>
+
+        <div>
+          <label for="{{ form.initial_password.id_for_label }}" class="mb-2 block text-sm font-medium text-text-strong">Senha inicial</label>
+          {{ form.initial_password }}
+          {% for error in form.initial_password.errors %}<p class="mt-2 text-sm text-danger">{{ error }}</p>{% endfor %}
+        </div>
+
+        <div class="rounded-2xl border border-border bg-white px-4 py-4">
+          <label for="{{ form.wants_in_app_reminders.id_for_label }}" class="flex items-start gap-3 text-sm leading-6 text-text-strong">
+            {{ form.wants_in_app_reminders }}
+            <span>Ativar lembretes dentro do aplicativo para esta paciente.</span>
+          </label>
+          {% for error in form.wants_in_app_reminders.errors %}<p class="mt-2 text-sm text-danger">{{ error }}</p>{% endfor %}
+        </div>
+
+        <div class="flex flex-col gap-3 sm:flex-row">
+          <button type="submit" class="amare-button-primary">Cadastrar paciente</button>
+          <a href="{% url 'users:doctor-patient-list' %}" class="amare-button-secondary text-center">Cancelar</a>
+        </div>
+      </form>
+    </article>
+  </section>
+{% endblock %}
