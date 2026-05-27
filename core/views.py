@@ -5,16 +5,20 @@ from .mixins import PatientRequiredMixin
 from .services import build_patient_dashboard
 
 
+class LandingView(TemplateView):
+    template_name = "landing/index.html"
+
+
 class RootRedirectView(RedirectView):
-    pattern_name = "users:login"
+    pattern_name = "core:landing"
 
     def get_redirect_url(self, *args, **kwargs):
         user = self.request.user
-        if not user.is_authenticated:
-            return super().get_redirect_url(*args, **kwargs)
-        if user.is_doctor:
-            return "/doctor/patients/"
-        return "/dashboard/"
+        if user.is_authenticated:
+            if user.is_doctor:
+                return "/doctor/patients/"
+            return "/dashboard/"
+        return "/landing/"
 
 
 class PatientDashboardView(PatientRequiredMixin, TemplateView):
