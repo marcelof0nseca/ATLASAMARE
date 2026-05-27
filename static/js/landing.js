@@ -36,6 +36,11 @@ document.addEventListener('DOMContentLoaded', function () {
   -------------------------------------------------------------------------- */
   const nav = document.getElementById('main-nav');
   if (nav) {
+    /* O CSS inicia a nav com opacity:0 (era o GSAP que revelava).
+       Fazemos o fade-in via transição CSS, sem biblioteca. */
+    nav.style.transition = 'opacity 0.4s ease';
+    setTimeout(() => { nav.style.opacity = '1'; }, 50);
+
     window.addEventListener('scroll', () => {
       nav.style.boxShadow = window.scrollY > 32
         ? '0 2px 16px rgba(75,61,86,0.08)'
