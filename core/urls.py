@@ -5,6 +5,7 @@ from .views import (
     CommunityPostCreateView,
     CommunityReactView,
     ExploreHomeView,
+    LandingView,
     PartnerListView,
     PatientDashboardView,
     PatientRoutineView,
@@ -20,6 +21,7 @@ app_name = "core"
 
 urlpatterns = [
     path("", RootRedirectView.as_view(), name="root"),
+    path("landing/", LandingView.as_view(), name="landing"),
     path("dashboard/", PatientDashboardView.as_view(), name="dashboard"),
     path("routine/", PatientRoutineView.as_view(), name="routine"),
     path("routine/tasks/create/", PatientTaskCreateView.as_view(), name="task-create"),
