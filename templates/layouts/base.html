@@ -8,14 +8,33 @@
     <meta name="description" content="Clareza e acolhimento para a jornada de fertilidade.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cardo:wght@400;700&family=Cormorant+Garamond:wght@500;600;700&family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cardo:wght@400;700&family=Cormorant+Garamond:wght@500;600;700&family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Cardo:wght@400;700&family=Cormorant+Garamond:wght@500;600;700&family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet"></noscript>
     <link rel="icon" href="{% static 'images/logoamare.png' %}">
     <link rel="stylesheet" href="{% static 'css/app.css' %}">
-    <script src="https://unpkg.com/htmx.org@1.9.12" defer></script>
+    <script src="https://unpkg.com/htmx.org@1.9.12"></script>
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.1/dist/cdn.min.js" defer></script>
     <script src="{% static 'js/amare.js' %}" defer></script>
+    <script>
+      // Envia o CSRF token em todos os requests HTMX (necessário para POST com hx-boost)
+      document.body.addEventListener("htmx:configRequest", function(evt) {
+        const csrfToken = document.cookie.split(";")
+          .map(c => c.trim())
+          .find(c => c.startsWith("csrftoken="));
+        if (csrfToken) {
+          evt.detail.headers["X-CSRFToken"] = csrfToken.split("=")[1];
+        }
+      });
+
+      // Reinicializa o Alpine.js após cada swap do HTMX para que x-data funcione na nova página
+      document.body.addEventListener("htmx:afterSwap", function() {
+        if (window.Alpine) {
+          window.Alpine.initTree(document.body);
+        }
+      });
+    </script>
   </head>
-  <body class="relative overflow-x-hidden">
+  <body class="relative overflow-x-hidden" hx-boost="true">
     <div class="pointer-events-none absolute inset-x-0 top-0 h-72 bg-gradient-to-b from-mandys-pink/35 via-linen to-transparent"></div>
     <div id="toast-root" class="fixed right-4 top-4 z-50 w-[min(24rem,calc(100vw-2rem))]"></div>
     <div id="modal-root" class="pointer-events-none fixed inset-0 z-40"></div>
