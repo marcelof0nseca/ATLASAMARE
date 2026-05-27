@@ -1861,3 +1861,66 @@ button { cursor: pointer; border: none; background: none; font-family: var(--fon
    ============================================================ */
 .text-center { text-align: center; }
 .visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; }
+
+/* ============================================================
+   REVEAL ANIMATIONS (substitui GSAP fromTo + ScrollTrigger)
+   Elementos ganham .reveal via JS; .is-revealed quando entram
+   na viewport via IntersectionObserver.
+   Transições CSS rodam na GPU (compositor thread) — sem JS
+   no scroll path.
+   ============================================================ */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition:
+    opacity  0.6s cubic-bezier(0.4, 0, 0.2, 1) var(--reveal-delay, 0s),
+    transform 0.6s cubic-bezier(0.4, 0, 0.2, 1) var(--reveal-delay, 0s);
+}
+.reveal.is-revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Connector line entre os steps (substitui GSAP scrub:1) */
+.reveal-line {
+  transform-origin: left center;
+  transform: scaleX(0);
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1) 0.15s;
+}
+.reveal-line.is-revealed {
+  transform: scaleX(1);
+}
+
+/* ============================================================
+   PERFORMANCE FIXES — backdrop-filter removido dos elementos
+   que causavam repaint em todo frame de scroll.
+   Substituído por fundos sólidos/opacos equivalentes.
+   ============================================================ */
+
+/* NAV: era blur(16px) saturate(180%) num fixed — pior caso */
+#main-nav {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  background: rgba(255,255,255,0.97) !important;
+}
+
+/* Depoimentos: 12 cards com blur(12px) no carrossel animado */
+.testimonial-card {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  background: rgb(250,244,232) !important;
+}
+
+/* Hero mockup: blur(20px) — simplifica para fundo opaco */
+.hero-mockup {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  background: rgba(255,255,255,0.95) !important;
+}
+
+/* Calendar pills dentro do bento */
+.cal-med-pill {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  background: #fff !important;
+}
