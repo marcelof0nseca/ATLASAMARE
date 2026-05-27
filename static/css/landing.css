@@ -1863,6 +1863,52 @@ button { cursor: pointer; border: none; background: none; font-family: var(--fon
 .visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; }
 
 /* ============================================================
+   HERO DECORATIVOS — rastros animados
+   ============================================================ */
+
+.hero-deco {
+  position: absolute;
+  top: 0;
+  width: clamp(200px, 22vw, 360px);
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  overflow: visible;
+}
+.hero-deco-left  { left: 0; }
+.hero-deco-right { right: 0; transform: scaleX(-1); }
+
+/* Garante que o conteúdo do hero fique acima dos decorativos */
+#hero > *:not(.hero-deco) { position: relative; z-index: 1; }
+
+/* Animação de rastro via stroke-dashoffset — 100% na GPU */
+.trail {
+  stroke-dasharray: 2000;
+  stroke-dashoffset: 2000;
+  animation: trail-draw 1.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+.trail:nth-child(1) { animation-delay: 0.10s; }
+.trail:nth-child(2) { animation-delay: 0.20s; }
+.trail:nth-child(3) { animation-delay: 0.29s; }
+.trail:nth-child(4) { animation-delay: 0.37s; }
+.trail:nth-child(5) { animation-delay: 0.44s; }
+.trail:nth-child(6) { animation-delay: 0.50s; }
+.trail:nth-child(7) { animation-delay: 0.55s; }
+.trail:nth-child(8) { animation-delay: 0.59s; }
+
+@keyframes trail-draw {
+  from { stroke-dashoffset: 2000; }
+  to   { stroke-dashoffset: 0; }
+}
+
+@media (max-width: 640px) {
+  .hero-deco { width: 130px; opacity: 0.6; }
+}
+@media (max-width: 380px) {
+  .hero-deco { display: none; }
+}
+
+/* ============================================================
    REVEAL ANIMATIONS (substitui GSAP fromTo + ScrollTrigger)
    Elementos ganham .reveal via JS; .is-revealed quando entram
    na viewport via IntersectionObserver.
