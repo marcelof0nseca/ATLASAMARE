@@ -38,13 +38,40 @@ document.addEventListener('DOMContentLoaded', function () {
   if (nav) {
     /* O CSS inicia a nav com opacity:0 (era o GSAP que revelava).
        Fazemos o fade-in via transição CSS, sem biblioteca. */
-    nav.style.transition = 'opacity 0.4s ease';
+    nav.style.transition = 'opacity 0.4s ease, transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s ease';
     setTimeout(() => { nav.style.opacity = '1'; }, 50);
 
+    /* ── Hide on scroll down / show on scroll up ──────────────
+       Usa transform (GPU) para esconder/mostrar sem layout shift.
+       Só oculta após passar da altura da própria nav (72px).
+    ────────────────────────────────────────────────────────── */
+    let lastScrollY = 0;
+    let ticking = false;
+
     window.addEventListener('scroll', () => {
-      nav.style.boxShadow = window.scrollY > 32
-        ? '0 2px 16px rgba(75,61,86,0.08)'
-        : 'none';
+      if (ticking) return;
+      ticking = true;
+
+      requestAnimationFrame(() => {
+        const currentY = window.scrollY;
+
+        /* Shadow */
+        nav.style.boxShadow = currentY > 32
+          ? '0 2px 16px rgba(75,61,86,0.08)'
+          : 'none';
+
+        /* Hide / show */
+        if (currentY > lastScrollY && currentY > 72) {
+          /* scrollando para baixo → esconde */
+          nav.style.transform = 'translateY(-100%)';
+        } else {
+          /* scrollando para cima → mostra */
+          nav.style.transform = 'translateY(0)';
+        }
+
+        lastScrollY = currentY;
+        ticking = false;
+      });
     }, { passive: true });
   }
 
