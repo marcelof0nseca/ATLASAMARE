@@ -2,16 +2,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const modalRoot = document.getElementById("modal-root");
   const toastRoot = document.getElementById("toast-root");
 
-  document.body.addEventListener("closeModal", () => {
-    if (modalRoot) {
-      modalRoot.innerHTML = "";
-    }
-  });
-
+  // ── Toast ──────────────────────────────────────────────────────────────────
   document.body.addEventListener("showToast", (event) => {
-    if (!toastRoot) {
-      return;
-    }
+    if (!toastRoot) return;
     const detail = event.detail || {};
     const tone = detail.tone === "success" ? "bg-success/90" : "bg-text-strong";
     toastRoot.innerHTML = `
@@ -24,4 +17,57 @@ document.addEventListener("DOMContentLoaded", () => {
       toastRoot.innerHTML = "";
     }, 3500);
   });
+
+  // ── Modal ──────────────────────────────────────────────────────────────────
+  document.body.addEventListener("closeModal", () => {
+    if (modalRoot) modalRoot.innerHTML = "";
+  });
+
+  // ── Barra de progresso de navegação ───────────────────────────────────────
+  const progress = document.getElementById("amare-progress");
+
+  function progressStart() {
+    if (!progress) return;
+    progress.className = "";
+    // força reflow para reiniciar a transição do zero
+    void progress.offsetWidth;
+    progress.className = "is-loading";
+  }
+
+  function progressDone() {
+    if (!progress) return;
+    progress.className = "is-done";
+  }
+
+  // ── Animação de entrada da página ─────────────────────────────────────────
+  function animatePageIn() {
+    const shell = document.querySelector(".amare-shell");
+    if (!shell) return;
+    shell.classList.remove("amare-page-in");
+    void shell.offsetWidth; // força reflow para reiniciar animação
+    shell.classList.add("amare-page-in");
+  }
+
+  // ── Eventos HTMX ──────────────────────────────────────────────────────────
+
+  // Inicia a barra quando um request HTMX começa
+  document.body.addEventListener("htmx:beforeRequest", progressStart);
+
+  // Conclui a barra e anima o conteúdo novo após o swap
+  document.body.addEventListener("htmx:afterSwap", () => {
+    progressDone();
+    animatePageIn();
+
+    // Reinicializa o Alpine.js para que x-data funcione na nova página
+    if (window.Alpine) {
+      window.Alpine.initTree(document.body);
+    }
+  });
+
+  // Fallback: se o request falhar, encerra a barra igualmente
+  document.body.addEventListener("htmx:responseError", progressDone);
+  document.body.addEventListener("htmx:sendError", progressDone);
+
+  // Roda a animação também no carregamento inicial (primeira página)
+  animatePageIn();
 });
