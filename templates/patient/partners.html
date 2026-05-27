@@ -1,0 +1,39 @@
+{% extends "layouts/patient_base.html" %}
+
+{% block title %}Parceiros | Clinica AMARE{% endblock %}
+{% block page_title %}Parceiros multidisciplinares{% endblock %}
+{% block page_intro %}Um catalogo filtravel de apoios complementares. O contato acontece fora da plataforma, direto com cada servico.{% endblock %}
+
+{% block content %}
+  <section class="amare-card p-5">
+    <div class="flex flex-wrap gap-2">
+      <a href="{% url 'core:partners' %}" class="amare-tab {% if not selected_category %}amare-tab-active{% endif %}">Todos</a>
+      {% for value, label in categories %}
+        <a href="{% url 'core:partners' %}?category={{ value }}" class="amare-tab {% if selected_category == value %}amare-tab-active{% endif %}">{{ label }}</a>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="mt-5 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+    {% for partner in partners %}
+      <article class="amare-card flex flex-col p-6">
+        <p class="amare-kicker">{{ partner.get_category_display }}</p>
+        <h2 class="mt-2 font-serif text-2xl font-bold">{{ partner.name }}</h2>
+        <p class="mt-1 text-sm font-bold text-golden">{{ partner.specialty }}</p>
+        <p class="mt-4 flex-1 text-sm leading-6 text-text-muted">{{ partner.description }}</p>
+        <div class="mt-5 flex flex-wrap gap-2">
+          {% for tag in partner.tag_list %}
+            <span class="amare-chip">{{ tag }}</span>
+          {% endfor %}
+        </div>
+        {% if partner.contact_url %}
+          <a href="{{ partner.contact_url }}" target="_blank" rel="noopener noreferrer" class="amare-button-primary mt-6 w-full">{{ partner.contact_label }}</a>
+        {% else %}
+          <button class="amare-button-secondary mt-6 w-full" disabled>Contato em breve</button>
+        {% endif %}
+      </article>
+    {% empty %}
+      {% include "components/empty_state.html" with title="Nenhum parceiro encontrado" copy="Tente outro filtro ou aguarde a curadoria da equipe AMARE." %}
+    {% endfor %}
+  </section>
+{% endblock %}

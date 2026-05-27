@@ -1,0 +1,66 @@
+{% extends "layouts/patient_base.html" %}
+
+{% block title %}Comunidade | Clinica AMARE{% endblock %}
+{% block page_title %}Comunidade de apoio{% endblock %}
+{% block page_intro %}Relatos anonimos, revisados antes de aparecerem, para que apoio nao vire sobrecarga nem exposicao.{% endblock %}
+
+{% block content %}
+  <section class="grid gap-5 xl:grid-cols-[0.42fr_0.58fr]">
+    <aside class="space-y-5">
+      <article class="amare-card p-6">
+        <p class="amare-kicker">Enviar relato</p>
+        <h2 class="mt-2 font-serif text-2xl font-bold">Compartilhe com cuidado</h2>
+        <p class="mt-3 text-sm leading-6 text-text-muted">
+          Seu relato passa por revisao antes de aparecer. Nao inclua nome, telefone, exames ou orientacoes medicas.
+        </p>
+        <form method="post" action="{% url 'core:community-create' %}" class="mt-5 space-y-4">
+          {% csrf_token %}
+          <div>
+            <label for="{{ post_form.category.id_for_label }}" class="mb-2 block text-sm font-bold">Tema</label>
+            {{ post_form.category }}
+          </div>
+          <div>
+            <label for="{{ post_form.body.id_for_label }}" class="mb-2 block text-sm font-bold">Relato</label>
+            {{ post_form.body }}
+          </div>
+          <button class="amare-button-primary w-full">Enviar para revisao</button>
+        </form>
+      </article>
+
+      <article class="amare-card p-6">
+        <p class="amare-kicker">Meus envios</p>
+        <div class="mt-4 space-y-3">
+          {% for post in my_pending_posts %}
+            <div class="rounded-xl border border-border bg-white/75 p-4">
+              {% include "components/status_badge.html" with status=post.status %}
+              <p class="mt-3 text-sm leading-6 text-text-muted">{{ post.body|truncatechars:140 }}</p>
+            </div>
+          {% empty %}
+            <p class="text-sm leading-6 text-text-muted">Voce nao tem relatos aguardando revisao.</p>
+          {% endfor %}
+        </div>
+      </article>
+    </aside>
+
+    <section class="space-y-4">
+      {% for post in posts %}
+        <article class="amare-card p-6">
+          <div class="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+            <div>
+              <p class="amare-kicker">{{ post.get_category_display }}</p>
+              <h2 class="mt-2 font-serif text-2xl font-bold">{{ post.pseudonym }}</h2>
+            </div>
+            <span class="amare-chip">{{ post.support_count }} apoio{{ post.support_count|pluralize }}</span>
+          </div>
+          <p class="mt-5 text-sm leading-7 text-text-strong">{{ post.body }}</p>
+          <form method="post" action="{% url 'core:community-react' post.id %}" class="mt-5">
+            {% csrf_token %}
+            <button class="amare-button-secondary">Enviar apoio</button>
+          </form>
+        </article>
+      {% empty %}
+        {% include "components/empty_state.html" with title="Ainda nao ha relatos aprovados" copy="Quando a equipe aprovar os primeiros relatos, eles aparecerao neste feed." %}
+      {% endfor %}
+    </section>
+  </section>
+{% endblock %}

@@ -1,11 +1,13 @@
 from datetime import timedelta
 
+from django.core.files.base import ContentFile
 from django.core.management.base import BaseCommand
 from django.utils import timezone
 
 from appointments.models import Appointment
 from assistant.models import AIInteraction, MayaConversation
 from assistant.services import ensure_default_conversations
+from core.models import CommunityPost, Partner, PatientTask, TreatmentReport
 from medications.models import Medication
 from treatments.models import Treatment, TreatmentStep
 from users.models import User
@@ -48,6 +50,7 @@ class Command(BaseCommand):
         self._seed_treatment_for_ana(created_patients[0], now)
         self._seed_treatment_for_luiza(created_patients[1], now)
         self._seed_empty_state_for_carol(created_patients[2])
+        self._seed_explore_content(created_patients, now)
         self.stdout.write(self.style.SUCCESS("Dados demo da Clínica AMARE prontos."))
 
     def _seed_treatment_for_ana(self, patient, now):
@@ -79,6 +82,11 @@ class Command(BaseCommand):
                 ("Ácido fólico", now.replace(hour=20, minute=0, second=0, microsecond=0)),
                 ("Progesterona", (now + timedelta(days=1)).replace(hour=8, minute=0, second=0, microsecond=0)),
             ],
+        )
+        PatientTask.objects.update_or_create(
+            patient=patient,
+            title="Separar documentos para a consulta",
+            defaults={"notes": "Levar exames recentes se estiverem disponiveis.", "due_at": now + timedelta(hours=4)},
         )
         self._upsert_interaction(
             user=patient,
@@ -137,6 +145,13 @@ class Command(BaseCommand):
             patient,
             [("Vitamina D", now.replace(hour=9, minute=30, second=0, microsecond=0))],
         )
+        report, _ = TreatmentReport.objects.get_or_create(
+            patient=patient,
+            title="Laudo pos-tratamento",
+            defaults={"status": TreatmentReport.Status.AVAILABLE, "release_note": "Liberado pela equipe AMARE."},
+        )
+        if not report.file:
+            report.file.save("laudo-demo.txt", ContentFile("Laudo demo AMARE para validacao da jornada."), save=True)
         self._upsert_interaction(
             user=patient,
             conversation=conversations[MayaConversation.Kind.TREATMENT],
@@ -192,6 +207,72 @@ class Command(BaseCommand):
             risk_level=AIInteraction.RiskLevel.LOW,
             suggested_next_step="Se ajudar, acompanhe apenas quando a clínica atualizar a próxima etapa.",
         )
+
+    def _seed_explore_content(self, patients, now):
+        partner_data = [
+            (
+                "Clara Nunes",
+                Partner.Category.PSYCHOLOGY,
+                "Psicologia perinatal",
+                "Apoio emocional para momentos de ansiedade, espera e tomada de decisao.",
+                "ansiedade,acolhimento,online",
+                True,
+            ),
+            (
+                "Viva Nutrir",
+                Partner.Category.NUTRITION,
+                "Nutricao para fertilidade",
+                "Orientacao nutricional complementar para rotina alimentar durante o tratamento.",
+                "fertilidade,rotina,planejamento",
+                True,
+            ),
+            (
+                "Ponto de Equilibrio",
+                Partner.Category.ACUPUNCTURE,
+                "Acupuntura integrativa",
+                "Servico complementar voltado a relaxamento e bem-estar.",
+                "bem-estar,relaxamento,presencial",
+                False,
+            ),
+        ]
+        for index, (name, category, specialty, description, tags, featured) in enumerate(partner_data, start=1):
+            Partner.objects.update_or_create(
+                name=name,
+                defaults={
+                    "category": category,
+                    "specialty": specialty,
+                    "description": description,
+                    "tags": tags,
+                    "contact_url": "https://wa.me/5581998003535",
+                    "is_featured": featured,
+                    "is_active": True,
+                    "sort_order": index,
+                },
+            )
+
+        approved_posts = [
+            (
+                patients[0],
+                CommunityPost.Category.FEELINGS,
+                "No dia em que eu parei de tentar entender tudo de uma vez, a rotina ficou um pouco mais possivel.",
+            ),
+            (
+                patients[1],
+                CommunityPost.Category.ROUTINE,
+                "O que mais me ajudou foi olhar primeiro a proxima dose e depois a agenda. Uma coisa por vez.",
+            ),
+        ]
+        for author, category, body in approved_posts:
+            CommunityPost.objects.update_or_create(
+                author=author,
+                body=body,
+                defaults={
+                    "category": category,
+                    "pseudonym": "Paciente AMARE",
+                    "status": CommunityPost.Status.APPROVED,
+                    "approved_at": now,
+                },
+            )
 
     def _conversation_map(self, patient):
         return {

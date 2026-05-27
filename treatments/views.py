@@ -5,6 +5,7 @@ from django.views import View
 from django.views.generic import TemplateView
 
 from core.mixins import DoctorRequiredMixin, PatientRequiredMixin
+from core.services import get_current_report
 
 from .models import Treatment, TreatmentStep
 from .services import complete_treatment_step, start_treatment_step
@@ -25,6 +26,7 @@ class PatientTreatmentTimelineView(PatientRequiredMixin, TemplateView):
                 "active_nav": "treatment",
                 "current_step": treatment.current_step if treatment else None,
                 "next_step": treatment.next_step if treatment else None,
+                "report": get_current_report(self.request.user),
             }
         )
         return context

@@ -1,0 +1,67 @@
+{% extends "layouts/patient_base.html" %}
+
+{% block title %}Explorar | Clinica AMARE{% endblock %}
+{% block page_title %}Explorar apoios{% endblock %}
+{% block page_intro %}Um espaco para suporte alem da rotina clinica direta: comunidade moderada e rede multidisciplinar confiavel.{% endblock %}
+
+{% block content %}
+  <section class="grid gap-5 lg:grid-cols-2">
+    <a href="{% url 'core:community' %}" class="amare-card block p-7 transition hover:border-golden">
+      <p class="amare-kicker">Comunidade</p>
+      <h2 class="mt-3 font-display text-5xl font-semibold leading-none text-golden">Relatos anonimos</h2>
+      <p class="mt-5 text-sm leading-6 text-text-muted">
+        Compartilhe e leia experiencias aprovadas pela equipe, com reacoes simples de apoio e sem comentarios livres.
+      </p>
+      <div class="mt-6 flex flex-wrap gap-2">
+        <span class="amare-chip">{{ approved_posts|length }} relato{{ approved_posts|length|pluralize }}</span>
+        <span class="amare-chip">{{ pending_posts_count }} em revisao</span>
+      </div>
+    </a>
+
+    <a href="{% url 'core:partners' %}" class="amare-card block p-7 transition hover:border-golden">
+      <p class="amare-kicker">Parceiros</p>
+      <h2 class="mt-3 font-display text-5xl font-semibold leading-none text-golden">Rede multidisciplinar</h2>
+      <p class="mt-5 text-sm leading-6 text-text-muted">
+        Encontre psicologia, nutricao, acupuntura e outros apoios complementares com contato externo.
+      </p>
+      <div class="mt-6 flex flex-wrap gap-2">
+        {% for partner in featured_partners %}
+          <span class="amare-chip">{{ partner.get_category_display }}</span>
+        {% empty %}
+          <span class="amare-chip">Catalogo em curadoria</span>
+        {% endfor %}
+      </div>
+    </a>
+  </section>
+
+  <section class="mt-5 grid gap-5 lg:grid-cols-[0.95fr_1.05fr]">
+    <article class="amare-card p-6">
+      <p class="amare-kicker">Relatos recentes</p>
+      <div class="mt-4 space-y-3">
+        {% for post in approved_posts %}
+          <div class="rounded-xl border border-border bg-white/75 p-4">
+            <p class="text-xs font-bold uppercase text-text-muted">{{ post.get_category_display }} · {{ post.pseudonym }}</p>
+            <p class="mt-2 text-sm leading-6 text-text-strong">{{ post.body|truncatechars:170 }}</p>
+          </div>
+        {% empty %}
+          <p class="text-sm leading-6 text-text-muted">Os relatos aprovados aparecerao aqui.</p>
+        {% endfor %}
+      </div>
+    </article>
+
+    <article class="amare-card p-6">
+      <p class="amare-kicker">Parceiros em destaque</p>
+      <div class="mt-4 space-y-3">
+        {% for partner in featured_partners %}
+          <div class="rounded-xl border border-border bg-white/75 p-4">
+            <p class="font-serif text-xl font-bold">{{ partner.name }}</p>
+            <p class="mt-1 text-sm font-bold text-golden">{{ partner.specialty }}</p>
+            <p class="mt-2 text-sm leading-6 text-text-muted">{{ partner.description|truncatechars:150 }}</p>
+          </div>
+        {% empty %}
+          <p class="text-sm leading-6 text-text-muted">Parceiros cadastrados como destaque aparecerao aqui.</p>
+        {% endfor %}
+      </div>
+    </article>
+  </section>
+{% endblock %}

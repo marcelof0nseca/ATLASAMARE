@@ -1,17 +1,79 @@
 {% extends "layouts/patient_base.html" %}
 
-{% block title %}Tratamento | Clínica AMARE{% endblock %}
-{% block page_title %}Acompanhamento do tratamento{% endblock %}
-{% block page_intro %}Cada etapa aparece em ordem para que você visualize o momento atual e o que vem a seguir sem excesso de informação.{% endblock %}
+{% block title %}Jornada | Clinica AMARE{% endblock %}
+{% block page_title %}Sua jornada de tratamento{% endblock %}
+{% block page_intro %}A timeline mostra o caminho em ordem, com destaque para o momento atual e para o que vem depois.{% endblock %}
 
 {% block content %}
-  {% if treatment %}
-    <section class="space-y-4">
-      {% for step in treatment.steps.all %}
-        {% include "components/step_card.html" with step=step next_step=next_step %}
-      {% endfor %}
-    </section>
-  {% else %}
-    {% include "components/empty_state.html" with title="Ainda não há um tratamento ativo" copy="Quando a clínica iniciar sua jornada, as etapas vão aparecer aqui em ordem, com o destaque certo para o momento atual." %}
-  {% endif %}
+  <section class="grid gap-5 xl:grid-cols-[1fr_0.42fr]">
+    <div class="space-y-4">
+      {% if treatment %}
+        {% for step in treatment.steps.all %}
+          <article class="relative rounded-xl border p-5 shadow-serene {% if step.status == 'in_progress' %}border-golden bg-mandys-pink/35{% elif step.status == 'completed' %}border-lesbian-green/50 bg-lesbian-green/20{% else %}border-border bg-white/80{% endif %}">
+            <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+              <div class="min-w-0">
+                <p class="amare-kicker">Etapa {{ step.order }}</p>
+                <h2 class="mt-2 font-serif text-2xl font-bold">{{ step.name }}</h2>
+                <p class="mt-2 text-sm leading-6 text-text-muted">
+                  {% if step.status == "in_progress" %}
+                    Voce esta aqui agora. Esta etapa guia o foco principal do seu acompanhamento.
+                  {% elif step.status == "completed" %}
+                    Esta parte ja foi concluida e permanece registrada na sua jornada.
+                  {% else %}
+                    Esta etapa aparece como previsao para dar clareza sobre o caminho.
+                  {% endif %}
+                </p>
+              </div>
+              <div>{% include "components/status_badge.html" with status=step.status %}</div>
+            </div>
+            {% if next_step and next_step.id == step.id %}
+              <div class="mt-4 rounded-xl border border-golden/30 bg-white/75 px-4 py-3 text-sm font-bold text-text-strong">
+                Seu proximo passo e este.
+              </div>
+            {% endif %}
+          </article>
+        {% endfor %}
+      {% else %}
+        {% include "components/empty_state.html" with title="Ainda nao ha um tratamento ativo" copy="Quando a clinica iniciar sua jornada, as etapas vao aparecer aqui com o destaque certo para o momento atual." %}
+      {% endif %}
+    </div>
+
+    <aside class="space-y-5">
+      <article class="amare-card p-6">
+        <p class="amare-kicker">Resumo</p>
+        <h2 class="mt-2 font-serif text-2xl font-bold">Onde estou?</h2>
+        <dl class="mt-5 space-y-4 text-sm">
+          <div>
+            <dt class="font-bold text-text-muted">Agora</dt>
+            <dd class="mt-1 font-bold text-text-strong">{% if current_step %}{{ current_step.name }}{% else %}Ainda nao iniciada{% endif %}</dd>
+          </div>
+          <div>
+            <dt class="font-bold text-text-muted">Depois</dt>
+            <dd class="mt-1 font-bold text-text-strong">{% if next_step %}{{ next_step.name }}{% else %}Sem nova etapa pendente{% endif %}</dd>
+          </div>
+        </dl>
+      </article>
+
+      <article class="amare-card p-6">
+        <p class="amare-kicker">Laudo</p>
+        <h2 class="mt-2 font-serif text-2xl font-bold">Pos-tratamento</h2>
+        <p class="mt-3 text-sm leading-6 text-text-muted">
+          O download permanece bloqueado ate a equipe confirmar que a leitura esta pronta para voce.
+        </p>
+        {% if report %}
+          <div class="mt-4">{% include "components/status_badge.html" with status=report.status %}</div>
+          {% if report.release_note %}
+            <p class="mt-3 text-sm leading-6 text-text-muted">{{ report.release_note }}</p>
+          {% endif %}
+          {% if report.is_available %}
+            <a href="{% url 'core:report-download' report.id %}" class="amare-button-primary mt-5 w-full">Baixar laudo</a>
+          {% else %}
+            <button class="amare-button-secondary mt-5 w-full" disabled>Download indisponivel</button>
+          {% endif %}
+        {% else %}
+          <div class="mt-4">{% include "components/status_badge.html" with status="locked" %}</div>
+        {% endif %}
+      </article>
+    </aside>
+  </section>
 {% endblock %}

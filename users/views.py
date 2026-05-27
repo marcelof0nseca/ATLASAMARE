@@ -8,6 +8,7 @@ from django.urls import reverse, reverse_lazy
 from django.views.generic import DetailView, FormView, ListView, UpdateView, View
 
 from core.mixins import DoctorRequiredMixin
+from core.models import CommunityPost
 
 from .forms import DoctorPatientCreateForm, LoginForm, PasswordResetRequestForm, ProfileForm
 from .models import User
@@ -70,6 +71,8 @@ class ProfileView(LoginRequiredMixin, UpdateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["active_nav"] = "profile"
+        if self.request.user.is_patient:
+            context["community_posts"] = CommunityPost.objects.filter(author=self.request.user)[:5]
         return context
 
 

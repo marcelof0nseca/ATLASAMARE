@@ -1,43 +1,72 @@
 {% extends "layouts/patient_base.html" %}
 
-{% block title %}Perfil | Clínica AMARE{% endblock %}
-{% block page_title %}Seu perfil{% endblock %}
-{% block page_intro %}Aqui ficam seus dados básicos e uma preferência simples de lembrete dentro do aplicativo.{% endblock %}
+{% block title %}Perfil | Clinica AMARE{% endblock %}
+{% block page_title %}Conta e preferencias{% endblock %}
+{% block page_intro %}Dados basicos, lembretes e privacidade em um lugar simples de revisar.{% endblock %}
 
 {% block content %}
   <section class="grid gap-5 lg:grid-cols-[0.9fr_1.1fr]">
-    <article class="amare-card p-6">
-      <p class="text-sm font-semibold text-text-strong">Resumo da conta</p>
-      <dl class="mt-5 space-y-4 text-sm">
-        <div>
-          <dt class="text-text-muted">Nome</dt>
-          <dd class="mt-1 font-medium text-text-strong">{{ request.user.full_name }}</dd>
+    <aside class="space-y-5">
+      <article class="amare-card p-6">
+        <p class="amare-kicker">Conta</p>
+        <dl class="mt-5 space-y-4 text-sm">
+          <div>
+            <dt class="font-bold text-text-muted">Nome</dt>
+            <dd class="mt-1 font-bold text-text-strong">{{ request.user.full_name }}</dd>
+          </div>
+          <div>
+            <dt class="font-bold text-text-muted">Email</dt>
+            <dd class="mt-1 font-bold text-text-strong">{{ request.user.email }}</dd>
+          </div>
+          <div>
+            <dt class="font-bold text-text-muted">Acesso</dt>
+            <dd class="mt-1 font-bold text-text-strong">{{ request.user.get_role_display }}</dd>
+          </div>
+        </dl>
+        <form method="post" action="{% url 'users:logout' %}" class="mt-6">
+          {% csrf_token %}
+          <button class="amare-button-secondary w-full">Sair com seguranca</button>
+        </form>
+      </article>
+
+      <article class="amare-card p-6">
+        <p class="amare-kicker">Comunidade</p>
+        <h2 class="mt-2 font-serif text-2xl font-bold">Meus relatos</h2>
+        <div class="mt-4 space-y-3">
+          {% for post in community_posts %}
+            <div class="rounded-xl border border-border bg-white/75 p-4">
+              {% include "components/status_badge.html" with status=post.status %}
+              <p class="mt-3 text-sm leading-6 text-text-muted">{{ post.body|truncatechars:130 }}</p>
+            </div>
+          {% empty %}
+            <p class="text-sm leading-6 text-text-muted">Voce ainda nao enviou relatos para revisao.</p>
+          {% endfor %}
         </div>
-        <div>
-          <dt class="text-text-muted">Email</dt>
-          <dd class="mt-1 font-medium text-text-strong">{{ request.user.email }}</dd>
-        </div>
-        <div>
-          <dt class="text-text-muted">Papel</dt>
-          <dd class="mt-1 font-medium text-text-strong">{{ request.user.get_role_display }}</dd>
-        </div>
-      </dl>
-    </article>
+      </article>
+    </aside>
 
     <article class="amare-card p-6">
-      <form method="post" class="space-y-4">
+      <p class="amare-kicker">Preferencias</p>
+      <h2 class="mt-2 font-serif text-2xl font-bold">Como a plataforma acompanha voce</h2>
+      <form method="post" class="mt-6 space-y-4">
         {% csrf_token %}
         <div>
-          <label for="{{ form.full_name.id_for_label }}" class="mb-2 block text-sm font-medium text-text-strong">Nome</label>
+          <label for="{{ form.full_name.id_for_label }}" class="mb-2 block text-sm font-bold text-text-strong">Nome</label>
           {{ form.full_name }}
         </div>
-        <div class="rounded-2xl border border-border bg-white px-4 py-4">
+        <div class="rounded-xl border border-border bg-white/75 px-4 py-4">
           <label for="{{ form.wants_in_app_reminders.id_for_label }}" class="flex items-start gap-3 text-sm leading-6 text-text-strong">
             {{ form.wants_in_app_reminders }}
-            <span>Quero continuar recebendo lembretes dentro do aplicativo para acompanhar minha rotina.</span>
+            <span>Quero receber lembretes dentro do aplicativo para acompanhar minha rotina.</span>
           </label>
         </div>
-        <button type="submit" class="amare-button-primary">Salvar preferências</button>
+        <div class="rounded-xl border border-border bg-lesbian-green/20 px-4 py-4">
+          <p class="text-sm font-bold text-text-strong">Privacidade da comunidade</p>
+          <p class="mt-2 text-sm leading-6 text-text-muted">
+            Seus relatos aparecem como Paciente AMARE quando aprovados. Sua identidade real nao fica visivel no feed.
+          </p>
+        </div>
+        <button type="submit" class="amare-button-primary">Salvar preferencias</button>
       </form>
     </article>
   </section>
