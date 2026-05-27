@@ -54,13 +54,14 @@ document.addEventListener("DOMContentLoaded", () => {
   document.body.addEventListener("htmx:beforeRequest", progressStart);
 
   // Conclui a barra e anima o conteúdo novo após o swap
-  document.body.addEventListener("htmx:afterSwap", () => {
+  document.body.addEventListener("htmx:afterSwap", (evt) => {
     progressDone();
     animatePageIn();
 
-    // Reinicializa o Alpine.js para que x-data funcione na nova página
-    if (window.Alpine) {
-      window.Alpine.initTree(document.body);
+    // Reinicializa o Alpine.js apenas no elemento trocado pelo HTMX,
+    // não em todo o document.body — evita percorrer o DOM inteiro a cada troca.
+    if (window.Alpine && evt.detail && evt.detail.target) {
+      window.Alpine.initTree(evt.detail.target);
     }
   });
 

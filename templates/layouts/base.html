@@ -51,6 +51,28 @@
       .amare-page-in {
         animation: amare-page-in 280ms cubic-bezier(0.4, 0, 0.2, 1) both;
       }
+
+      /* ── Scroll performance ── */
+      /*
+        overflow-x: clip não cria scroll container nem stacking context,
+        ao contrário de overflow-x: hidden. Isso libera o browser para
+        compor camadas de GPU corretamente durante o scroll.
+      */
+      body {
+        overflow-x: clip;
+      }
+
+      /*
+        Promove a nav fixa para camada de GPU própria.
+        Com will-change + translateZ(0), o browser não precisa recompor
+        o conteúdo por baixo dela a cada frame de scroll.
+        backdrop-filter removido: era a principal causa do jank
+        (obrigava repaint+blur a cada frame de scroll).
+      */
+      .amare-bottom-nav {
+        will-change: transform;
+        transform: translateZ(0);
+      }
     </style>
     <script src="https://unpkg.com/htmx.org@1.9.12"></script>
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.1/dist/cdn.min.js" defer></script>
@@ -67,7 +89,7 @@
       });
     </script>
   </head>
-  <body class="relative overflow-x-hidden" hx-boost="true">
+  <body class="relative" hx-boost="true">
     <div id="amare-progress"></div>
     <div class="pointer-events-none absolute inset-x-0 top-0 h-72 bg-gradient-to-b from-mandys-pink/35 via-linen to-transparent"></div>
     <div id="toast-root" class="fixed right-4 top-4 z-50 w-[min(24rem,calc(100vw-2rem))]"></div>

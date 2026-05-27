@@ -22,7 +22,7 @@
         </div>
       </div>
 
-      <nav class="mt-4 hidden rounded-xl border border-border bg-white/65 p-2 shadow-serene backdrop-blur lg:block">
+      <nav class="mt-4 hidden rounded-xl border border-border bg-white/90 p-2 shadow-serene lg:block">
         <ul class="grid grid-cols-5 gap-2 text-center">
           <li><a class="amare-nav-link {% if active_nav == 'home' %}amare-nav-link-active{% endif %}" href="{% url 'core:dashboard' %}">Home</a></li>
           <li><a class="amare-nav-link {% if active_nav == 'treatment' %}amare-nav-link-active{% endif %}" href="{% url 'treatments:timeline' %}">Jornada</a></li>
@@ -36,7 +36,7 @@
     {% block content %}{% endblock %}
   </main>
 
-  <nav class="fixed inset-x-3 bottom-3 z-30 rounded-xl border border-border bg-surface/95 p-2 shadow-serene backdrop-blur lg:hidden">
+  <nav class="amare-bottom-nav fixed inset-x-3 bottom-3 z-30 rounded-xl border border-border bg-surface p-2 shadow-serene lg:hidden">
     <ul class="grid grid-cols-5 gap-1 text-center">
       <li><a class="amare-nav-link {% if active_nav == 'home' %}amare-nav-link-active{% endif %}" href="{% url 'core:dashboard' %}">Home</a></li>
       <li><a class="amare-nav-link {% if active_nav == 'treatment' %}amare-nav-link-active{% endif %}" href="{% url 'treatments:timeline' %}">Jornada</a></li>
