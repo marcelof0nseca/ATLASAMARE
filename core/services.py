@@ -6,7 +6,7 @@ from appointments.models import Appointment
 from medications.models import Medication
 from treatments.models import Treatment
 
-from .models import CommunityPost, Partner, PatientTask, TreatmentReport
+from .models import CommunityPost, PatientTask, TreatmentReport
 
 
 def build_patient_dashboard(user):
@@ -15,11 +15,18 @@ def build_patient_dashboard(user):
     appointments = Appointment.objects.filter(
         patient=user, scheduled_at__date__gte=today
     ).order_by("scheduled_at")[:3]
-    medications_today = Medication.objects.filter(
-        patient=user,
-        scheduled_for__date=today,
-    ).order_by("scheduled_for")
-    next_medication = medications_today.filter(status=Medication.Status.PENDING).first()
+
+    # Uma única query para as medicações de hoje; filtragem da próxima dose em Python.
+    medications_today = list(
+        Medication.objects.filter(
+            patient=user,
+            scheduled_for__date=today,
+        ).order_by("scheduled_for")
+    )
+    next_medication = next(
+        (m for m in medications_today if m.status == Medication.Status.PENDING),
+        None,
+    )
 
     return {
         "treatment": treatment,
@@ -31,8 +38,7 @@ def build_patient_dashboard(user):
         "next_appointment": appointments[0] if appointments else None,
         "pending_tasks_count": PatientTask.objects.filter(patient=user, status=PatientTask.Status.PENDING).count(),
         "report": get_current_report(user),
-        "featured_posts": CommunityPost.objects.filter(status=CommunityPost.Status.APPROVED)[:2],
-        "featured_partners": Partner.objects.filter(is_active=True, is_featured=True)[:3],
+        # featured_posts e featured_partners removidos: não são usados no template do dashboard.
     }
 
 
@@ -44,20 +50,30 @@ def group_appointments_by_date(queryset):
 
 
 def group_medications_for_patient(user):
-    now = timezone.localtime()
-    today = now.date()
-    queryset = Medication.objects.filter(patient=user).order_by("scheduled_for")
-    now_item = queryset.filter(
-        scheduled_for__date=today,
-        status=Medication.Status.PENDING,
-    ).order_by("scheduled_for").first()
-    today_items = queryset.filter(scheduled_for__date=today)
-    if now_item:
-        today_items = today_items.exclude(pk=now_item.pk)
+    today = timezone.localdate()
+
+    # Uma única query traz hoje + próximas doses; filtragem feita em Python.
+    all_meds = list(
+        Medication.objects.filter(
+            patient=user,
+            scheduled_for__date__gte=today,
+        ).order_by("scheduled_for")
+    )
+
+    now_item = next(
+        (m for m in all_meds if m.scheduled_for.date() == today and m.status == Medication.Status.PENDING),
+        None,
+    )
+    today_items = [
+        m for m in all_meds
+        if m.scheduled_for.date() == today and (now_item is None or m.pk != now_item.pk)
+    ]
+    upcoming_items = [m for m in all_meds if m.scheduled_for.date() > today][:5]
+
     return {
         "now_item": now_item,
         "today_items": today_items,
-        "upcoming_items": queryset.filter(scheduled_for__date__gt=today)[:5],
+        "upcoming_items": upcoming_items,
     }
 
 
@@ -68,14 +84,20 @@ def get_current_report(user):
 def build_patient_routine(user):
     today = timezone.localdate()
     medications = group_medications_for_patient(user)
-    appointments = Appointment.objects.filter(patient=user).order_by("scheduled_at")
+
+    # Filtra apenas compromissos a partir de hoje para não carregar todo o histórico.
+    appointments = Appointment.objects.filter(
+        patient=user,
+        scheduled_at__date__gte=today,
+    ).order_by("scheduled_at")
+
     tasks = PatientTask.objects.filter(patient=user).order_by("status", "due_at", "-created_at")
     return {
         **medications,
         "appointments_by_date": group_appointments_by_date(appointments),
         "tasks": tasks,
         "today_tasks": tasks.filter(due_at__date=today) | tasks.filter(due_at__isnull=True, status=PatientTask.Status.PENDING),
-        "upcoming_appointments": appointments.filter(scheduled_at__date__gte=today)[:4],
+        "upcoming_appointments": appointments[:4],
     }
 
 

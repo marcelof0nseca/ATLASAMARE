@@ -148,7 +148,9 @@ class CommunityPost(models.Model):
 
     @property
     def support_count(self) -> int:
-        return self.reactions.count()
+        # len() usa o cache do prefetch_related("reactions") quando disponível.
+        # .count() sempre gera um SELECT COUNT(*) extra, ignorando o cache.
+        return len(self.reactions.all())
 
 
 class CommunityReaction(models.Model):

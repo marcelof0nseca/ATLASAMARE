@@ -38,14 +38,21 @@ class Treatment(models.Model):
 
     @property
     def current_step(self):
-        return self.steps.filter(status=TreatmentStep.Status.IN_PROGRESS).order_by("order").first()
+        # self.steps.all() usa o cache do prefetch_related quando disponível.
+        # self.steps.filter() sempre gera uma nova query SQL, ignorando o cache.
+        return next(
+            (s for s in self.steps.all() if s.status == TreatmentStep.Status.IN_PROGRESS),
+            None,
+        )
 
     @property
     def next_step(self):
-        current_step = self.current_step
-        if current_step:
-            return self.steps.filter(order__gt=current_step.order).order_by("order").first()
-        return self.steps.exclude(status=TreatmentStep.Status.COMPLETED).order_by("order").first()
+        # Itera o cache de steps uma única vez para encontrar current e next.
+        steps = list(self.steps.all())  # ordenado por `order` via Meta
+        current = next((s for s in steps if s.status == TreatmentStep.Status.IN_PROGRESS), None)
+        if current:
+            return next((s for s in steps if s.order > current.order), None)
+        return next((s for s in steps if s.status != TreatmentStep.Status.COMPLETED), None)
 
 
 class TreatmentStep(models.Model):
