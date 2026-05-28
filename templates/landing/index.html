@@ -51,15 +51,16 @@
     <a href="#hero" class="nav-logo" aria-label="AMARE — início">Amare</a>
 
     <ul class="nav-links" role="list">
-      <li><a href="#features">Plataforma</a></li>
       <li><a href="#profiles">Perfis</a></li>
-      <li><a href="#how-it-works">Como funciona</a></li>
-      <li><a href="#pricing">Preços</a></li>
+      <li><a href="#features">Plataforma</a></li>
+      <li><a href="#how-it-works">Trilha</a></li>
+      <li><a href="#testimonials">Depoimentos</a></li>
+      <li><a href="#faq">FAQ</a></li>
     </ul>
 
     <div class="nav-actions">
       <a href="{% url 'users:login' %}" class="btn btn-ghost-small">Entrar</a>
-      <a href="#pricing" class="btn btn-primary" style="font-size:13px;padding:10px 18px;">Conhecer o AMARE</a>
+      <a href="{% url 'users:login' %}" class="btn btn-primary" style="font-size:13px;padding:10px 18px;">Conhecer o AMARE</a>
     </div>
 
     <button class="hamburger" id="hamburger-btn" aria-label="Abrir menu" aria-expanded="false">
@@ -74,13 +75,14 @@
   <div class="drawer-handle" aria-hidden="true"></div>
   <button id="drawer-close" class="visually-hidden" aria-label="Fechar menu">Fechar</button>
   <ul class="drawer-links">
-    <li><a href="#features" class="drawer-link">Plataforma</a></li>
     <li><a href="#profiles" class="drawer-link">Perfis</a></li>
-    <li><a href="#how-it-works" class="drawer-link">Como funciona</a></li>
-    <li><a href="#pricing" class="drawer-link">Preços</a></li>
+    <li><a href="#features" class="drawer-link">Plataforma</a></li>
+    <li><a href="#how-it-works" class="drawer-link">Trilha</a></li>
+    <li><a href="#testimonials" class="drawer-link">Depoimentos</a></li>
+    <li><a href="#faq" class="drawer-link">FAQ</a></li>
     <li><a href="{% url 'users:login' %}" class="drawer-link">Entrar</a></li>
   </ul>
-  <a href="#pricing" class="btn btn-primary drawer-cta drawer-link">Conhecer o AMARE</a>
+  <a href="{% url 'users:login' %}" class="btn btn-primary drawer-cta drawer-link">Conhecer o AMARE</a>
 </div>
 
 <!-- ============================================================
@@ -88,29 +90,19 @@
      ============================================================ -->
 <section id="hero" aria-labelledby="hero-heading">
 
-  <!-- Decorativo esquerdo — rastros rosa/rose -->
-  <svg class="hero-deco hero-deco-left" viewBox="0 0 320 900" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-    <path class="trail" d="M310,-50 C148,82 338,234 158,382 C-22,530 242,664 94,822"  stroke="#C47D8C" stroke-width="1.8" stroke-linecap="round" opacity="0.90"/>
-    <path class="trail" d="M288,-36 C126,96 316,248 136,396 C-44,544 220,678 72,836"  stroke="#C47D8C" stroke-width="1.6" stroke-linecap="round" opacity="0.74"/>
-    <path class="trail" d="M266,-22 C104,110 294,262 114,410 C-66,558 198,692 50,850"  stroke="#C47D8C" stroke-width="1.5" stroke-linecap="round" opacity="0.58"/>
-    <path class="trail" d="M244,-8  C82,124 272,276 92,424 C-88,572 176,706 28,864"   stroke="#C47D8C" stroke-width="1.4" stroke-linecap="round" opacity="0.44"/>
-    <path class="trail" d="M222,6   C60,138 250,290 70,438 C-110,586 154,720 6,878"   stroke="#b56d7c" stroke-width="1.3" stroke-linecap="round" opacity="0.32"/>
-    <path class="trail" d="M200,20  C38,152 228,304 48,452 C-132,600 132,734 -16,892"  stroke="#b56d7c" stroke-width="1.2" stroke-linecap="round" opacity="0.22"/>
-    <path class="trail" d="M178,34  C16,166 206,318 26,466 C-154,614 110,748 -38,906"  stroke="#9d5d6c" stroke-width="1.1" stroke-linecap="round" opacity="0.14"/>
-    <path class="trail" d="M156,48  C-6,180 184,332 4,480 C-176,628 88,762 -60,920"   stroke="#9d5d6c" stroke-width="1.0" stroke-linecap="round" opacity="0.07"/>
-  </svg>
+  <!-- Decorativo esquerdo — blobs rose/rosa (orgânicos, emergem da borda) -->
+  <div class="hero-blob-wrap hero-blob-left" aria-hidden="true">
+    <div class="hero-blob hb-rose-a"></div>
+    <div class="hero-blob hb-rose-b"></div>
+    <div class="hero-blob hb-rose-c"></div>
+  </div>
 
-  <!-- Decorativo direito — rastros navy/indigo (espelho horizontal) -->
-  <svg class="hero-deco hero-deco-right" viewBox="0 0 320 900" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-    <path class="trail" d="M310,-50 C148,82 338,234 158,382 C-22,530 242,664 94,822"  stroke="#4B3D56" stroke-width="1.8" stroke-linecap="round" opacity="0.75"/>
-    <path class="trail" d="M288,-36 C126,96 316,248 136,396 C-44,544 220,678 72,836"  stroke="#4B3D56" stroke-width="1.6" stroke-linecap="round" opacity="0.62"/>
-    <path class="trail" d="M266,-22 C104,110 294,262 114,410 C-66,558 198,692 50,850"  stroke="#4B3D56" stroke-width="1.5" stroke-linecap="round" opacity="0.50"/>
-    <path class="trail" d="M244,-8  C82,124 272,276 92,424 C-88,572 176,706 28,864"   stroke="#4B3D56" stroke-width="1.4" stroke-linecap="round" opacity="0.38"/>
-    <path class="trail" d="M222,6   C60,138 250,290 70,438 C-110,586 154,720 6,878"   stroke="#3d3047" stroke-width="1.3" stroke-linecap="round" opacity="0.26"/>
-    <path class="trail" d="M200,20  C38,152 228,304 48,452 C-132,600 132,734 -16,892"  stroke="#3d3047" stroke-width="1.2" stroke-linecap="round" opacity="0.17"/>
-    <path class="trail" d="M178,34  C16,166 206,318 26,466 C-154,614 110,748 -38,906"  stroke="#3d3047" stroke-width="1.1" stroke-linecap="round" opacity="0.10"/>
-    <path class="trail" d="M156,48  C-6,180 184,332 4,480 C-176,628 88,762 -60,920"   stroke="#3d3047" stroke-width="1.0" stroke-linecap="round" opacity="0.05"/>
-  </svg>
+  <!-- Decorativo direito — blobs navy/ameixa -->
+  <div class="hero-blob-wrap hero-blob-right" aria-hidden="true">
+    <div class="hero-blob hb-navy-a"></div>
+    <div class="hero-blob hb-navy-b"></div>
+    <div class="hero-blob hb-navy-c"></div>
+  </div>
 
   <p class="hero-eyebrow">Plataforma de Reprodução Assistida</p>
 
@@ -121,7 +113,7 @@
   </p>
 
   <div class="hero-ctas">
-    <a href="#pricing" class="btn btn-primary">Começar agora</a>
+    <a href="{% url 'users:login' %}" class="btn btn-primary">Começar agora</a>
     <a href="#how-it-works" class="btn btn-ghost">Ver demonstração</a>
   </div>
 
@@ -174,29 +166,7 @@
 </section>
 
 <!-- ============================================================
-     3. TRUST BAR
-     ============================================================ -->
-<section id="trust-bar" aria-label="Tecnologias utilizadas">
-  <div class="container">
-    <div class="trust-bar-inner">
-      <span class="trust-label">Desenvolvido com</span>
-      <span class="trust-item">Clínica Amare</span>
-      <span class="trust-item">Django</span>
-      <span class="trust-item">Tailwind CSS</span>
-      <span class="trust-item">WCAG 2.1 AA</span>
-      <span class="trust-item">Python</span>
-      <!-- duplicate for marquee -->
-      <span class="trust-item" aria-hidden="true">Clínica Amare</span>
-      <span class="trust-item" aria-hidden="true">Django</span>
-      <span class="trust-item" aria-hidden="true">Tailwind CSS</span>
-      <span class="trust-item" aria-hidden="true">WCAG 2.1 AA</span>
-      <span class="trust-item" aria-hidden="true">Python</span>
-    </div>
-  </div>
-</section>
-
-<!-- ============================================================
-     4. THREE PROFILES
+     3. THREE PROFILES
      ============================================================ -->
 <section id="profiles" aria-labelledby="profiles-heading">
   <div class="container">
@@ -260,33 +230,7 @@
 </section>
 
 <!-- ============================================================
-     5. STATS
-     ============================================================ -->
-<section id="stats" aria-label="Números do AMARE">
-  <div class="container">
-    <div class="stats-grid">
-      <div class="stat-cell">
-        <div class="stat-number" data-count="3">0</div>
-        <div class="stat-label">Perfis integrados</div>
-      </div>
-      <div class="stat-cell">
-        <div class="stat-number" data-count="7">0</div>
-        <div class="stat-label">Módulos principais</div>
-      </div>
-      <div class="stat-cell">
-        <div class="stat-number" data-count="100%">0%</div>
-        <div class="stat-label">WCAG 2.1 AA</div>
-      </div>
-      <div class="stat-cell">
-        <div class="stat-number" data-count="1">0</div>
-        <div class="stat-label">Jornada unificada</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ============================================================
-     6. FEATURES BENTO GRID
+     5. FEATURES BENTO GRID
      ============================================================ -->
 <section id="features" aria-labelledby="features-heading">
   <div class="container">
@@ -321,8 +265,8 @@
         </div>
       </div>
 
-      <!-- Cell 2: Agenda (tall) -->
-      <div class="bento-cell bento-tall bento-patient-bg">
+      <!-- Cell 2: Agenda -->
+      <div class="bento-cell bento-patient-bg">
         <div class="spotlight" aria-hidden="true"></div>
         <div class="bento-icon-wrap" style="background:rgba(196,125,140,0.12);">
           <i class="ph ph-calendar" style="font-size:24px;color:var(--color-theme-patient);" aria-hidden="true"></i>
@@ -339,10 +283,6 @@
             <div class="cal-med-pill">
               <span class="cal-med-time">20:00</span>
               <span class="cal-med-name">Cetrotide 0.25mg</span>
-            </div>
-            <div class="cal-med-pill">
-              <span class="cal-med-time">22:00</span>
-              <span class="cal-med-name">Utrogestan 200mg</span>
             </div>
           </div>
         </div>
@@ -482,7 +422,38 @@
 </section>
 
 <!-- ============================================================
-     8. TESTIMONIALS
+     8. TRUST BAR
+     ============================================================ -->
+<section id="trust-bar" aria-label="Tecnologias utilizadas">
+  <div class="container">
+    <p class="trust-label">Desenvolvido com</p>
+    <div class="trust-items">
+      <div class="trust-item">
+        <img src="{% static 'img/logos/pythonlogo.png' %}" alt="Python" class="trust-item-logo">
+        <span class="trust-item-name">Python</span>
+      </div>
+      <div class="trust-item">
+        <img src="{% static 'img/logos/jslogo.png' %}" alt="JavaScript" class="trust-item-logo">
+        <span class="trust-item-name">JavaScript</span>
+      </div>
+      <div class="trust-item">
+        <img src="{% static 'img/logos/csstwlogo.webp' %}" alt="Tailwind CSS" class="trust-item-logo">
+        <span class="trust-item-name">Tailwind CSS</span>
+      </div>
+      <div class="trust-item">
+        <img src="{% static 'img/logos/awslogo.webp' %}" alt="AWS" class="trust-item-logo">
+        <span class="trust-item-name">AWS</span>
+      </div>
+      <div class="trust-item">
+        <img src="{% static 'img/logos/htmllogo.png' %}" alt="HTML5" class="trust-item-logo">
+        <span class="trust-item-name">HTML 5</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     9. TESTIMONIALS
      ============================================================ -->
 <section id="testimonials" aria-labelledby="testimonials-heading">
   <div class="container" style="overflow:visible;">
@@ -677,84 +648,27 @@
 </section>
 
 <!-- ============================================================
-     9. PRICING
+     10. CTA SECTION
      ============================================================ -->
-<section id="pricing" aria-labelledby="pricing-heading">
+<section id="cta-section" aria-labelledby="cta-heading">
   <div class="container">
-    <div class="pricing-header">
-      <span class="section-label">Planos para clínicas</span>
-      <h2 id="pricing-heading" class="pricing-h2">Simples e transparente</h2>
-      <div class="billing-toggle" role="group" aria-label="Periodicidade de cobrança">
-        <span class="toggle-label active" id="label-monthly">Mensal</span>
-        <div class="toggle-switch" id="billing-toggle" role="switch" aria-checked="false" tabindex="0" aria-label="Alternar para cobrança anual">
-          <div class="toggle-knob"></div>
-        </div>
-        <span class="toggle-label" id="label-annual">Anual</span>
-        <span class="save-badge">Economize 20%</span>
-      </div>
+    <h2 id="cta-heading" class="cta-h2">
+      <span class="cta-word">Sua&nbsp;</span><span class="cta-word">paciente&nbsp;</span><span class="cta-word">merece</span><br>
+      <span class="cta-word">a&nbsp;</span><span class="cta-word">melhor&nbsp;</span><span class="cta-word">jornada.</span>
+    </h2>
+    <p class="cta-subtitle">
+      Junte-se às clínicas que já transformaram a experiência de reprodução assistida com o ATLAS.
+    </p>
+    <div class="cta-actions">
+      <a href="{% url 'users:login' %}" class="btn btn-primary">Agendar demonstração</a>
+      <a href="#faq" class="btn btn-ghost">Falar com nossa equipe</a>
     </div>
-
-    <div class="plans-grid">
-      <!-- Essencial -->
-      <div class="plan-card">
-        <div class="plan-name">Essencial</div>
-        <div class="plan-price"><sup>R$</sup><span data-monthly="0" data-annual="0">0</span></div>
-        <div class="plan-period">3 meses grátis para teste</div>
-        <div class="plan-divider"></div>
-        <ul class="plan-features">
-          <li><span class="plan-check" aria-hidden="true">✓</span> Até 10 pacientes ativas</li>
-          <li><span class="plan-check" aria-hidden="true">✓</span> Todos os módulos básicos</li>
-          <li><span class="plan-check" aria-hidden="true">✓</span> Suporte por e-mail</li>
-          <li><span class="plan-check" aria-hidden="true">✓</span> WCAG 2.1 AA</li>
-        </ul>
-        <button class="btn btn-ghost plan-btn plan-select-btn" type="button">Começar grátis</button>
-      </div>
-
-      <!-- Profissional (featured) -->
-      <div class="plan-card plan-card-featured">
-        <div class="plan-popular-badge">Mais popular</div>
-        <div class="plan-name">Profissional</div>
-        <div class="plan-price"><sup>R$</sup><span data-monthly="299" data-annual="239">299</span></div>
-        <div class="plan-period">/mês · faturado mensalmente</div>
-        <div class="plan-divider"></div>
-        <ul class="plan-features">
-          <li><span class="plan-check" aria-hidden="true">✓</span> Pacientes ilimitadas</li>
-          <li><span class="plan-check" aria-hidden="true">✓</span> IA Maya avançada</li>
-          <li><span class="plan-check" aria-hidden="true">✓</span> Relatórios completos</li>
-          <li><span class="plan-check" aria-hidden="true">✓</span> Suporte prioritário</li>
-          <li><span class="plan-check" aria-hidden="true">✓</span> Personalização de timeline</li>
-        </ul>
-        <button class="btn btn-primary plan-btn plan-select-btn btn-shimmer" type="button">Assinar agora</button>
-      </div>
-
-      <!-- Enterprise -->
-      <div class="plan-card">
-        <div class="plan-name">Enterprise</div>
-        <div class="plan-price" style="font-size:32px;line-height:1.2;margin-top:8px;">Sob consulta</div>
-        <div class="plan-period">Personalizado para sua clínica</div>
-        <div class="plan-divider"></div>
-        <ul class="plan-features">
-          <li><span class="plan-check" aria-hidden="true">✓</span> Multi-clínica</li>
-          <li><span class="plan-check" aria-hidden="true">✓</span> SLA dedicado</li>
-          <li><span class="plan-check" aria-hidden="true">✓</span> Treinamento presencial</li>
-          <li><span class="plan-check" aria-hidden="true">✓</span> Integrações customizadas</li>
-          <li><span class="plan-check" aria-hidden="true">✓</span> API access</li>
-        </ul>
-        <button class="btn btn-ghost plan-btn plan-select-btn" type="button">Falar com equipe</button>
-      </div>
-    </div>
-
-    <div class="trust-badges-row">
-      <span class="trust-badge"><i class="ph ph-shield-check" aria-hidden="true"></i> LGPD Compliant</span>
-      <span class="trust-badge"><i class="ph ph-check-circle" aria-hidden="true"></i> WCAG 2.1 AA</span>
-      <span class="trust-badge"><i class="ph ph-lock-key" aria-hidden="true"></i> Dados criptografados</span>
-      <span class="trust-badge"><i class="ph ph-headset" aria-hidden="true"></i> Suporte dedicado</span>
-    </div>
+    <p class="cta-micro">Sem compromisso · Demonstração gratuita · Resposta em 24h</p>
   </div>
 </section>
 
 <!-- ============================================================
-     10. FAQ
+     11. FAQ
      ============================================================ -->
 <section id="faq" aria-labelledby="faq-heading">
   <div class="container">
@@ -811,7 +725,7 @@
           <i class="ph ph-plus faq-icon" aria-hidden="true"></i>
         </button>
         <div class="faq-answer" role="region">
-          <p class="faq-answer-inner">Sim, no plano Profissional e Enterprise você pode personalizar completamente as etapas da timeline conforme seu protocolo clínico — definindo nomes, descrições, documentos anexos e critérios de desbloqueio para cada etapa.</p>
+          <p class="faq-answer-inner">Sim, você pode personalizar completamente as etapas da timeline conforme seu protocolo clínico — definindo nomes, descrições, documentos anexos e critérios de desbloqueio para cada etapa.</p>
         </div>
       </div>
 
@@ -821,7 +735,7 @@
           <i class="ph ph-plus faq-icon" aria-hidden="true"></i>
         </button>
         <div class="faq-answer" role="region">
-          <p class="faq-answer-inner">Atualmente integramos com os principais sistemas de prontuário eletrônico do mercado brasileiro. No plano Enterprise, integrações customizadas são disponibilizadas via API RESTful, com documentação completa e suporte técnico dedicado.</p>
+          <p class="faq-answer-inner">Atualmente integramos com os principais sistemas de prontuário eletrônico do mercado brasileiro. Integrações customizadas são disponibilizadas via API RESTful, com documentação completa e suporte técnico dedicado.</p>
         </div>
       </div>
 
@@ -831,7 +745,7 @@
           <i class="ph ph-plus faq-icon" aria-hidden="true"></i>
         </button>
         <div class="faq-answer" role="region">
-          <p class="faq-answer-inner">Todos os planos incluem materiais de onboarding, vídeos tutoriais e uma base de conhecimento completa. O plano Profissional inclui sessões de treinamento online ao vivo. O Enterprise inclui treinamento presencial para toda a equipe.</p>
+          <p class="faq-answer-inner">Sim. Todos os planos incluem materiais de onboarding, vídeos tutoriais e uma base de conhecimento completa, além de sessões de treinamento online ao vivo para a equipe.</p>
         </div>
       </div>
 
@@ -846,26 +760,6 @@
       </div>
 
     </div>
-  </div>
-</section>
-
-<!-- ============================================================
-     11. CTA SECTION
-     ============================================================ -->
-<section id="cta-section" aria-labelledby="cta-heading">
-  <div class="container">
-    <h2 id="cta-heading" class="cta-h2">
-      <span class="cta-word">Sua&nbsp;</span><span class="cta-word">paciente&nbsp;</span><span class="cta-word">merece</span><br>
-      <span class="cta-word">a&nbsp;</span><span class="cta-word">melhor&nbsp;</span><span class="cta-word">jornada.</span>
-    </h2>
-    <p class="cta-subtitle">
-      Junte-se às clínicas que já transformaram a experiência de reprodução assistida com o ATLAS.
-    </p>
-    <div class="cta-actions">
-      <a href="#pricing" class="btn btn-primary">Agendar demonstração</a>
-      <a href="#faq" class="btn btn-ghost">Falar com nossa equipe</a>
-    </div>
-    <p class="cta-micro">Sem compromisso · Demonstração gratuita · Resposta em 24h</p>
   </div>
 </section>
 

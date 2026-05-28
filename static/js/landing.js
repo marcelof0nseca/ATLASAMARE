@@ -90,13 +90,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
   /* Todos os seletores que recebem animação de reveal por scroll */
   const scrollRevealSelectors = [
-    '#trust-bar .trust-label', '#trust-bar .trust-item',
     '.profiles-header',  '.profile-card',
-    '.stat-cell',
     '.features-header',  '.bento-cell',
     '.how-header',       '.step',
     '.testimonials-header',
-    '.pricing-header',   '.plan-card', '.trust-badges-row',
     '.faq-header',       '.faq-item',
     '.cta-subtitle',     '.cta-actions', '.cta-micro',
   ];
@@ -156,34 +153,7 @@ document.addEventListener('DOMContentLoaded', function () {
     lineObserver.observe(line);
   });
 
-  /* ── 7. Stats counters ────────────────────────────────────────────────────
-     Inalterado: IntersectionObserver + rAF. Não está no scroll path.
-  -------------------------------------------------------------------------- */
-  document.querySelectorAll('[data-count]').forEach(el => {
-    const target = el.getAttribute('data-count');
-    const isPercent = target.includes('%');
-    const num = parseFloat(target);
-    const ob = new IntersectionObserver(entries => {
-      if (!entries[0].isIntersecting) return;
-      ob.disconnect();
-      const start = performance.now();
-      const duration = 1800;
-      function easeOutQuart(t) { return 1 - Math.pow(1 - t, 4); }
-      function tick(now) {
-        const progress = Math.min((now - start) / duration, 1);
-        const value = easeOutQuart(progress) * num;
-        el.textContent = isPercent
-          ? Math.round(value) + '%'
-          : (num % 1 === 0 ? Math.round(value) : value.toFixed(1));
-        if (progress < 1) requestAnimationFrame(tick);
-        else el.textContent = target;
-      }
-      requestAnimationFrame(tick);
-    }, { threshold: 0.5 });
-    ob.observe(el);
-  });
-
-  /* ── 8. Spotlight mouse tracking nos bento cells ─────────────────────────
+  /* ── 7. Spotlight mouse tracking nos bento cells ─────────────────────────
      Só dispara em mousemove (hover), nunca no scroll — sem impacto.
   -------------------------------------------------------------------------- */
   document.querySelectorAll('.bento-cell').forEach(cell => {
@@ -213,31 +183,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   });
 
-  /* ── 10. Pricing toggle ───────────────────────────────────────────────── */
-  const toggleSwitch  = document.getElementById('billing-toggle');
-  const monthlyLabel  = document.getElementById('label-monthly');
-  const annualLabel   = document.getElementById('label-annual');
-  const priceEls      = document.querySelectorAll('[data-monthly][data-annual]');
-  let isAnnual = false;
-
-  function activateToggle() {
-    isAnnual = !isAnnual;
-    toggleSwitch.classList.toggle('on', isAnnual);
-    toggleSwitch.setAttribute('aria-checked', isAnnual);
-    monthlyLabel.classList.toggle('active', !isAnnual);
-    annualLabel.classList.toggle('active', isAnnual);
-    priceEls.forEach(el => {
-      el.textContent = isAnnual ? el.dataset.annual : el.dataset.monthly;
-    });
-  }
-  if (toggleSwitch) {
-    toggleSwitch.addEventListener('click', activateToggle);
-    toggleSwitch.addEventListener('keydown', e => {
-      if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); activateToggle(); }
-    });
-  }
-
-  /* ── 11. Mobile drawer ────────────────────────────────────────────────── */
+  /* ── 10. Mobile drawer ───────────────────────────────────────────────── */
   const hamburger     = document.getElementById('hamburger-btn');
   const drawerOverlay = document.getElementById('drawer-overlay');
   const drawer        = document.getElementById('nav-drawer');
@@ -296,10 +242,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }, 3200);
   }
 
-  document.querySelectorAll('.plan-select-btn').forEach(btn => {
-    btn.addEventListener('click', () => showToast('Plano selecionado! Redirecionando...'));
-  });
-
+  /* ── 13. Newsletter form ─────────────────────────────────────────────── */
   const newsForm = document.querySelector('.footer-newsletter-form');
   if (newsForm) {
     newsForm.addEventListener('submit', e => {

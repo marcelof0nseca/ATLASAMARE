@@ -214,7 +214,7 @@ button { cursor: pointer; border: none; background: none; font-family: var(--fon
 .nav-links {
   display: flex;
   align-items: center;
-  gap: 32px;
+  gap: 22px;
   list-style: none;
 }
 
@@ -486,53 +486,61 @@ button { cursor: pointer; border: none; background: none; font-family: var(--fon
    3. TRUST BAR
    ============================================================ */
 #trust-bar {
-  padding: 32px 0;
+  padding: 48px 0;
   border-top: 1px solid rgba(75,61,86,0.08);
   border-bottom: 1px solid rgba(75,61,86,0.08);
   background: var(--color-bg);
-  overflow: hidden;
-}
-
-.trust-bar-inner {
-  display: flex;
-  align-items: center;
-  gap: 48px;
-  flex-wrap: wrap;
-  justify-content: center;
 }
 
 .trust-label {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 500;
   text-transform: uppercase;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.14em;
   color: var(--color-text-secondary);
-  flex-shrink: 0;
+  text-align: center;
+  margin-bottom: 32px;
 }
 
+/* 5 itens estáticos centrados */
+.trust-items {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(32px, 6vw, 80px);
+  flex-wrap: wrap;
+}
+
+/* Cada item: logo + nome */
 .trust-item {
-  font-family: var(--font-subtitle);
-  font-size: 18px;
-  color: var(--color-title);
-  opacity: 0.6;
-  transition: opacity 200ms;
-  white-space: nowrap;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  opacity: 0.60;
+  transition: opacity 220ms ease, transform 220ms ease;
+  cursor: default;
 }
-.trust-item:hover { opacity: 1; }
+.trust-item:hover {
+  opacity: 1;
+  transform: translateY(-2px);
+}
 
-/* marquee on mobile */
-@media (max-width: 767px) {
-  .trust-bar-inner { flex-wrap: nowrap; justify-content: flex-start; }
-  #trust-bar { padding: 24px 0; }
-  .trust-bar-inner {
-    animation: marquee 22s linear infinite;
-    width: max-content;
-  }
-  @keyframes marquee {
-    0% { transform: translateX(0); }
-    100% { transform: translateX(-50%); }
-  }
+.trust-item-logo {
+  width: 44px;
+  height: 44px;
+  object-fit: contain;
+  display: block;
+}
+
+.trust-item-name {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: var(--color-title);
+  white-space: nowrap;
 }
 
 /* ============================================================
@@ -1863,49 +1871,144 @@ button { cursor: pointer; border: none; background: none; font-family: var(--fon
 .visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; }
 
 /* ============================================================
-   HERO DECORATIVOS — rastros animados
+   HERO DECORATIVOS — blobs orgânicos animados
+   Técnica: border-radius morphing + transform + filter:blur
+   100% CSS, 100% GPU (compositor thread) — zero impacto de scroll
    ============================================================ */
 
-.hero-deco {
+/* Wrapper: posicionado nas bordas, overflow:hidden corta os blobs */
+.hero-blob-wrap {
   position: absolute;
   top: 0;
-  width: clamp(200px, 22vw, 360px);
+  width: clamp(220px, 28vw, 420px);
   height: 100%;
   pointer-events: none;
   z-index: 0;
-  overflow: visible;
+  overflow: hidden;
 }
-.hero-deco-left  { left: 0; }
-.hero-deco-right { right: 0; transform: scaleX(-1); }
+.hero-blob-left  { left: 0; }
+.hero-blob-right { right: 0; }
 
-/* Garante que o conteúdo do hero fique acima dos decorativos */
-#hero > *:not(.hero-deco) { position: relative; z-index: 1; }
+/* Garante que o conteúdo do hero fique acima dos blobs */
+#hero > *:not(.hero-blob-wrap) { position: relative; z-index: 1; }
 
-/* Animação de rastro via stroke-dashoffset — 100% na GPU */
-.trail {
-  stroke-dasharray: 2000;
-  stroke-dashoffset: 2000;
-  animation: trail-draw 1.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-.trail:nth-child(1) { animation-delay: 0.10s; }
-.trail:nth-child(2) { animation-delay: 0.20s; }
-.trail:nth-child(3) { animation-delay: 0.29s; }
-.trail:nth-child(4) { animation-delay: 0.37s; }
-.trail:nth-child(5) { animation-delay: 0.44s; }
-.trail:nth-child(6) { animation-delay: 0.50s; }
-.trail:nth-child(7) { animation-delay: 0.55s; }
-.trail:nth-child(8) { animation-delay: 0.59s; }
-
-@keyframes trail-draw {
-  from { stroke-dashoffset: 2000; }
-  to   { stroke-dashoffset: 0; }
+/* Base do blob: posição absoluta, shape + blur */
+.hero-blob {
+  position: absolute;
+  border-radius: 60% 40% 70% 30% / 50% 60% 40% 70%;
+  filter: blur(72px);
+  will-change: transform, border-radius;
 }
 
-@media (max-width: 640px) {
-  .hero-deco { width: 130px; opacity: 0.6; }
+/* ── ESQUERDA: rose/rosa ──────────────────────────────────── */
+
+/* Blob A — grande, topo, emerge da borda esquerda */
+.hb-rose-a {
+  width: 320px;
+  height: 280px;
+  top: 4%;
+  left: -140px;
+  background: radial-gradient(ellipse at 60% 50%, #C47D8C, #d9a0b0 55%, transparent 80%);
+  opacity: 0.14;
+  animation: blob-drift-a 9s ease-in-out infinite alternate;
 }
-@media (max-width: 380px) {
-  .hero-deco { display: none; }
+
+/* Blob B — médio, meio, emerge mais pela borda */
+.hb-rose-b {
+  width: 240px;
+  height: 260px;
+  top: 38%;
+  left: -100px;
+  background: radial-gradient(ellipse at 55% 45%, #b56b7a, #C47D8C 50%, transparent 80%);
+  opacity: 0.12;
+  animation: blob-drift-b 12s ease-in-out infinite alternate;
+  animation-delay: -4s;
+}
+
+/* Blob C — pequeno, inferior, tom mais quente */
+.hb-rose-c {
+  width: 180px;
+  height: 200px;
+  top: 65%;
+  left: -70px;
+  background: radial-gradient(ellipse at 50% 50%, #d4879a, transparent 75%);
+  opacity: 0.10;
+  animation: blob-drift-c 15s ease-in-out infinite alternate;
+  animation-delay: -7s;
+}
+
+/* ── DIREITA: navy/ameixa ─────────────────────────────────── */
+
+/* Blob A — grande, topo, emerge da borda direita */
+.hb-navy-a {
+  width: 340px;
+  height: 300px;
+  top: 6%;
+  right: -150px;
+  background: radial-gradient(ellipse at 40% 50%, #4B3D56, #6b5478 55%, transparent 80%);
+  opacity: 0.13;
+  animation: blob-drift-a 11s ease-in-out infinite alternate;
+  animation-delay: -2s;
+}
+
+/* Blob B — médio, meio */
+.hb-navy-b {
+  width: 220px;
+  height: 250px;
+  top: 35%;
+  right: -90px;
+  background: radial-gradient(ellipse at 45% 55%, #3d3047, #4B3D56 50%, transparent 80%);
+  opacity: 0.11;
+  animation: blob-drift-b 14s ease-in-out infinite alternate;
+  animation-delay: -6s;
+}
+
+/* Blob C — pequeno, inferior */
+.hb-navy-c {
+  width: 170px;
+  height: 190px;
+  top: 62%;
+  right: -60px;
+  background: radial-gradient(ellipse at 50% 50%, #5a4a66, transparent 75%);
+  opacity: 0.09;
+  animation: blob-drift-c 10s ease-in-out infinite alternate;
+  animation-delay: -3s;
+}
+
+/* ── KEYFRAMES — movimento suave como respiração ─────────── */
+
+@keyframes blob-drift-a {
+  0%   { transform: translate(0,   0)   scale(1);    border-radius: 60% 40% 70% 30% / 50% 60% 40% 70%; }
+  40%  { transform: translate(18px, -24px) scale(1.06); border-radius: 40% 60% 30% 70% / 60% 40% 70% 30%; }
+  70%  { transform: translate(-10px, 16px) scale(0.97); border-radius: 70% 30% 55% 45% / 40% 65% 35% 60%; }
+  100% { transform: translate(10px, -8px)  scale(1.03); border-radius: 50% 50% 40% 60% / 55% 45% 65% 35%; }
+}
+
+@keyframes blob-drift-b {
+  0%   { transform: translate(0,   0)   scale(1);    border-radius: 40% 60% 50% 50% / 60% 40% 60% 40%; }
+  35%  { transform: translate(-20px, 20px) scale(1.08); border-radius: 60% 40% 40% 60% / 40% 60% 50% 50%; }
+  65%  { transform: translate(14px, -18px) scale(0.95); border-radius: 50% 50% 65% 35% / 55% 45% 40% 60%; }
+  100% { transform: translate(-8px,  12px) scale(1.04); border-radius: 35% 65% 45% 55% / 45% 55% 60% 40%; }
+}
+
+@keyframes blob-drift-c {
+  0%   { transform: translate(0,   0)   scale(1);    border-radius: 55% 45% 60% 40% / 45% 55% 45% 55%; }
+  50%  { transform: translate(16px, 22px) scale(1.10); border-radius: 45% 55% 40% 60% / 60% 40% 55% 45%; }
+  100% { transform: translate(-12px, -14px) scale(0.93); border-radius: 65% 35% 55% 45% / 40% 60% 45% 55%; }
+}
+
+/* Mobile: reduz tamanho e opacidade */
+@media (max-width: 768px) {
+  .hero-blob-wrap { width: clamp(160px, 40vw, 280px); }
+  .hero-blob      { filter: blur(52px); }
+  .hb-rose-a, .hb-navy-a { opacity: 0.11; }
+  .hb-rose-b, .hb-navy-b { opacity: 0.09; }
+  .hb-rose-c, .hb-navy-c { opacity: 0.07; }
+}
+
+@media (max-width: 480px) {
+  .hero-blob-wrap { width: 160px; }
+  .hero-blob      { filter: blur(40px); }
 }
 
 /* ============================================================
