@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>AMARE · Entrar</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,300;1,400;1,500;1,600&family=Manrope:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    /* base palette */
+    --cream:        #F3E9D7;
+    --cream-soft:   #FAF3E6;
+    --cream-deep:   #E6D8BD;
+    --paper:        #FFFCF6;
+    --ink:          #2A1F15;
+    --ink-2:        #5F4B3A;
+    --ink-3:        #9A876F;
+    --ink-faint:    #C9BAA0;
+    --line:         rgba(42,31,21,0.18);
+    --line-strong:  rgba(42,31,21,0.4);
+
+    /* accent (mutável via tweaks) */
+    --accent:       #B3633F;
+    --accent-deep:  #8C4A2C;
+    --accent-soft:  #E0B89F;
+    --accent-tint:  rgba(179,99,63,0.10);
+
+    --sage:         #8B9D7E;
+    --sage-soft:    #C7D2B9;
+    --rose:         #C99B92;
+
+    /* type */
+    --serif: 'Cormorant Garamond', 'Hoefler Text', Georgia, serif;
+    --sans:  'Manrope', ui-sans-serif, system-ui, sans-serif;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; height: 100%; }
+  body {
+    background: var(--cream);
+    color: var(--ink);
+    font-family: var(--sans);
+    -webkit-font-smoothing: antialiased;
+    overflow: hidden;
+    height: 100vh;
+  }
+
+  /* gentle film-grain via radial noise — keeps cream from feeling flat */
+  body::before {
+    content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 0;
+    background:
+      radial-gradient(120% 80% at 50% 30%, rgba(255,251,240,0.6) 0%, transparent 60%),
+      radial-gradient(80% 60% at 20% 100%, rgba(230,216,189,0.55) 0%, transparent 60%);
+    mix-blend-mode: multiply;
+    opacity: .8;
+  }
+
+  #root { position: relative; z-index: 1; height: 100vh; overflow: hidden; }
+
+  /* selection */
+  ::selection { background: var(--accent-soft); color: var(--ink); }
+
+  /* ── shared utility ── */
+  .eyebrow {
+    font-family: var(--sans); font-size: 11px;
+    letter-spacing: 0.22em; text-transform: uppercase;
+    color: var(--accent); font-weight: 500;
+  }
+  .small { font-family: var(--sans); font-size: 12px; color: var(--ink-2); }
+
+  /* ── tweaks panel adjustments — keep it subtle ── */
+  .twk-panel { font-family: var(--sans) !important; }
+</style>
+</head>
+<body>
+
+<div id="root"></div>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<script type="text/babel" src="tweaks-panel.jsx"></script>
+<script type="text/babel" src="src/all.jsx"></script>
+
+</body>
+</html>

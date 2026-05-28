@@ -1,37 +1,52 @@
 {% extends "layouts/base.html" %}
+{% load static %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'css/login.css' %}">
+{% endblock %}
 
 {% block body %}
-  <main class="amare-shell flex min-h-screen items-center justify-center py-8">
-    <div class="grid w-full max-w-6xl gap-6 lg:grid-cols-[1fr_0.82fr] lg:items-stretch">
-      <section class="relative overflow-hidden rounded-xl border border-border bg-linen p-7 shadow-serene sm:p-10">
-        <div class="absolute right-6 top-6 h-28 w-28 rounded-full border border-old-rose/40"></div>
-        {% include "components/site_logo.html" with wrapper_class="relative z-10 mb-10 inline-flex rounded-xl border border-border bg-white/70 px-4 py-3" image_class="block h-auto w-full max-w-[13rem] object-contain" %}
-        <p class="amare-kicker">Portal da paciente</p>
-        <h1 class="amare-display-title mt-3 max-w-2xl">Cuidado claro para atravessar a jornada com menos peso.</h1>
-        <p class="mt-6 max-w-xl text-base leading-7 text-text-muted">
-          Acompanhe tratamento, rotina, acolhimento e rede de apoio em uma experiencia desenhada para ser calma, segura e objetiva.
-        </p>
-        <div class="mt-10 grid gap-4 sm:grid-cols-3">
-          <div class="amare-panel p-4">
-            <p class="font-serif text-xl font-bold text-golden">Jornada</p>
-            <p class="mt-2 text-sm leading-6 text-text-muted">Etapa atual e proximo passo sempre visiveis.</p>
-          </div>
-          <div class="amare-panel p-4">
-            <p class="font-serif text-xl font-bold text-golden">Rotina</p>
-            <p class="mt-2 text-sm leading-6 text-text-muted">Agenda, medicacoes e tarefas pessoais no mesmo lugar.</p>
-          </div>
-          <div class="amare-panel p-4">
-            <p class="font-serif text-xl font-bold text-golden">Apoio</p>
-            <p class="mt-2 text-sm leading-6 text-text-muted">Maya, comunidade e parceiros com trilhos seguros.</p>
-          </div>
-        </div>
-      </section>
+<div class="lp-root">
 
-      <section class="amare-card flex items-center p-6 sm:p-8">
-        <div class="w-full">
-          {% block public_content %}{% endblock %}
-        </div>
-      </section>
-    </div>
+  {# ── header ─────────────────────────────────────────────── #}
+  <header class="lp-header">
+    <img src="{% static 'images/amare-logo.png' %}" alt="AMARE" class="lp-logo">
+  </header>
+
+  {# ── main: hero + form ───────────────────────────────────── #}
+  <main class="lp-main">
+
+    {# left: editorial hero #}
+    <section class="lp-hero">
+      <p class="lp-intro">olá de novo,</p>
+
+      <h1 class="lp-headline">
+        <span class="hl-mask"><span class="hl-line">a vida</span></span>
+        <span class="hl-mask"><span class="hl-line">que <em class="hl-accent">floresce</em></span></span>
+        <span class="hl-mask"><span class="hl-line">devagar.</span></span>
+      </h1>
+
+      <p class="lp-blurb">
+        o cuidado continua de onde paramos. seu ciclo, suas conversas
+        e seu time esperam por você — sem pressa.
+      </p>
+    </section>
+
+    {# right: auth form #}
+    <section class="lp-form-section">
+      {% block public_content %}{% endblock %}
+    </section>
+
   </main>
+
+  {# ── footer ──────────────────────────────────────────────── #}
+  <footer class="lp-footer">
+    <span>amare · cuidado em cada detalhe</span>
+    <span class="lp-footer-links">
+      <a href="#" onclick="return false">privacidade</a>
+      <a href="#" onclick="return false">ajuda</a>
+    </span>
+  </footer>
+
+</div>
 {% endblock %}

@@ -1,34 +1,178 @@
 {% extends "layouts/public_base.html" %}
+{% load static %}
 
-{% block title %}Entrar | Clinica AMARE{% endblock %}
+{% block title %}Entrar | Clínica AMARE{% endblock %}
 
 {% block public_content %}
-  <p class="amare-kicker">Acesso seguro</p>
-  <h1 class="mt-3 font-display text-4xl font-semibold leading-none text-golden">Entrar na AMARE</h1>
-  <p class="mt-4 text-sm leading-6 text-text-muted">
-    Use seu email e senha para continuar a jornada como paciente ou acessar a area medica.
-  </p>
 
-  <form method="post" class="mt-8 space-y-4">
-    {% csrf_token %}
-    {% if form.non_field_errors %}
-      <div class="rounded-xl border border-danger/30 bg-danger/10 px-4 py-3 text-sm font-semibold text-text-strong">
-        {{ form.non_field_errors|join:", " }}
-      </div>
-    {% endif %}
-    <div>
-      <label for="{{ form.email.id_for_label }}" class="mb-2 block text-sm font-bold text-text-strong">Email</label>
-      {{ form.email }}
-    </div>
-    <div>
-      <label for="{{ form.password.id_for_label }}" class="mb-2 block text-sm font-bold text-text-strong">Senha</label>
-      {{ form.password }}
-    </div>
-    <button type="submit" class="amare-button-primary w-full">Entrar</button>
-  </form>
+<form method="post" class="lp-form" id="login-form" novalidate>
+  {% csrf_token %}
 
-  <div class="mt-6 flex flex-col gap-3 text-sm sm:flex-row sm:items-center sm:justify-between">
-    <a href="{% url 'users:password-reset-request' %}" class="font-bold text-text-strong underline decoration-mandys-pink underline-offset-4">Recuperar acesso</a>
-    <span class="text-text-muted">Sessao protegida</span>
+  {# ── Server / non-field errors ────────────────────────── #}
+  {% if form.non_field_errors %}
+  <div class="lp-server-error" role="alert">
+    {% for error in form.non_field_errors %}{{ error }}{% if not forloop.last %}<br>{% endif %}{% endfor %}
   </div>
+  {% endif %}
+
+  {# ── Email ────────────────────────────────────────────── #}
+  <div class="lp-field{% if form.email.errors %} has-error{% endif %}" id="field-email">
+    <label for="id_email">e-mail</label>
+    <div class="lp-field-wrap">
+      <input
+        type="email"
+        name="email"
+        id="id_email"
+        autocomplete="email"
+        required
+        value="{{ form.email.value|default:'' }}"
+        aria-describedby="err-email"
+      >
+      <div class="lp-line-base" aria-hidden="true"></div>
+      <div class="lp-line-focus" aria-hidden="true"></div>
+    </div>
+    <p class="lp-field-error {% if form.email.errors %}is-visible{% endif %}" id="err-email" role="alert">
+      {% if form.email.errors %}{{ form.email.errors|first }}{% endif %}
+    </p>
+  </div>
+
+  {# ── Password ─────────────────────────────────────────── #}
+  <div class="lp-field{% if form.password.errors %} has-error{% endif %}" id="field-password">
+    <label for="id_password">senha</label>
+    <div class="lp-field-wrap">
+      <input
+        type="password"
+        name="password"
+        id="id_password"
+        class="has-toggle"
+        autocomplete="current-password"
+        required
+        aria-describedby="err-password"
+      >
+      <div class="lp-line-base" aria-hidden="true"></div>
+      <div class="lp-line-focus" aria-hidden="true"></div>
+      <button
+        type="button"
+        class="lp-toggle-pwd"
+        id="toggle-pwd"
+        aria-label="mostrar senha"
+        aria-controls="id_password"
+      >mostrar</button>
+    </div>
+    <p class="lp-field-error {% if form.password.errors %}is-visible{% endif %}" id="err-password" role="alert">
+      {% if form.password.errors %}{{ form.password.errors|first }}{% endif %}
+    </p>
+  </div>
+
+  {# ── Actions ──────────────────────────────────────────── #}
+  <div class="lp-actions">
+    <button type="submit" class="lp-submit" id="submit-btn" aria-label="entrar">
+      {# spinner — visible on is-loading #}
+      <span class="lp-spinner" aria-hidden="true"></span>
+
+      {# checkmark — visible on is-done #}
+      <svg class="lp-check" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <path d="M3 8 L7 12 L13 4"
+              stroke="white" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round"
+              style="stroke-dasharray:20;stroke-dashoffset:0;animation:lp-draw .5s ease-out"/>
+      </svg>
+
+      <span class="lp-submit-text">entrar</span>
+
+      {# arrow — visible on idle #}
+      <svg class="lp-submit-arrow" width="22" height="12" viewBox="0 0 22 12" fill="none" aria-hidden="true">
+        <path d="M1 6 H19 M14 1 L20 6 L14 11"
+              stroke="white" stroke-width="1.6" fill="none"
+              stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+
+    <a href="{% url 'users:password-reset-request' %}" class="lp-recover">
+      esqueci minha senha
+    </a>
+  </div>
+
+</form>
+
+<script>
+(function () {
+  'use strict';
+
+  /* ── helpers ─────────────────────────────────────────── */
+  function showErr(id, msg) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    el.textContent = msg;
+    el.classList.add('is-visible');
+  }
+  function clearErr(id) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    el.textContent = '';
+    el.classList.remove('is-visible');
+  }
+
+  /* ── focus state → animated underline ───────────────── */
+  document.querySelectorAll('.lp-field-wrap input').forEach(function (input) {
+    var field = input.closest('.lp-field');
+    if (!field) return;
+    input.addEventListener('focus', function () { field.classList.add('is-focused'); });
+    input.addEventListener('blur',  function () { field.classList.remove('is-focused'); });
+  });
+
+  /* ── show / hide password ────────────────────────────── */
+  var toggleBtn = document.getElementById('toggle-pwd');
+  var pwdInput  = document.getElementById('id_password');
+  if (toggleBtn && pwdInput) {
+    toggleBtn.addEventListener('click', function () {
+      var isShowing = pwdInput.type === 'text';
+      pwdInput.type          = isShowing ? 'password' : 'text';
+      toggleBtn.textContent  = isShowing ? 'mostrar'  : 'ocultar';
+      toggleBtn.setAttribute('aria-label', isShowing ? 'mostrar senha' : 'esconder senha');
+    });
+  }
+
+  /* ── clear inline errors on input ───────────────────── */
+  var emailInput = document.getElementById('id_email');
+  if (emailInput) {
+    emailInput.addEventListener('input', function () { clearErr('err-email'); });
+  }
+  if (pwdInput) {
+    pwdInput.addEventListener('input', function () { clearErr('err-password'); });
+  }
+
+  /* ── client-side validation + button loading state ──── */
+  var form      = document.getElementById('login-form');
+  var submitBtn = document.getElementById('submit-btn');
+  var submitTxt = submitBtn ? submitBtn.querySelector('.lp-submit-text') : null;
+
+  if (form && submitBtn) {
+    form.addEventListener('submit', function (e) {
+      /* quick client-side check — catches empty / obviously wrong input */
+      var email = emailInput ? emailInput.value.trim() : '';
+      var pwd   = pwdInput   ? pwdInput.value          : '';
+      var valid = true;
+
+      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        showErr('err-email', 'preciso de um e-mail válido para continuar');
+        valid = false;
+      }
+      if (!pwd || pwd.length < 1) {
+        showErr('err-password', 'informe sua senha para continuar');
+        valid = false;
+      }
+
+      if (!valid) { e.preventDefault(); return; }
+
+      /* show loading state while Django processes the POST */
+      submitBtn.classList.add('is-loading');
+      submitBtn.disabled = true;
+      if (submitTxt) submitTxt.textContent = 'abrindo seu espaço…';
+    });
+  }
+
+})();
+</script>
+
 {% endblock %}
