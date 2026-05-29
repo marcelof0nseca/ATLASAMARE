@@ -1,4 +1,6 @@
+from calendar import monthrange
 from collections import defaultdict
+from datetime import timedelta
 
 from django.utils import timezone
 
@@ -92,12 +94,65 @@ def build_patient_routine(user):
     ).order_by("scheduled_at")
 
     tasks = PatientTask.objects.filter(patient=user).order_by("status", "due_at", "-created_at")
+    calendar_medications = Medication.objects.filter(
+        patient=user,
+        scheduled_for__date__gte=today.replace(day=1),
+    ).order_by("scheduled_for")
+    calendar_tasks = tasks.filter(due_at__date__gte=today.replace(day=1))
+
     return {
         **medications,
         "appointments_by_date": group_appointments_by_date(appointments),
+        "routine_calendar": build_routine_calendar(today, appointments, calendar_medications, calendar_tasks),
         "tasks": tasks,
         "today_tasks": tasks.filter(due_at__date=today) | tasks.filter(due_at__isnull=True, status=PatientTask.Status.PENDING),
         "upcoming_appointments": appointments[:4],
+    }
+
+
+def build_routine_calendar(today, appointments, medications, tasks):
+    first_day = today.replace(day=1)
+    last_day = today.replace(day=monthrange(today.year, today.month)[1])
+    start_day = first_day - timedelta(days=first_day.weekday())
+    end_day = last_day + timedelta(days=6 - last_day.weekday())
+
+    appointments_by_day = group_appointments_by_date(appointments)
+    medications_by_day = defaultdict(list)
+    for medication in medications:
+        medications_by_day[timezone.localtime(medication.scheduled_for).date()].append(medication)
+
+    tasks_by_day = defaultdict(list)
+    for task in tasks:
+        if task.due_at:
+            tasks_by_day[timezone.localtime(task.due_at).date()].append(task)
+
+    weeks = []
+    cursor = start_day
+    while cursor <= end_day:
+        week = []
+        for _ in range(7):
+            day_appointments = appointments_by_day.get(cursor, [])
+            day_medications = medications_by_day.get(cursor, [])
+            day_tasks = tasks_by_day.get(cursor, [])
+            week.append(
+                {
+                    "date": cursor,
+                    "number": cursor.day,
+                    "is_today": cursor == today,
+                    "in_month": cursor.month == today.month,
+                    "appointments": day_appointments,
+                    "medications": day_medications,
+                    "tasks": day_tasks,
+                    "event_count": len(day_appointments) + len(day_medications) + len(day_tasks),
+                }
+            )
+            cursor += timedelta(days=1)
+        weeks.append(week)
+
+    return {
+        "month_label": today,
+        "weeks": weeks,
+        "weekdays": ["Seg", "Ter", "Qua", "Qui", "Sex", "Sab", "Dom"],
     }
 
 

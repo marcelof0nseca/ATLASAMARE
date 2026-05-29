@@ -2,28 +2,108 @@
 
 {% block title %}Agenda | Clínica AMARE{% endblock %}
 {% block page_title %}Sua agenda com leitura simples{% endblock %}
-{% block page_intro %}Consultas e exames aparecem em ordem cronológica para reduzir esforço e facilitar a organização do dia.{% endblock %}
+{% block page_intro %}Consultas e exames ficam organizados em calendário e em lista, para você escolher a forma mais fácil de acompanhar.{% endblock %}
 
 {% block content %}
   <div class="grid gap-5">
-    <div class="flex gap-3 text-sm">
-      <a href="{% url 'appointments:list' %}" class="rounded-2xl bg-rose px-4 py-2 text-white">Agenda</a>
-      <a href="{% url 'medications:list' %}" class="rounded-2xl border border-border bg-white px-4 py-2 text-text-strong">Medicações</a>
+    <div class="flex flex-wrap gap-3 text-sm">
+      <a href="{% url 'appointments:list' %}" class="amare-button-primary">Agenda</a>
+      <a href="{% url 'medications:list' %}" class="amare-button-secondary">Medicações</a>
     </div>
 
-    {% if appointments_by_date %}
-      {% for date, items in appointments_by_date.items %}
-        <section class="amare-card p-6">
-          <h2 class="text-lg font-semibold">{{ date|date:"l, d \\d\\e F" }}</h2>
+    <article class="amare-card overflow-hidden p-0">
+      <div class="border-b border-border bg-white/70 p-5 sm:p-6">
+        <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+          <div>
+            <p class="amare-kicker">Calendário</p>
+            <h2 class="mt-2 font-serif text-3xl font-medium text-text-strong">
+              {{ routine_calendar.month_label|date:"F \\d\\e Y" }}
+            </h2>
+            <p class="mt-2 max-w-2xl text-sm leading-6 text-text-muted">
+              Os compromissos aparecem nos dias certos, com horário em destaque para facilitar o planejamento.
+            </p>
+          </div>
+          <span class="amare-chip">Consultas e exames</span>
+        </div>
+      </div>
+
+      <div class="grid gap-0 xl:grid-cols-[1fr_18rem]">
+        <div class="overflow-x-auto p-4 sm:p-6">
+          <div class="min-w-[44rem]">
+            <div class="grid grid-cols-7 border-b border-border text-center text-xs font-semibold uppercase tracking-[0.12em] text-text-muted">
+              {% for weekday in routine_calendar.weekdays %}
+                <div class="px-2 pb-3">{{ weekday }}</div>
+              {% endfor %}
+            </div>
+
+            <div class="grid grid-cols-7 border-l border-border">
+              {% for week in routine_calendar.weeks %}
+                {% for day in week %}
+                  <section class="min-h-32 border-b border-r border-border bg-white/70 p-2 {% if not day.in_month %}opacity-45{% endif %}">
+                    <div class="mb-2 flex items-center justify-between">
+                      <span class="inline-flex h-7 w-7 items-center justify-center rounded-full text-sm font-semibold {% if day.is_today %}bg-golden text-white{% else %}text-text-strong{% endif %}">
+                        {{ day.number }}
+                      </span>
+                      {% if day.event_count %}
+                        <span class="text-[11px] font-semibold text-text-muted">{{ day.event_count }}</span>
+                      {% endif %}
+                    </div>
+
+                    <div class="space-y-1.5">
+                      {% for appointment in day.appointments %}
+                        <div class="truncate rounded-md bg-golden px-2 py-1 text-[11px] font-semibold leading-4 text-white" title="{{ appointment.get_type_display }} - {{ appointment.scheduled_at|date:'H:i' }}">
+                          {{ appointment.scheduled_at|date:"H:i" }} {{ appointment.get_type_display }}
+                        </div>
+                      {% endfor %}
+                    </div>
+                  </section>
+                {% endfor %}
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+
+        <aside class="border-t border-border bg-linen/55 p-5 xl:border-l xl:border-t-0">
+          <p class="amare-kicker">Próximos</p>
+          <h3 class="mt-2 font-serif text-xl font-medium text-text-strong">Compromissos</h3>
           <div class="mt-4 space-y-3">
-            {% for appointment in items %}
-              {% include "components/appointment_item.html" with appointment=appointment %}
+            {% for appointment in upcoming_appointments %}
+              <article class="rounded-lg border border-border bg-white p-3">
+                <p class="text-sm font-semibold text-text-strong">{{ appointment.get_type_display }}</p>
+                <p class="mt-1 text-xs font-semibold uppercase tracking-[0.08em] text-text-muted">
+                  {{ appointment.scheduled_at|date:"d/m" }} às {{ appointment.scheduled_at|date:"H:i" }}
+                </p>
+                {% if appointment.details %}
+                  <p class="mt-2 text-sm leading-5 text-text-muted">{{ appointment.details }}</p>
+                {% endif %}
+              </article>
+            {% empty %}
+              <p class="text-sm leading-6 text-text-muted">Nenhum compromisso futuro cadastrado.</p>
             {% endfor %}
           </div>
-        </section>
-      {% endfor %}
-    {% else %}
-      {% include "components/empty_state.html" with title="Sua agenda está tranquila por enquanto" copy="Não há consultas ou exames cadastrados neste momento. Quando surgir algo novo, ele aparecerá aqui em ordem." %}
-    {% endif %}
+        </aside>
+      </div>
+    </article>
+
+    <article class="amare-card p-6">
+      <p class="amare-kicker">Lista cronológica</p>
+      <h2 class="mt-2 font-serif text-2xl font-medium text-text-strong">Todos os compromissos</h2>
+      <div class="mt-5 space-y-4">
+        {% if appointments_by_date %}
+          {% for date, items in appointments_by_date.items %}
+            <section class="border-t border-border pt-4 first:border-t-0 first:pt-0">
+              <h3 class="font-serif text-xl font-medium text-golden">{{ date|date:"l, d \\d\\e F" }}</h3>
+              <div class="mt-3 space-y-3">
+                {% for appointment in items %}
+                  {% include "components/appointment_item.html" with appointment=appointment %}
+                {% endfor %}
+              </div>
+            </section>
+          {% endfor %}
+        {% else %}
+          {% include "components/empty_state.html" with title="Sua agenda está tranquila por enquanto" copy="Não há consultas ou exames cadastrados neste momento. Quando surgir algo novo, ele aparecerá aqui em ordem." %}
+        {% endif %}
+      </div>
+    </article>
   </div>
 {% endblock %}
