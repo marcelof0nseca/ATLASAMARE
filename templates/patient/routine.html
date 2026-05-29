@@ -5,49 +5,7 @@
 {% block page_intro %}Consultas, exames, medicacoes e tarefas pessoais aparecem juntas para voce decidir o proximo passo com menos esforco.{% endblock %}
 
 {% block content %}
-  <section class="grid gap-5 xl:grid-cols-[0.95fr_1.05fr]">
-    <aside class="space-y-5">
-      <article class="amare-card p-6">
-        <p class="amare-kicker">Agora</p>
-        <h2 class="mt-2 font-serif text-2xl font-bold">Primeiro cuidado do dia</h2>
-        <div class="mt-5">
-          {% if now_item %}
-            {% include "patient/partials/medication_row.html" with medication=now_item %}
-          {% else %}
-            <p class="text-sm leading-6 text-text-muted">Nao ha dose pendente para este momento. Voce pode seguir para a agenda ou tarefas pessoais.</p>
-          {% endif %}
-        </div>
-      </article>
-
-      <article class="amare-card p-6">
-        <p class="amare-kicker">Tarefas pessoais</p>
-        <h2 class="mt-2 font-serif text-2xl font-bold">Adicionar lembrete</h2>
-        <form method="post" action="{% url 'core:task-create' %}" class="mt-5 space-y-3">
-          {% csrf_token %}
-          <div>
-            <label for="{{ task_form.title.id_for_label }}" class="mb-2 block text-sm font-bold">Tarefa</label>
-            {{ task_form.title }}
-          </div>
-          <div>
-            <label for="{{ task_form.notes.id_for_label }}" class="mb-2 block text-sm font-bold">Observacao</label>
-            {{ task_form.notes }}
-          </div>
-          <div class="grid gap-3 sm:grid-cols-2">
-            <div>
-              <label for="{{ task_form.due_date.id_for_label }}" class="mb-2 block text-sm font-bold">Data</label>
-              {{ task_form.due_date }}
-            </div>
-            <div>
-              <label for="{{ task_form.due_time.id_for_label }}" class="mb-2 block text-sm font-bold">Hora</label>
-              {{ task_form.due_time }}
-            </div>
-          </div>
-          <button class="amare-button-primary w-full">Adicionar tarefa</button>
-        </form>
-      </article>
-    </aside>
-
-    <div class="space-y-5">
+  <section class="space-y-5">
       <article class="amare-card overflow-hidden p-0">
         <div class="border-b border-border bg-white/70 p-5 sm:p-6">
           <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
@@ -141,6 +99,49 @@
         </div>
       </article>
 
+    <div class="grid items-start gap-5 xl:grid-cols-[0.85fr_1.15fr]">
+      <aside class="space-y-5">
+        <article class="amare-card p-6">
+          <p class="amare-kicker">Agora</p>
+          <h2 class="mt-2 font-serif text-2xl font-bold">Primeiro cuidado do dia</h2>
+          <div class="mt-5">
+            {% if now_item %}
+              {% include "patient/partials/medication_row.html" with medication=now_item %}
+            {% else %}
+              <p class="text-sm leading-6 text-text-muted">Nao ha dose pendente para este momento. Voce pode seguir para a agenda ou tarefas pessoais.</p>
+            {% endif %}
+          </div>
+        </article>
+
+        <article class="amare-card p-6">
+          <p class="amare-kicker">Tarefas pessoais</p>
+          <h2 class="mt-2 font-serif text-2xl font-bold">Adicionar lembrete</h2>
+          <form method="post" action="{% url 'core:task-create' %}" class="mt-5 space-y-3">
+            {% csrf_token %}
+            <div>
+              <label for="{{ task_form.title.id_for_label }}" class="mb-2 block text-sm font-bold">Tarefa</label>
+              {{ task_form.title }}
+            </div>
+            <div>
+              <label for="{{ task_form.notes.id_for_label }}" class="mb-2 block text-sm font-bold">Observacao</label>
+              {{ task_form.notes }}
+            </div>
+            <div class="grid gap-3 sm:grid-cols-2">
+              <div>
+                <label for="{{ task_form.due_date.id_for_label }}" class="mb-2 block text-sm font-bold">Data</label>
+                {{ task_form.due_date }}
+              </div>
+              <div>
+                <label for="{{ task_form.due_time.id_for_label }}" class="mb-2 block text-sm font-bold">Hora</label>
+                {{ task_form.due_time }}
+              </div>
+            </div>
+            <button class="amare-button-primary w-full">Adicionar tarefa</button>
+          </form>
+        </article>
+      </aside>
+
+      <div class="space-y-5">
       <article class="amare-card p-6">
         <p class="amare-kicker">Medicacoes</p>
         <h2 class="mt-2 font-serif text-2xl font-bold">Hoje e proximas doses</h2>
@@ -209,6 +210,7 @@
           {% endfor %}
         </div>
       </article>
+    </div>
     </div>
   </section>
 {% endblock %}
