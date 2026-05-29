@@ -4,23 +4,38 @@
 
 @layer base {
   :root {
-    --linen: #faf4e8;
-    --mandys-pink: #f2b8b1;
-    --lesbian-green: #a3c1ad;
-    --golden-orange: #b97535;
-    --tundora: #4c4444;
-    --old-rose: #c88e86;
-    --canvas: var(--linen);
-    --surface: #fffaf2;
-    --rose: var(--old-rose);
-    --rose-soft: var(--mandys-pink);
-    --lavender-soft: var(--lesbian-green);
-    --text-strong: var(--tundora);
-    --text-muted: #756a66;
-    --success: var(--lesbian-green);
-    --warning: #d6a25d;
-    --danger: #b85f5b;
-    --border-soft: rgba(200, 142, 134, 0.42);
+    --color-theme-patient: #c47d8c;
+    --color-theme-partner: #8da69a;
+    --color-theme-medical: #faf4e8;
+    --color-title: #4b3d56;
+    --color-subtitle: #5e5066;
+    --color-text-primary: #3a3347;
+    --color-text-secondary: #797493;
+    --color-background: #ffffff;
+    --color-success: #4caf50;
+    --color-error: #e53935;
+    --color-warning: #fb8c00;
+    --color-disabled: #bdbdbd;
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
+    --linen: var(--color-theme-medical);
+    --mandys-pink: rgba(196, 125, 140, 0.18);
+    --lesbian-green: var(--color-theme-partner);
+    --golden-orange: var(--color-theme-patient);
+    --tundora: var(--color-title);
+    --old-rose: var(--color-theme-patient);
+    --canvas: var(--color-background);
+    --surface: rgba(255, 255, 255, 0.9);
+    --rose: var(--color-theme-patient);
+    --rose-soft: rgba(196, 125, 140, 0.28);
+    --lavender-soft: rgba(141, 166, 154, 0.22);
+    --text-strong: var(--color-text-primary);
+    --text-muted: var(--color-text-secondary);
+    --success: var(--color-success);
+    --warning: var(--color-warning);
+    --danger: var(--color-error);
+    --border-soft: rgba(75, 61, 86, 0.12);
   }
 
   html {
@@ -30,6 +45,10 @@
   body {
     @apply bg-canvas text-text-strong font-sans antialiased;
     min-height: 100vh;
+    background:
+      radial-gradient(ellipse at top left, rgba(196, 125, 140, 0.12), transparent 42rem),
+      radial-gradient(ellipse at bottom right, rgba(141, 166, 154, 0.14), transparent 46rem),
+      linear-gradient(180deg, #ffffff 0%, #faf4e8 100%);
   }
 
   h1 {
@@ -47,7 +66,7 @@
   input:not([type="checkbox"]):not([type="radio"]),
   select,
   textarea {
-    @apply min-h-11 w-full rounded-xl border border-border bg-white/90 px-4 py-3 text-sm text-text-strong shadow-sm transition;
+    @apply min-h-11 w-full rounded-lg border border-border bg-white px-4 py-3 text-sm text-text-strong shadow-sm transition;
   }
 
   input[type="checkbox"],
@@ -59,7 +78,7 @@
   select:focus,
   textarea:focus {
     @apply border-rose outline-none;
-    box-shadow: 0 0 0 4px rgba(235, 207, 203, 0.7);
+    box-shadow: 0 0 0 3px rgba(196, 125, 140, 0.24);
   }
 
   button:focus-visible,
@@ -70,23 +89,24 @@
 
 @layer components {
   .amare-shell {
-    @apply mx-auto min-h-screen max-w-6xl px-4 pb-28 pt-5 sm:px-6 lg:px-8 lg:pb-12;
+    @apply min-h-screen px-4 pb-28 pt-5 sm:px-6 lg:ml-64 lg:px-8 lg:pb-12 xl:px-12;
   }
 
   .amare-card {
     @apply rounded-xl border border-border bg-surface shadow-serene;
+    box-shadow: var(--shadow-sm);
   }
 
   .amare-panel {
-    @apply rounded-xl border border-border bg-white/70;
+    @apply rounded-lg border border-border bg-white/80;
   }
 
   .amare-kicker {
-    @apply text-xs font-bold uppercase text-golden tracking-[0.18em];
+    @apply text-xs font-semibold uppercase text-text-muted tracking-[0.16em];
   }
 
   .amare-display-title {
-    @apply font-display text-4xl leading-none text-golden sm:text-5xl;
+    @apply font-display text-4xl font-medium leading-none text-golden sm:text-5xl;
     letter-spacing: 0;
   }
 
@@ -99,15 +119,19 @@
   }
 
   .amare-chip {
-    @apply inline-flex items-center gap-2 rounded-full border border-border bg-white/70 px-3 py-1 text-xs font-semibold text-text-strong;
+    @apply inline-flex items-center gap-2 rounded-lg border border-border bg-white px-3 py-1 text-xs font-semibold text-text-strong;
   }
 
   .amare-button-primary {
-    @apply inline-flex min-h-11 items-center justify-center rounded-xl bg-golden px-4 py-3 text-sm font-bold text-white transition hover:bg-[#9f642c];
+    @apply inline-flex min-h-11 items-center justify-center rounded-lg bg-golden px-5 py-3 text-sm font-semibold text-white transition;
+  }
+
+  .amare-button-primary:hover {
+    filter: brightness(0.9);
   }
 
   .amare-button-secondary {
-    @apply inline-flex min-h-11 items-center justify-center rounded-xl border border-border bg-white px-4 py-3 text-sm font-bold text-text-strong transition hover:border-golden;
+    @apply inline-flex min-h-11 items-center justify-center rounded-lg border border-border bg-white px-5 py-3 text-sm font-semibold text-text-strong transition hover:border-golden;
   }
 
   .amare-button-secondary:hover {
@@ -123,15 +147,15 @@
   }
 
   .amare-contact-link {
-    @apply inline-flex items-center gap-3 rounded-xl border border-border bg-white px-4 py-3 text-sm text-text-strong shadow-sm transition hover:border-golden;
+    @apply inline-flex items-center gap-3 rounded-lg border border-border bg-white px-4 py-3 text-sm text-text-strong shadow-sm transition hover:border-golden;
   }
 
   .amare-contact-icon {
-    @apply inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-linen text-golden;
+    @apply inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-linen text-golden;
   }
 
   .amare-nav-link {
-    @apply flex min-h-12 items-center justify-center rounded-xl px-3 py-2 text-xs font-bold text-text-muted transition hover:text-text-strong;
+    @apply flex min-h-11 items-center gap-3 rounded-lg px-3 py-2 text-sm font-semibold text-text-muted transition hover:text-golden;
   }
 
   .amare-nav-link:hover {
@@ -139,15 +163,35 @@
   }
 
   .amare-nav-link-active {
-    @apply text-text-strong;
-    background-color: rgba(163, 193, 173, 0.35);
+    @apply bg-golden text-white shadow-sm;
+  }
+
+  .amare-nav-link-active:hover {
+    @apply text-white;
+    background-color: var(--color-theme-patient);
   }
 
   .amare-tab {
-    @apply inline-flex min-h-10 items-center justify-center rounded-full border border-border bg-white/75 px-4 py-2 text-sm font-bold text-text-strong transition hover:border-golden;
+    @apply inline-flex min-h-10 items-center justify-center rounded-lg border border-border bg-white/75 px-4 py-2 text-sm font-semibold text-text-strong transition hover:border-golden;
   }
 
   .amare-tab-active {
     @apply border-golden bg-golden text-white;
+  }
+
+  .amare-patient-navbar {
+    @apply sticky top-0 z-20 flex h-[76px] items-center justify-between border-b border-border bg-white/75 px-4 backdrop-blur-xl sm:px-6 lg:ml-64 lg:px-8 xl:px-12;
+  }
+
+  .amare-patient-sidebar {
+    @apply fixed inset-y-0 left-0 z-30 hidden w-64 border-r border-border bg-white/85 px-3 py-5 backdrop-blur-xl lg:block;
+  }
+
+  .amare-patient-page-title {
+    @apply font-display text-4xl font-medium leading-none text-text-strong sm:text-5xl;
+  }
+
+  .amare-icon-tile {
+    @apply inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-linen text-text-strong;
   }
 }

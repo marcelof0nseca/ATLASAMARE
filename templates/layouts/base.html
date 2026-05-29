@@ -8,8 +8,8 @@
     <meta name="description" content="Clareza e acolhimento para a jornada de fertilidade.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cardo:wght@400;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600&family=Manrope:wght@300;400;500;600&family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
-    <noscript><link href="https://fonts.googleapis.com/css2?family=Cardo:wght@400;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600&family=Manrope:wght@300;400;500;600&family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet"></noscript>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Bitter:wght@400;500;600&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Bitter:wght@400;500;600&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet"></noscript>
     <link rel="icon" href="{% static 'images/logoamare.png' %}">
     <link rel="stylesheet" href="{% static 'css/app.css' %}">
     <style>
@@ -19,7 +19,7 @@
         top: 0; left: 0;
         height: 3px;
         width: 0%;
-        background: var(--golden-orange, #b97535);
+        background: var(--color-theme-patient, #c47d8c);
         z-index: 9999;
         border-radius: 0 2px 2px 0;
         opacity: 0;
@@ -92,7 +92,7 @@
   </head>
   <body class="relative" hx-boost="true">
     <div id="amare-progress"></div>
-    <div class="pointer-events-none absolute inset-x-0 top-0 h-72 bg-gradient-to-b from-mandys-pink/35 via-linen to-transparent"></div>
+    <div class="pointer-events-none absolute inset-x-0 top-0 h-72 bg-gradient-to-b from-mandys-pink/20 via-linen to-transparent"></div>
     <div id="toast-root" class="fixed right-4 top-4 z-50 w-[min(24rem,calc(100vw-2rem))]"></div>
     <div id="modal-root" class="pointer-events-none fixed inset-0 z-40"></div>
     {% include "components/message_stack.html" %}

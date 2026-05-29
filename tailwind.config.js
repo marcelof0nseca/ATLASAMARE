@@ -36,7 +36,7 @@ module.exports = {
       fontFamily: {
         sans: ["Montserrat", "ui-sans-serif", "system-ui", "sans-serif"],
         display: ["'Cormorant Garamond'", "Georgia", "serif"],
-        serif: ["Cardo", "Georgia", "serif"],
+        serif: ["Bitter", "Georgia", "serif"],
       },
     },
   },
