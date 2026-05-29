@@ -79,11 +79,11 @@
                 {% endfor %}
               </div>
 
-              <div class="grid grid-cols-7 border-l border-border">
+              <div class="grid auto-rows-[9.5rem] grid-cols-7 border-l border-border">
                 {% for week in routine_calendar.weeks %}
                   {% for day in week %}
-                    <section class="min-h-32 border-b border-r border-border bg-white/70 p-2 {% if not day.in_month %}opacity-45{% endif %}">
-                      <div class="mb-2 flex items-center justify-between">
+                    <section class="flex h-full min-w-0 flex-col border-b border-r border-border bg-white/70 p-2 {% if not day.in_month %}opacity-45{% endif %}">
+                      <div class="mb-2 flex h-7 shrink-0 items-center justify-between">
                         <span class="inline-flex h-7 w-7 items-center justify-center rounded-full text-sm font-semibold {% if day.is_today %}bg-golden text-white{% else %}text-text-strong{% endif %}">
                           {{ day.number }}
                         </span>
@@ -92,19 +92,19 @@
                         {% endif %}
                       </div>
 
-                      <div class="space-y-1.5">
+                      <div class="min-h-0 flex-1 space-y-1.5 overflow-hidden">
                         {% for appointment in day.appointments %}
-                          <div class="truncate rounded-md bg-golden px-2 py-1 text-[11px] font-semibold leading-4 text-white" title="{{ appointment.get_type_display }} - {{ appointment.scheduled_at|date:'H:i' }}">
+                          <div class="h-6 truncate rounded-md bg-golden px-2 py-1 text-[11px] font-semibold leading-4 text-white" title="{{ appointment.get_type_display }} - {{ appointment.scheduled_at|date:'H:i' }}">
                             {{ appointment.scheduled_at|date:"H:i" }} {{ appointment.get_type_display }}
                           </div>
                         {% endfor %}
                         {% for medication in day.medications|slice:":2" %}
-                          <div class="truncate rounded-md bg-lesbian-green/25 px-2 py-1 text-[11px] font-semibold leading-4 text-text-strong" title="{{ medication.name }} - {{ medication.scheduled_for|date:'H:i' }}">
+                          <div class="h-6 truncate rounded-md bg-lesbian-green/25 px-2 py-1 text-[11px] font-semibold leading-4 text-text-strong" title="{{ medication.name }} - {{ medication.scheduled_for|date:'H:i' }}">
                             {{ medication.scheduled_for|date:"H:i" }} {{ medication.name }}
                           </div>
                         {% endfor %}
                         {% for task in day.tasks|slice:":2" %}
-                          <div class="truncate rounded-md bg-warning/15 px-2 py-1 text-[11px] font-semibold leading-4 text-text-strong" title="{{ task.title }}">
+                          <div class="h-6 truncate rounded-md bg-warning/15 px-2 py-1 text-[11px] font-semibold leading-4 text-text-strong" title="{{ task.title }}">
                             {% if task.due_at %}{{ task.due_at|date:"H:i" }} {% endif %}{{ task.title }}
                           </div>
                         {% endfor %}
