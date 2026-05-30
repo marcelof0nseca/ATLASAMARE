@@ -252,37 +252,30 @@ class Command(BaseCommand):
 
         support_community_data = [
             (
-                "Rede Fertilidade com Calma",
+                "Forum anonimo de tentantes",
                 SupportCommunity.Category.FERTILITY,
-                "Pacientes em tratamento de reproducao assistida",
-                "Grupo educativo com encontros online sobre rotina, duvidas gerais e acolhimento entre pacientes.",
-                "Grupo online moderado",
-                "educacao,online,acolhimento",
+                "Tentantes e pacientes em jornada de fertilidade",
+                "Comunidade BabyCenter Brasil para trocar experiencias, duvidas e acolhimento com outras tentantes.",
+                "BabyCenter Brasil",
+                "forum,anonimo,tentantes",
                 True,
-                "https://example.com/fertilidade-com-calma",
+                "https://brasil.babycenter.com/comunidade",
+                "Conhecer Comunidade",
             ),
             (
-                "Circulo de Espera",
+                "Relatos reais e acolhimento",
                 SupportCommunity.Category.EMOTIONAL,
-                "Pacientes em fases de espera, beta e preparacao",
-                "Comunidade focada em escuta, ansiedade e pequenas estrategias para atravessar periodos de incerteza.",
-                "Comunidade de apoio emocional",
-                "ansiedade,espera,escuta",
+                "Tentantes que buscam relatos reais e identificacao",
+                "Busca publica no Instagram com relatos e vivencias compartilhadas por tentantes usando a hashtag #vidadetentante.",
+                "Instagram #vidadetentante",
+                "relatos,instagram,acolhimento",
                 True,
-                "https://example.com/circulo-de-espera",
-            ),
-            (
-                "Parceiros na Jornada",
-                SupportCommunity.Category.FAMILY,
-                "Acompanhantes, casais e rede de apoio",
-                "Espaco com materiais e conversas para quem acompanha uma paciente durante o tratamento.",
-                "Conteudo para rede de apoio",
-                "familia,parceiros,rede",
-                False,
-                "https://example.com/parceiros-na-jornada",
+                "https://www.instagram.com/explore/search/keyword/?q=%23vidadetentante",
+                "Explorar Relatos no Instagram",
             ),
         ]
-        for index, (name, category, audience, description, support_type, tags, featured, url) in enumerate(
+        SupportCommunity.objects.exclude(name__in=[item[0] for item in support_community_data]).update(is_active=False)
+        for index, (name, category, audience, description, support_type, tags, featured, url, label) in enumerate(
             support_community_data,
             start=1,
         ):
@@ -293,7 +286,7 @@ class Command(BaseCommand):
                     "audience": audience,
                     "description": description,
                     "support_type": support_type,
-                    "contact_label": "Acessar comunidade",
+                    "contact_label": label,
                     "contact_url": url,
                     "tags": tags,
                     "is_featured": featured,

@@ -190,6 +190,32 @@ class MayaConversationTests(TestCase):
         self.assertEqual(interaction.mode, AIInteraction.Mode.FALLBACK)
         self.assertEqual(interaction.intent, AIInteraction.Intent.ROUTINE)
 
+    @override_settings(
+        MAYA_LLM_PROVIDER="groq",
+        MAYA_GROQ_API_KEY="groq-key",
+        MAYA_GROQ_MODEL="llama-3.1-8b-instant",
+        MAYA_GROQ_BASE_URL="https://api.groq.com/openai/v1/chat/completions",
+    )
+    def test_groq_provider_builds_chat_completions_payload(self):
+        with patch("assistant.services.urllib_request.urlopen") as urlopen_mock:
+            urlopen_mock.return_value = FakeLLMResponse(
+                {"choices": [{"message": {"content": "Resposta gerada pela Groq."}}]}
+            )
+            interaction = answer_question_with_maya(
+                self.patient,
+                "Me explica minha etapa atual?",
+                conversation=self.conversations[MayaConversation.Kind.TREATMENT],
+            )
+
+        request = urlopen_mock.call_args.args[0]
+        payload = json.loads(request.data.decode("utf-8"))
+        self.assertEqual(interaction.mode, AIInteraction.Mode.LLM)
+        self.assertEqual(interaction.answer, "Resposta gerada pela Groq.")
+        self.assertEqual(payload["model"], "llama-3.1-8b-instant")
+        self.assertEqual(payload["messages"][0]["role"], "system")
+        self.assertEqual(payload["messages"][1]["role"], "user")
+        self.assertIn("Bearer groq-key", request.headers["Authorization"])
+
     def test_send_route_resolves_to_send_view(self):
         match = resolve("/maya/send/")
         self.assertEqual(match.func.view_class, MayaSendMessageView)

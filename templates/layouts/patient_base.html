@@ -37,9 +37,9 @@
           </a>
         </li>
         <li>
-          <a class="amare-nav-link {% if active_nav == 'explore' %}amare-nav-link-active{% endif %}" href="{% url 'core:explore' %}">
-            <svg class="h-[18px] w-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/></svg>
-            Explorar
+          <a class="amare-nav-link {% if active_nav == 'communities' %}amare-nav-link-active{% endif %}" href="{% url 'core:communities' %}">
+            <svg class="h-[18px] w-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="10" cy="7" r="4"/><path d="M22 12h-6"/><path d="M19 9v6"/></svg>
+            Comunidades
           </a>
         </li>
       </ul>
@@ -92,7 +92,7 @@
       <li><a class="amare-nav-link justify-center {% if active_nav == 'treatment' %}amare-nav-link-active{% endif %}" href="{% url 'treatments:timeline' %}" aria-label="Timeline"><svg class="h-[18px] w-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></a></li>
       <li><a class="amare-nav-link justify-center {% if active_nav == 'routine' %}amare-nav-link-active{% endif %}" href="{% url 'core:routine' %}" aria-label="Agenda"><svg class="h-[18px] w-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg></a></li>
       <li><a class="amare-nav-link justify-center {% if active_nav == 'maya' %}amare-nav-link-active{% endif %}" href="{% url 'assistant:chat' %}" aria-label="Maya"><svg class="h-[18px] w-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2Z"/></svg></a></li>
-      <li><a class="amare-nav-link justify-center {% if active_nav == 'explore' %}amare-nav-link-active{% endif %}" href="{% url 'core:explore' %}" aria-label="Explorar"><svg class="h-[18px] w-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></a></li>
+      <li><a class="amare-nav-link justify-center {% if active_nav == 'communities' %}amare-nav-link-active{% endif %}" href="{% url 'core:communities' %}" aria-label="Comunidades"><svg class="h-[18px] w-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="10" cy="7" r="4"/><path d="M22 12h-6"/><path d="M19 9v6"/></svg></a></li>
     </ul>
   </nav>
 {% endblock %}

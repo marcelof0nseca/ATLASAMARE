@@ -121,6 +121,20 @@ class PartnerListView(PatientRequiredMixin, TemplateView):
         return context
 
 
+class SupportCommunityListView(PatientRequiredMixin, TemplateView):
+    template_name = "patient/support_communities.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context.update(
+            {
+                "support_communities": SupportCommunity.objects.filter(is_active=True)[:2],
+                "active_nav": "communities",
+            }
+        )
+        return context
+
+
 class CommunityFeedView(PatientRequiredMixin, TemplateView):
     template_name = "patient/community.html"
 

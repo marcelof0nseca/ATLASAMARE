@@ -115,6 +115,38 @@ class PatientExperienceTests(TestCase):
         self.assertContains(response, post.body)
         self.assertContains(response, "Enviar para revisao")
 
+    def test_support_communities_page_has_dedicated_external_links(self):
+        SupportCommunity.objects.create(
+            name="Forum anonimo de tentantes",
+            category=SupportCommunity.Category.FERTILITY,
+            audience="Tentantes",
+            description="Comunidade BabyCenter Brasil.",
+            support_type="BabyCenter Brasil",
+            contact_label="Conhecer Comunidade",
+            contact_url="https://brasil.babycenter.com/comunidade",
+            is_active=True,
+            sort_order=1,
+        )
+        SupportCommunity.objects.create(
+            name="Relatos reais e acolhimento",
+            category=SupportCommunity.Category.EMOTIONAL,
+            audience="Tentantes",
+            description="Relatos no Instagram.",
+            support_type="Instagram #vidadetentante",
+            contact_label="Explorar Relatos no Instagram",
+            contact_url="https://www.instagram.com/explore/search/keyword/?q=%23vidadetentante",
+            is_active=True,
+            sort_order=2,
+        )
+
+        response = self.client.get(reverse("core:communities"))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Forum anonimo de tentantes")
+        self.assertContains(response, "https://brasil.babycenter.com/comunidade")
+        self.assertContains(response, "Relatos reais e acolhimento")
+        self.assertContains(response, "https://www.instagram.com/explore/search/keyword/?q=%23vidadetentante")
+
     def test_locked_report_does_not_download_and_available_report_does(self):
         locked = TreatmentReport.objects.create(patient=self.patient, title="Laudo")
         response = self.client.get(reverse("core:report-download", args=[locked.id]))

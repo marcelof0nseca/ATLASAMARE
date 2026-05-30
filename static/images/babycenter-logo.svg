@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 200" role="img" aria-labelledby="title desc">
+  <title id="title">BabyCenter</title>
+  <desc id="desc">Marca visual simplificada do BabyCenter para card de comunidade.</desc>
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M178 18a82 82 0 0 0-82 82c0 31 17 58 42 72" stroke="#18c7a5" stroke-width="14"/>
+    <path d="M178 18a82 82 0 0 1 82 82c0 31-17 58-42 72" stroke="#18c7a5" stroke-width="14"/>
+    <path d="M178 116v54" stroke="#005a98" stroke-width="12"/>
+    <path d="M173 112c-38-2-63-27-69-66 38 1 65 24 69 66Z" fill="#005a98" stroke="#005a98" stroke-width="4"/>
+    <path d="M201 89c14-22 33-29 58-20-12 23-33 31-58 20Z" fill="#f6b21a" stroke="#f6b21a" stroke-width="4"/>
+    <path d="M190 66c2-22 14-36 36-42 5 22-8 37-27 48Z" fill="#ff6b57" stroke="#ff6b57" stroke-width="4"/>
+  </g>
+  <text x="180" y="194" text-anchor="middle" font-family="Montserrat, Arial, sans-serif" font-size="52" font-weight="500" fill="#005a98">babycenter</text>
+</svg>

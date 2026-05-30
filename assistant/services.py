@@ -340,12 +340,16 @@ def answer_with_llm_or_fallback(question: str, normalized_question: str, user, c
 
 
 def maya_llm_is_configured() -> bool:
+    if settings.MAYA_LLM_PROVIDER == "groq":
+        return bool(settings.MAYA_GROQ_API_KEY and settings.MAYA_GROQ_MODEL)
     if settings.MAYA_LLM_PROVIDER == "gemini":
         return bool(settings.MAYA_GEMINI_API_KEY and settings.MAYA_GEMINI_MODEL)
     return bool(settings.MAYA_OPENAI_API_KEY and settings.MAYA_OPENAI_MODEL)
 
 
 def call_llm_provider(question: str, user, conversation: MayaConversation, intent: str, risk_level: str) -> str:
+    if settings.MAYA_LLM_PROVIDER == "groq":
+        return call_groq_chat_completions(question, user, conversation, intent, risk_level)
     if settings.MAYA_LLM_PROVIDER == "gemini":
         return call_gemini_chat_completions(question, user, conversation, intent, risk_level)
     return call_openai_responses(question, user, conversation, intent, risk_level)
@@ -613,6 +617,33 @@ def call_gemini_chat_completions(question: str, user, conversation: MayaConversa
         if content:
             return content
     raise error.HTTPError(settings.MAYA_GEMINI_BASE_URL, 500, "Resposta invalida da Maya", hdrs=None, fp=None)
+
+
+def call_groq_chat_completions(question: str, user, conversation: MayaConversation, intent: str, risk_level: str) -> str:
+    payload = {
+        "model": settings.MAYA_GROQ_MODEL,
+        "messages": [
+            {"role": "system", "content": MAYA_INSTRUCTIONS},
+            {"role": "user", "content": build_llm_user_context(question, user, conversation, intent, risk_level)},
+        ],
+    }
+    http_request = urllib_request.Request(
+        settings.MAYA_GROQ_BASE_URL,
+        data=json.dumps(payload).encode("utf-8"),
+        headers={
+            "Authorization": f"Bearer {settings.MAYA_GROQ_API_KEY}",
+            "Content-Type": "application/json",
+        },
+        method="POST",
+    )
+    with urllib_request.urlopen(http_request, timeout=20) as response:
+        data = json.loads(response.read().decode("utf-8"))
+    for choice in data.get("choices", []):
+        message = choice.get("message") or {}
+        content = message.get("content")
+        if content:
+            return content
+    raise error.HTTPError(settings.MAYA_GROQ_BASE_URL, 500, "Resposta invalida da Maya", hdrs=None, fp=None)
 
 
 def build_llm_user_context(question: str, user, conversation: MayaConversation, intent: str, risk_level: str) -> str:

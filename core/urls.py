@@ -14,6 +14,7 @@ from .views import (
     PatientTaskUpdateView,
     ReportDownloadView,
     RootRedirectView,
+    SupportCommunityListView,
 )
 
 
@@ -28,6 +29,7 @@ urlpatterns = [
     path("routine/tasks/<int:pk>/update/", PatientTaskUpdateView.as_view(), name="task-update"),
     path("routine/tasks/<int:pk>/complete/", PatientTaskCompleteView.as_view(), name="task-complete"),
     path("explore/", ExploreHomeView.as_view(), name="explore"),
+    path("comunidades/", SupportCommunityListView.as_view(), name="communities"),
     path("explore/partners/", PartnerListView.as_view(), name="partners"),
     path("explore/community/", CommunityFeedView.as_view(), name="community"),
     path("explore/community/new/", CommunityPostCreateView.as_view(), name="community-create"),
