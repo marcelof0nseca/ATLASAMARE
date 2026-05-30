@@ -1,34 +1,42 @@
-<div class="space-y-3">
-  <div class="ml-auto max-w-[88%] rounded-xl bg-golden px-4 py-3 text-sm leading-6 text-white">
-    {{ interaction.question }}
+<div class="space-y-4">
+  <div class="flex justify-end">
+    <div class="max-w-[82%] rounded-2xl rounded-br-md bg-golden px-4 py-3 text-sm leading-6 text-white shadow-sm">
+      {{ interaction.question }}
+    </div>
   </div>
 
-  <div class="max-w-[92%] rounded-xl border border-border bg-white/85 px-4 py-4 text-sm leading-6 text-text-strong">
-    <div class="mb-3 flex flex-wrap items-center gap-2">
-      <p class="amare-kicker">Maya</p>
-      {% if interaction.intent == "feelings" %}
-        <span class="amare-status-pill bg-lesbian-green/25 text-text-strong">Acolhimento</span>
-      {% elif interaction.intent == "routine" %}
-        <span class="amare-status-pill border border-border bg-white text-text-muted">Rotina</span>
-      {% elif interaction.intent == "treatment" %}
-        <span class="amare-status-pill bg-mandys-pink/35 text-text-strong">Tratamento</span>
-      {% elif interaction.intent == "symptom" %}
-        <span class="amare-status-pill bg-warning/20 text-text-strong">Cuidado</span>
-      {% endif %}
-      {% if interaction.risk_level == "high" %}
-        <span class="amare-status-pill bg-danger/15 text-text-strong">Fale com a equipe</span>
-      {% elif interaction.risk_level == "medium" %}
-        <span class="amare-status-pill bg-warning/15 text-text-strong">Precisa de avaliacao</span>
+  <div class="flex items-start gap-3">
+    <div class="mt-1 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white text-sm font-semibold text-golden shadow-sm">M</div>
+    <div class="max-w-[86%] rounded-2xl rounded-bl-md border border-border bg-white/95 px-4 py-4 text-sm leading-6 text-text-strong shadow-sm">
+      <div class="mb-3 flex flex-wrap items-center gap-2">
+        <p class="text-xs font-semibold uppercase tracking-[0.14em] text-text-muted">Maya</p>
+        {% if interaction.mode == "llm" %}
+          <span class="rounded-full bg-lesbian-green/20 px-2 py-1 text-[11px] font-semibold text-text-strong">IA</span>
+        {% endif %}
+        {% if interaction.intent == "feelings" %}
+          <span class="rounded-full bg-lesbian-green/20 px-2 py-1 text-[11px] font-semibold text-text-strong">Acolhimento</span>
+        {% elif interaction.intent == "routine" %}
+          <span class="rounded-full bg-linen px-2 py-1 text-[11px] font-semibold text-text-muted">Rotina</span>
+        {% elif interaction.intent == "treatment" %}
+          <span class="rounded-full bg-mandys-pink/35 px-2 py-1 text-[11px] font-semibold text-text-strong">Tratamento</span>
+        {% elif interaction.intent == "symptom" %}
+          <span class="rounded-full bg-warning/20 px-2 py-1 text-[11px] font-semibold text-text-strong">Cuidado</span>
+        {% endif %}
+        {% if interaction.risk_level == "high" %}
+          <span class="rounded-full bg-danger/15 px-2 py-1 text-[11px] font-semibold text-text-strong">Fale com a equipe</span>
+        {% elif interaction.risk_level == "medium" %}
+          <span class="rounded-full bg-warning/15 px-2 py-1 text-[11px] font-semibold text-text-strong">Precisa de avaliacao</span>
+        {% endif %}
+      </div>
+
+      <p>{{ interaction.answer }}</p>
+
+      {% if interaction.suggested_next_step %}
+        <div class="mt-4 rounded-xl bg-linen px-4 py-3">
+          <p class="text-xs font-semibold uppercase tracking-[0.14em] text-text-muted">Proximo cuidado</p>
+          <p class="mt-2 text-sm leading-6 text-text-strong">{{ interaction.suggested_next_step }}</p>
+        </div>
       {% endif %}
     </div>
-
-    <p>{{ interaction.answer }}</p>
-
-    {% if interaction.suggested_next_step %}
-      <div class="mt-4 rounded-xl bg-linen px-4 py-3">
-        <p class="amare-kicker">Proximo cuidado</p>
-        <p class="mt-2 text-sm leading-6 text-text-strong">{{ interaction.suggested_next_step }}</p>
-      </div>
-    {% endif %}
   </div>
 </div>
