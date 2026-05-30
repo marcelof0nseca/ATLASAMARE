@@ -1,0 +1,128 @@
+{% extends "layouts/partner_base.html" %}
+
+{% block title %}Maya | Modo Acompanhante | Clínica AMARE{% endblock %}
+{% block page_title %}Maya acompanha você e {{ linked_patient.first_name }}{% endblock %}
+{% block page_intro %}Pergunte à Maya como apoiar {{ linked_patient.first_name }} durante o tratamento. Ela entende o contexto da jornada.{% endblock %}
+
+{% block content %}
+  <section class="mx-auto max-w-5xl">
+    <div class="grid gap-5 lg:grid-cols-[280px_1fr]">
+      {# Left Side: Sidebar of conversations #}
+      <aside class="space-y-3">
+        {% for conv in conversations %}
+          <a href="{% url 'partner:maya-kind' conv.kind %}" 
+             class="block amare-card p-4 transition border {% if conv.kind == selected_conversation.kind %}border-[#8DA69A] bg-[#8DA69A]/10{% else %}border-border bg-white/80 hover:border-[#8DA69A]/40{% endif %}">
+            <p class="text-xs font-semibold uppercase text-text-muted tracking-wider">
+              {% if conv.kind == 'treatment' %}
+                Tratamento dela
+              {% elif conv.kind == 'routine' %}
+                Rotina dela
+              {% elif conv.kind == 'feelings' %}
+                Como ela está
+              {% else %}
+                {{ conv.title }}
+              {% endif %}
+            </p>
+            <p class="mt-2 text-xs leading-5 text-text-muted">
+              {% if conv.kind == 'treatment' %}
+                Entenda as etapas do tratamento de {{ linked_patient.first_name }}
+              {% elif conv.kind == 'routine' %}
+                Saiba como ajudar com medicações, agenda e organização do dia
+              {% elif conv.kind == 'feelings' %}
+                Dicas para oferecer apoio emocional durante momentos difíceis
+              {% else %}
+                {{ conv.description }}
+              {% endif %}
+            </p>
+          </a>
+        {% endfor %}
+
+        {% include "components/partner_maya_notice.html" %}
+      </aside>
+
+      {# Right Side: The Chat Thread #}
+      <article
+        class="amare-card flex h-[calc(100vh-15rem)] min-h-[38rem] flex-col overflow-hidden p-0"
+        x-data
+        x-init="$nextTick(() => { const thread = document.getElementById('maya-thread'); if (thread) { thread.scrollTop = thread.scrollHeight; } })"
+      >
+        <div class="border-b border-border bg-white/80 p-5 sm:p-6">
+          <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div class="flex items-center gap-4">
+              <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[#8DA69A] text-lg font-semibold text-white">M</div>
+              <div>
+                <p class="amare-kicker">Assistente Maya</p>
+                <h2 class="mt-1 font-serif text-2xl font-medium text-text-strong">
+                  {% if selected_conversation.kind == 'treatment' %}
+                    Tratamento dela
+                  {% elif selected_conversation.kind == 'routine' %}
+                    Rotina dela
+                  {% else %}
+                    Como ela está
+                  {% endif %}
+                </h2>
+              </div>
+            </div>
+            <span class="amare-chip">Groq + fallback seguro</span>
+          </div>
+        </div>
+
+        <div id="maya-thread" class="flex-1 space-y-5 overflow-y-auto bg-linen/35 px-4 py-6 sm:px-6">
+          {% if interactions %}
+            {% for interaction in interactions %}
+              {% include "patient/partials/maya_exchange.html" with interaction=interaction %}
+            {% endfor %}
+          {% else %}
+            <div id="maya-empty-state" class="mx-auto max-w-2xl rounded-xl border border-border bg-white/85 p-6 text-center shadow-sm">
+              <div class="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-[#8DA69A] text-xl font-semibold text-white">M</div>
+              <p class="mt-4 font-serif text-2xl font-medium text-text-strong">Como posso te ajudar hoje?</p>
+              <p class="mt-3 text-sm leading-6 text-text-muted">
+                {{ empty_state.copy|default:"Pergunte sobre como apoiar ela durante esta etapa." }}
+              </p>
+            </div>
+          {% endif %}
+        </div>
+
+        <div id="maya-loading" class="mx-4 mb-3 hidden max-w-[70%] rounded-xl border border-border bg-white/85 px-4 py-3 text-sm text-text-muted sm:mx-6">
+          Maya está pensando...
+        </div>
+
+        <div class="border-t border-border bg-white/90 p-4 sm:p-5">
+          <div class="mb-3 flex gap-2 overflow-x-auto pb-1">
+            {% for example in prompt_examples %}
+              <button
+                type="button"
+                class="shrink-0 rounded-full border border-border bg-white px-3 py-2 text-xs font-semibold text-text-muted transition hover:border-[#8DA69A] hover:text-[#8DA69A]"
+                onclick="document.getElementById('id_question').value='{{ example|escapejs }}'; document.getElementById('id_question').focus();"
+              >
+                {{ example }}
+              </button>
+            {% endfor %}
+          </div>
+
+          <form
+            method="post"
+            action="{% url 'partner:maya-send' %}"
+            hx-post="{% url 'partner:maya-send' %}"
+            hx-target="#maya-thread"
+            hx-swap="beforeend"
+            hx-indicator="#maya-loading"
+            hx-on::after-request="if(event.detail.successful){this.reset(); const emptyState = document.getElementById('maya-empty-state'); if (emptyState) { emptyState.remove(); } const thread = document.getElementById('maya-thread'); if (thread) { thread.scrollTop = thread.scrollHeight; }}"
+            class="space-y-3"
+          >
+            {% csrf_token %}
+            <input type="hidden" name="conversation_kind" value="{{ selected_conversation.kind }}">
+            <label for="id_question" class="sr-only">Sua pergunta</label>
+            <div class="flex items-end gap-3 rounded-xl border border-border bg-white p-2 shadow-sm">
+              <textarea id="id_question" name="question" rows="1" placeholder="Pergunte como apoiar {{ linked_patient.first_name }}..." required class="max-h-32 min-h-12 resize-none border-0 bg-transparent shadow-none focus:shadow-none focus:ring-0"></textarea>
+              <button type="submit" class="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[#8DA69A] text-white transition hover:brightness-90" aria-label="Enviar mensagem">
+                <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg>
+              </button>
+            </div>
+            <p class="text-xs leading-5 text-text-muted">A Maya orientará o contato com a clínica em caso de dúvidas clínicas específicas.</p>
+          </form>
+        </div>
+      </article>
+    </div>
+  </section>
+{% endblock %}

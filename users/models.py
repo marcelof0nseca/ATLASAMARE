@@ -10,6 +10,7 @@ class User(AbstractUser):
     class Role(models.TextChoices):
         PATIENT = "patient", _("Paciente")
         DOCTOR = "doctor", _("Médico")
+        PARTNER = "partner", _("Acompanhante")
 
     username = None
     first_name = None
@@ -31,6 +32,15 @@ class User(AbstractUser):
         blank=True,
         limit_choices_to={"role": Role.DOCTOR},
         verbose_name=_("médico responsável"),
+    )
+    linked_patient = models.ForeignKey(
+        "self",
+        on_delete=models.SET_NULL,
+        related_name="partners",
+        null=True,
+        blank=True,
+        limit_choices_to={"role": Role.PATIENT},
+        verbose_name=_("paciente acompanhado"),
     )
     wants_in_app_reminders = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -57,11 +67,17 @@ class User(AbstractUser):
     def is_doctor(self) -> bool:
         return self.role == self.Role.DOCTOR
 
+    @property
+    def is_partner(self) -> bool:
+        return self.role == self.Role.PARTNER
+
     def clean(self) -> None:
         super().clean()
         if self.is_doctor and self.primary_doctor_id:
             raise ValidationError({"primary_doctor": _("Médicos não devem ter médico responsável.")})
         if self.primary_doctor and not self.is_patient:
             raise ValidationError({"role": _("Apenas pacientes podem ter médico responsável.")})
+        if self.linked_patient and not self.is_partner:
+            raise ValidationError({"role": _("Apenas acompanhantes podem ter um paciente acompanhado.")})
 
 # Create your models here.

@@ -160,7 +160,7 @@ class MayaConversationTests(TestCase):
             )
             interaction = answer_question_with_maya(
                 self.patient,
-                "Me explica minha etapa atual?",
+                "Me explica o procedimento?",
                 conversation=self.conversations[MayaConversation.Kind.TREATMENT],
             )
 
@@ -203,7 +203,7 @@ class MayaConversationTests(TestCase):
             )
             interaction = answer_question_with_maya(
                 self.patient,
-                "Me explica minha etapa atual?",
+                "Me explica o procedimento?",
                 conversation=self.conversations[MayaConversation.Kind.TREATMENT],
             )
 

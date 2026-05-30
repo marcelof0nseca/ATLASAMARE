@@ -1,0 +1,110 @@
+{% extends "layouts/partner_base.html" %}
+
+{% block title %}Home | Modo Acompanhante | Clínica AMARE{% endblock %}
+{% block page_title %}Oi, {{ request.user.full_name|default:"acompanhante" }}{% endblock %}
+{% block page_intro %}Acompanhe o progresso e ajude a gerenciar a rotina de {{ linked_patient.full_name }}.{% endblock %}
+
+{% block content %}
+  <section class="grid gap-5 xl:grid-cols-[1.08fr_0.92fr]">
+    <article class="amare-card overflow-hidden p-6 sm:p-8">
+      <p class="amare-kicker">Jornada atual de {{ linked_patient.first_name }}</p>
+      {% if treatment and current_step %}
+        <h2 class="mt-3 font-display text-5xl font-semibold leading-none text-[#8DA69A]">{{ current_step.name }}</h2>
+        <p class="mt-4 max-w-2xl text-sm leading-6 text-text-muted">
+          Esta é a etapa em andamento. Acompanhe a evolução do tratamento passo a passo na jornada.
+        </p>
+        <div class="mt-6 grid gap-4 sm:grid-cols-2">
+          <div class="amare-panel p-5">
+            <p class="amare-kicker">Agora</p>
+            <p class="mt-2 font-serif text-2xl font-bold text-text-strong">{{ current_step.name }}</p>
+          </div>
+          <div class="amare-panel p-5">
+            <p class="amare-kicker">Depois</p>
+            <p class="mt-2 font-serif text-2xl font-bold text-text-strong">
+              {% if next_step %}{{ next_step.name }}{% else %}Sem nova etapa pendente{% endif %}
+            </p>
+          </div>
+        </div>
+        <div class="mt-6 flex flex-col gap-3 sm:flex-row">
+          <a href="{% url 'partner:treatment' %}" class="amare-button-primary" style="background-color:#8DA69A;">Ver jornada</a>
+          <a href="{% url 'partner:maya' %}" class="amare-button-secondary">Falar com Maya</a>
+        </div>
+      {% elif treatment %}
+        <h2 class="mt-3 font-display text-5xl font-semibold leading-none text-[#8DA69A]">Tratamento preparado</h2>
+        <p class="mt-4 max-w-2xl text-sm leading-6 text-text-muted">
+          As etapas já estão organizadas. Quando a equipe iniciar a primeira etapa, ela aparecerá aqui em destaque.
+        </p>
+        <a href="{% url 'partner:treatment' %}" class="amare-button-primary mt-6" style="background-color:#8DA69A;">Ver estrutura</a>
+      {% else %}
+        {% include "components/empty_state.html" with title="A jornada ainda não começou" copy="Quando a equipe ativar o tratamento de Ana Beatriz, a etapa atual e o próximo passo aparecerão nesta área." %}
+      {% endif %}
+    </article>
+
+    <aside class="space-y-5">
+      <article class="amare-card p-6">
+        <p class="amare-kicker">Hoje</p>
+        <h2 class="mt-2 font-serif text-2xl font-bold">Próximo cuidado de {{ linked_patient.first_name }}</h2>
+        <div class="mt-5 space-y-3">
+          <div class="amare-panel p-4">
+            <p class="text-xs font-bold uppercase text-text-muted">Medicação</p>
+            <p class="mt-2 text-sm font-bold text-text-strong">
+              {% if next_medication %}
+                {{ next_medication.name }} às {{ next_medication.scheduled_for|date:"H:i" }}
+              {% else %}
+                Nenhuma dose pendente agora
+              {% endif %}
+            </p>
+          </div>
+          <div class="amare-panel p-4">
+            <p class="text-xs font-bold uppercase text-text-muted">Compromisso</p>
+            <p class="mt-2 text-sm font-bold text-text-strong">
+              {% if next_appointment %}
+                {{ next_appointment.get_type_display }} em {{ next_appointment.scheduled_at|date:"d/m" }} às {{ next_appointment.scheduled_at|date:"H:i" }}
+              {% else %}
+                Nenhum compromisso próximo
+              {% endif %}
+            </p>
+          </div>
+          <div class="amare-panel p-4">
+            <p class="text-xs font-bold uppercase text-text-muted">Tarefas da Rotina</p>
+            <p class="mt-2 text-sm font-bold text-text-strong">{{ pending_tasks_count }} pendente{{ pending_tasks_count|pluralize }}</p>
+          </div>
+        </div>
+        <a href="{% url 'partner:routine' %}" class="amare-button-secondary mt-5 w-full hover:border-[#8DA69A]/40">Abrir rotina</a>
+      </article>
+
+      <article class="amare-card p-6">
+        <p class="amare-kicker">Laudo de {{ linked_patient.first_name }}</p>
+        <h2 class="mt-2 font-serif text-2xl font-bold">Pós-tratamento</h2>
+        <p class="mt-3 text-sm leading-6 text-text-muted">
+          {% if report %}
+            {% if report.is_available %}O laudo pós-tratamento já está liberado pela equipe médica.{% else %}O download aparecerá quando a equipe liberar a leitura.{% endif %}
+          {% else %}
+            Quando houver um laudo cadastrado pela equipe, ele aparecerá aqui.
+          {% endif %}
+        </p>
+        {% if report %}
+          <div class="mt-4">{% include "components/status_badge.html" with status=report.status %}</div>
+        {% endif %}
+      </article>
+    </aside>
+  </section>
+
+  <section class="mt-5 grid gap-5 lg:grid-cols-3">
+    <a href="{% url 'partner:maya' %}" class="amare-card block p-6 transition hover:border-[#8DA69A]/40">
+      <p class="amare-kicker">Maya</p>
+      <h2 class="mt-2 font-serif text-2xl font-bold text-text-strong">Orientação & Apoio</h2>
+      <p class="mt-3 text-sm leading-6 text-text-muted">Dúvidas sobre o tratamento, rotina e formas de oferecer suporte emocional a {{ linked_patient.first_name }}.</p>
+    </a>
+    <a href="{% url 'partner:routine' %}" class="amare-card block p-6 transition hover:border-[#8DA69A]/40">
+      <p class="amare-kicker">Rotina</p>
+      <h2 class="mt-2 font-serif text-2xl font-bold text-text-strong">Agenda & Medicações</h2>
+      <p class="mt-3 text-sm leading-6 text-text-muted">Acompanhe e ajude a marcar medicamentos concluídos, e confira os compromissos agendados.</p>
+    </a>
+    <a href="{% url 'partner:treatment' %}" class="amare-card block p-6 transition hover:border-[#8DA69A]/40">
+      <p class="amare-kicker">Jornada</p>
+      <h2 class="mt-2 font-serif text-2xl font-bold text-text-strong">Linha do Tempo</h2>
+      <p class="mt-3 text-sm leading-6 text-text-muted">Veja todas as etapas programadas do tratamento e saiba qual é a fase atual do ciclo.</p>
+    </a>
+  </section>
+{% endblock %}

@@ -452,11 +452,12 @@ def build_feelings_reply(user) -> MayaReply:
 
 
 def build_routine_reply(normalized_question: str, user) -> MayaReply:
+    patient = user.linked_patient if getattr(user, "role", None) == "partner" else user
     today = timezone.localdate()
-    doses_today = Medication.objects.filter(patient=user, scheduled_for__date=today).order_by("scheduled_for")
+    doses_today = Medication.objects.filter(patient=patient, scheduled_for__date=today).order_by("scheduled_for")
     pending_dose = doses_today.filter(status=Medication.Status.PENDING).first()
     upcoming_appointment = Appointment.objects.filter(
-        patient=user,
+        patient=patient,
         scheduled_at__date__gte=today,
     ).order_by("scheduled_at").first()
 
@@ -507,7 +508,8 @@ def build_routine_reply(normalized_question: str, user) -> MayaReply:
 
 
 def build_treatment_reply(normalized_question: str, user) -> MayaReply:
-    treatment = Treatment.objects.filter(patient=user, is_active=True).prefetch_related("steps").first()
+    patient = user.linked_patient if getattr(user, "role", None) == "partner" else user
+    treatment = Treatment.objects.filter(patient=patient, is_active=True).prefetch_related("steps").first()
     current_step = treatment.current_step if treatment else None
     next_step = treatment.next_step if treatment else None
 
@@ -520,29 +522,29 @@ def build_treatment_reply(normalized_question: str, user) -> MayaReply:
     elif any(keyword in normalized_question for keyword in ["proximo passo", "proxima etapa", "o que vem depois", "o que vem a seguir"]):
         if next_step:
             answer = (
-                f"Pelo que está registrado, sua etapa atual é {current_step.name.lower() if current_step else 'a etapa em andamento'} "
-                f"e o próximo passo é {next_step.name.lower()}. Você pode acompanhar isso na timeline, sem precisar guardar tudo de cabeça."
+                f"Pelo que está registrado, a etapa atual dela é {current_step.name.lower() if current_step else 'a etapa em andamento'} "
+                f"e o próximo passo é {next_step.name.lower()}. Você pode acompanhar isso na jornada, sem precisar guardar tudo de cabeça."
             )
         elif current_step:
             answer = (
-                f"Pelo que está registrado, sua etapa atual é {current_step.name.lower()}. "
-                "Quando a equipe atualizar uma nova etapa, ela aparece na timeline."
+                f"Pelo que está registrado, a etapa atual dela é {current_step.name.lower()}. "
+                "Quando a equipe atualizar uma nova etapa, ela aparece na jornada."
             )
         else:
-            answer = "Quando a equipe iniciar ou atualizar sua jornada, a timeline vai mostrar a etapa atual e o próximo passo."
+            answer = "Quando a equipe iniciar ou atualizar a jornada dela, o painel vai mostrar a etapa atual e o próximo passo."
     elif any(keyword in normalized_question for keyword in ["proximos passos", "proximas etapas"]):
         if next_step:
             answer = (
-                f"Pelo que está registrado, sua etapa atual é {current_step.name.lower() if current_step else 'a etapa em andamento'} "
-                f"e o próximo passo é {next_step.name.lower()}. Você pode acompanhar isso na timeline, sem precisar guardar tudo de cabeça."
+                f"Pelo que está registrado, a etapa atual dela é {current_step.name.lower() if current_step else 'a etapa em andamento'} "
+                f"e o próximo passo é {next_step.name.lower()}. Você pode acompanhar isso na jornada, sem precisar guardar tudo de cabeça."
             )
         elif current_step:
             answer = (
-                f"Pelo que está registrado, sua etapa atual é {current_step.name.lower()}. "
-                "Quando a equipe atualizar uma nova etapa, ela aparece na timeline."
+                f"Pelo que está registrado, a etapa atual dela é {current_step.name.lower()}. "
+                "Quando a equipe atualizar uma nova etapa, ela aparece na jornada."
             )
         else:
-            answer = "Quando a equipe iniciar ou atualizar sua jornada, a timeline vai mostrar a etapa atual e o próximo passo."
+            answer = "Quando a equipe iniciar ou atualizar a jornada dela, o painel vai mostrar a etapa atual e o próximo passo."
     elif current_step:
         answer = (
             f"Hoje a etapa em destaque é {current_step.name.lower()}. "
@@ -559,11 +561,22 @@ def build_treatment_reply(normalized_question: str, user) -> MayaReply:
         mode=AIInteraction.Mode.FALLBACK,
         intent=AIInteraction.Intent.TREATMENT,
         risk_level=AIInteraction.RiskLevel.LOW,
-        suggested_next_step="Abra a timeline para ver a etapa atual e o próximo passo lado a lado.",
+        suggested_next_step="Abra a jornada para ver a etapa atual e o próximo passo lado a lado.",
     )
 
 
 def build_general_reply(user, conversation_kind: str) -> MayaReply:
+    if getattr(user, "role", None) == "partner":
+        return MayaReply(
+            answer=(
+                "Oi, estou aqui com você. Posso te ajudar a entender as etapas do tratamento dela, "
+                "organizar a rotina de cuidados ou apoiar como vocês estão se sentindo hoje."
+            ),
+            mode=AIInteraction.Mode.FALLBACK,
+            intent=AIInteraction.Intent.GENERAL,
+            risk_level=AIInteraction.RiskLevel.LOW,
+            suggested_next_step="Me conte o que você quer olhar primeiro: tratamento dela, rotina ou sentimentos.",
+        )
     return MayaReply(
         answer=(
             "Oi, estou aqui com você. Posso te ajudar a entender sua etapa atual, organizar sua rotina "
@@ -577,8 +590,9 @@ def build_general_reply(user, conversation_kind: str) -> MayaReply:
 
 
 def build_support_anchor(user) -> str:
+    patient = user.linked_patient if getattr(user, "role", None) == "partner" else user
     next_dose = Medication.objects.filter(
-        patient=user,
+        patient=patient,
         scheduled_for__date=timezone.localdate(),
         status=Medication.Status.PENDING,
     ).order_by("scheduled_for").first()
@@ -586,17 +600,17 @@ def build_support_anchor(user) -> str:
         return f"Se ajudar, você pode olhar apenas a próxima dose de {next_dose.name} às {timezone.localtime(next_dose.scheduled_for).strftime('%H:%M')}."
 
     next_appointment = Appointment.objects.filter(
-        patient=user,
+        patient=patient,
         scheduled_at__date__gte=timezone.localdate(),
     ).order_by("scheduled_at").first()
     if next_appointment:
         return f"Talvez o próximo passo concreto de hoje seja revisar {next_appointment.get_type_display().lower()} em {timezone.localtime(next_appointment.scheduled_at).strftime('%d/%m às %H:%M')}."
 
-    treatment = Treatment.objects.filter(patient=user, is_active=True).prefetch_related("steps").first()
+    treatment = Treatment.objects.filter(patient=patient, is_active=True).prefetch_related("steps").first()
     if treatment and treatment.next_step:
         return f"Se quiser, eu posso te ajudar a olhar só a próxima etapa: {treatment.next_step.name.lower()}."
 
-    return "Podemos ir por partes e olhar apenas o próximo passo concreto do seu dia."
+    return "Podemos ir por partes e olhar apenas o próximo passo concreto do dia."
 
 
 def suggested_next_step_for_intent(user, conversation_kind: str, intent: str, risk_level: str) -> str:
@@ -612,8 +626,9 @@ def suggested_next_step_for_intent(user, conversation_kind: str, intent: str, ri
 
 
 def build_safe_context_summary(user, intent: str = AIInteraction.Intent.GENERAL) -> str:
+    patient = user.linked_patient if getattr(user, "role", None) == "partner" else user
     today = timezone.localdate()
-    treatment = Treatment.objects.filter(patient=user, is_active=True).prefetch_related("steps").first()
+    treatment = Treatment.objects.filter(patient=patient, is_active=True).prefetch_related("steps").first()
     current_step = treatment.current_step.name if treatment and treatment.current_step else "Sem etapa em andamento"
     next_step = treatment.next_step.name if treatment and treatment.next_step else "Sem próxima etapa definida"
     treatment_text = (
@@ -625,12 +640,12 @@ def build_safe_context_summary(user, intent: str = AIInteraction.Intent.GENERAL)
         return treatment_text
 
     next_dose = Medication.objects.filter(
-        patient=user,
+        patient=patient,
         scheduled_for__date=timezone.localdate(),
         status=Medication.Status.PENDING,
     ).order_by("scheduled_for").first()
     next_appointment = Appointment.objects.filter(
-        patient=user,
+        patient=patient,
         scheduled_at__date__gte=timezone.localdate(),
     ).order_by("scheduled_at").first()
     dose_text = (

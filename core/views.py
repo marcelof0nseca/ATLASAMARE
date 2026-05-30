@@ -7,7 +7,7 @@ from django.utils import timezone
 from django.views.generic import RedirectView, TemplateView
 
 from .forms import CommunityPostForm, PatientTaskForm
-from .mixins import PatientRequiredMixin
+from .mixins import PatientOrPartnerRequiredMixin, PatientRequiredMixin
 from .models import CommunityPost, CommunityReaction, Partner, PatientTask, SupportCommunity, TreatmentReport
 from .services import build_patient_dashboard, build_patient_routine, get_explore_context
 
@@ -24,6 +24,8 @@ class RootRedirectView(RedirectView):
         if user.is_authenticated:
             if user.is_doctor:
                 return "/doctor/patients/"
+            if getattr(user, "role", None) == "partner":
+                return "/partner/dashboard/"
             return "/dashboard/"
         return "/landing/"
 
@@ -187,11 +189,12 @@ class CommunityReactView(PatientRequiredMixin, RedirectView):
         return redirect("core:community")
 
 
-class ReportDownloadView(PatientRequiredMixin, RedirectView):
+class ReportDownloadView(PatientOrPartnerRequiredMixin, RedirectView):
     pattern_name = "treatments:timeline"
 
     def get(self, request, pk, *args, **kwargs):
-        report = get_object_or_404(TreatmentReport, pk=pk, patient=request.user)
+        patient = request.user.linked_patient if request.user.is_partner else request.user
+        report = get_object_or_404(TreatmentReport, pk=pk, patient=patient)
         if not report.is_available:
             raise Http404("Laudo ainda nao liberado.")
         return FileResponse(report.file.open("rb"), as_attachment=True, filename=report.file.name.split("/")[-1])

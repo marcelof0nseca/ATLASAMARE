@@ -1,6 +1,11 @@
 from django.test import TestCase
+from django.urls import reverse
+from django.utils import timezone
 from rest_framework.test import APIClient
 
+from core.models import PatientTask
+from medications.models import Medication
+from treatments.models import Treatment, TreatmentStep
 from .models import User
 
 
@@ -61,3 +66,74 @@ class DoctorPatientPermissionTests(TestCase):
         self.client.force_login(self.patient)
         response = self.client.get("/doctor/patients/new/")
         self.assertEqual(response.status_code, 403)
+
+
+class PartnerModeTests(TestCase):
+    def setUp(self):
+        self.patient = User.objects.create_user(
+            email="patient@amare.local",
+            password="amare123!",
+            full_name="Ana Beatriz",
+            role=User.Role.PATIENT,
+        )
+        self.partner = User.objects.create_user(
+            email="joao@amare.local",
+            password="amare123!",
+            full_name="João Santos",
+            role=User.Role.PARTNER,
+            linked_patient=self.patient,
+        )
+        self.treatment = Treatment.objects.create(
+            patient=self.patient,
+            name="Fertilização in vitro",
+            is_active=True,
+        )
+        TreatmentStep.objects.create(
+            treatment=self.treatment,
+            name="Coleta de óvulos",
+            order=1,
+            status=TreatmentStep.Status.IN_PROGRESS,
+        )
+        self.medication = Medication.objects.create(
+            patient=self.patient,
+            name="Progesterona",
+            scheduled_for=timezone.now(),
+        )
+
+    def test_partner_properties(self):
+        self.assertTrue(self.partner.is_partner)
+        self.assertFalse(self.partner.is_patient)
+        self.assertEqual(self.partner.linked_patient, self.patient)
+
+    def test_partner_dashboard_access(self):
+        self.client.force_login(self.partner)
+        response = self.client.get(reverse("partner:dashboard"))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "João Santos")
+        self.assertContains(response, "Ana Beatriz")
+
+    def test_partner_cannot_access_patient_dashboard(self):
+        self.client.force_login(self.partner)
+        response = self.client.get("/dashboard/")
+        self.assertEqual(response.status_code, 403)
+
+    def test_partner_routine_unexpected_symptoms(self):
+        self.client.force_login(self.partner)
+        response = self.client.post(
+            reverse("partner:routine"),
+            {"unexpected_symptoms": "Dor de cabeça moderada no fim da tarde"}
+        )
+        self.assertRedirects(response, reverse("partner:routine"))
+        task = PatientTask.objects.get(patient=self.patient)
+        self.assertEqual(task.notes, "Dor de cabeça moderada no fim da tarde")
+        self.assertEqual(task.title, "Sintoma inesperado registrado pelo acompanhante")
+
+    def test_partner_can_confirm_medication(self):
+        self.client.force_login(self.partner)
+        response = self.client.get(reverse("medications:confirm", args=[self.medication.id]))
+        self.assertEqual(response.status_code, 200)
+        response = self.client.post(reverse("medications:complete", args=[self.medication.id]))
+        self.assertRedirects(response, reverse("partner:routine"))
+        self.medication.refresh_from_db()
+        self.assertEqual(self.medication.status, Medication.Status.COMPLETED)
+

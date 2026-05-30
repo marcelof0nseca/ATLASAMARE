@@ -1,0 +1,89 @@
+{% extends "layouts/partner_base.html" %}
+
+{% block title %}Perfil | Modo Acompanhante | Clínica AMARE{% endblock %}
+{% block page_title %}Seu perfil{% endblock %}
+{% block page_intro %}Gerencie suas informações e preferências como acompanhante de {{ linked_patient.first_name }}.{% endblock %}
+
+{% block content %}
+  <section class="grid gap-5 lg:grid-cols-[0.9fr_1.1fr]">
+    {# Left side card #}
+    <aside class="space-y-5">
+      <article class="amare-card p-6">
+        <p class="amare-kicker">Conta</p>
+        <dl class="mt-5 space-y-4 text-sm">
+          <div>
+            <dt class="font-bold text-text-muted">Nome</dt>
+            <dd class="mt-1 font-bold text-text-strong">{{ request.user.full_name }}</dd>
+          </div>
+          <div>
+            <dt class="font-bold text-text-muted">Email</dt>
+            <dd class="mt-1 font-bold text-text-strong">{{ request.user.email }}</dd>
+          </div>
+          <div>
+            <dt class="font-bold text-text-muted">Papel</dt>
+            <dd class="mt-1 font-bold text-text-strong">Acompanhante</dd>
+          </div>
+          <div>
+            <dt class="font-bold text-text-muted">Acompanhando</dt>
+            <dd class="mt-1 font-bold text-text-strong">{{ linked_patient.full_name }}</dd>
+          </div>
+        </dl>
+        <form method="post" action="{% url 'users:logout' %}" class="mt-6">
+          {% csrf_token %}
+          <button class="amare-button-secondary w-full hover:border-[#8DA69A]/40">Sair com segurança</button>
+        </form>
+      </article>
+    </aside>
+
+    {# Right side card #}
+    <article class="amare-card p-6">
+      <p class="amare-kicker">Preferências</p>
+      <h2 class="mt-2 font-serif text-2xl font-bold">Como a plataforma acompanha você</h2>
+      
+      <form method="post" class="mt-6 space-y-5">
+        {% csrf_token %}
+        
+        {# Section 1: Editar Nome #}
+        <div>
+          <label for="id_full_name" class="mb-2 block text-sm font-bold text-text-strong">Nome</label>
+          <input type="text" id="id_full_name" name="full_name" value="{{ request.user.full_name }}" required class="w-full focus:border-[#8DA69A] focus:ring-[#8DA69A]/40">
+        </div>
+
+        {# Section 2: Editar Foto de Perfil #}
+        <div class="flex items-center gap-4 mt-6">
+          <div class="inline-flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-[#8DA69A] text-xl font-semibold text-white">
+            {{ request.user.full_name|first|upper }}
+          </div>
+          <div>
+            <p class="text-sm font-semibold text-text-strong">Foto de perfil</p>
+            <p class="mt-1 text-xs text-text-muted">Funcionalidade em breve</p>
+          </div>
+        </div>
+
+        {# Section 3: Histórico de Notificações #}
+        <div class="mt-6">
+          <p class="text-sm font-semibold text-text-strong mb-3">Histórico de Notificações</p>
+          {% include "components/empty_state.html" with title="Nenhuma notificação ainda" copy="Suas notificações aparecerão aqui." %}
+        </div>
+
+        {# Section 4: Permissões do Site #}
+        <div class="mt-6 rounded-2xl border border-border bg-white px-4 py-4">
+          <label class="flex items-start gap-3 text-sm leading-6 text-text-strong">
+            <input type="checkbox" name="wants_in_app_reminders" {% if request.user.wants_in_app_reminders %}checked{% endif %} class="rounded border-border text-[#8DA69A] focus:ring-[#8DA69A]/40">
+            <span>Receber lembretes dentro do aplicativo para acompanhar a rotina.</span>
+          </label>
+        </div>
+
+        <button type="submit" class="amare-button-primary mt-6" style="background-color:#8DA69A;">Salvar preferências</button>
+
+        {# WhatsApp Emergency Link #}
+        <div class="mt-6 border-t border-border pt-5">
+          {% include "components/clinic_whatsapp_link.html" with
+            label="Entre em contato diretamente conosco"
+            caption="Somente em emergências — +55 81 99800-3535"
+            class_name="amare-contact-link w-full justify-start border-[#8DA69A]/30 bg-[#8DA69A]/5" %}
+        </div>
+      </form>
+    </article>
+  </section>
+{% endblock %}

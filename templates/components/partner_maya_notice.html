@@ -1,0 +1,7 @@
+<div class="rounded-xl border border-[#8DA69A]/30 bg-[#8DA69A]/5 p-4 text-sm leading-6 text-text-strong">
+  <p class="font-bold">A Maya ajuda acompanhantes com orientações gerais sobre como apoiar {{ linked_patient.first_name }}.</p>
+  <p class="mt-2 text-text-muted">Para dúvidas médicas específicas, fale diretamente com a clínica.</p>
+  <div class="mt-4">
+    {% include "components/clinic_whatsapp_link.html" with label="Falar com a clínica" caption="WhatsApp direto da Clínica AMARE" class_name="amare-contact-link justify-start border-[#8DA69A]/30 bg-white" %}
+  </div>
+</div>

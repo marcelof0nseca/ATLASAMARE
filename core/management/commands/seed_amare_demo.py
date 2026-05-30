@@ -46,6 +46,21 @@ class Command(BaseCommand):
             patient.save()
             created_patients.append(patient)
 
+        # Seed partner user
+        partner, _ = User.objects.get_or_create(
+            email="joao@amare.local",
+            defaults={
+                "full_name": "João Santos",
+                "role": User.Role.PARTNER,
+                "linked_patient": created_patients[0],  # Ana Beatriz
+                "wants_in_app_reminders": True,
+            }
+        )
+        partner.linked_patient = created_patients[0]
+        partner.role = User.Role.PARTNER
+        partner.set_password("amare123!")
+        partner.save()
+
         now = timezone.localtime()
         self._seed_treatment_for_ana(created_patients[0], now)
         self._seed_treatment_for_luiza(created_patients[1], now)
