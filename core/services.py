@@ -8,7 +8,7 @@ from appointments.models import Appointment
 from medications.models import Medication
 from treatments.models import Treatment
 
-from .models import CommunityPost, PatientTask, SupportCommunity, TreatmentReport
+from .models import CommunityPost, Partner, PatientTask, SupportCommunity, TreatmentReport
 
 
 def build_patient_dashboard(user):
