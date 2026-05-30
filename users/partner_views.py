@@ -17,6 +17,7 @@ from core.mixins import PartnerRequiredMixin
 from core.models import PatientTask
 from core.services import (
     build_patient_dashboard,
+    get_current_report,
     group_appointments_by_date,
     group_medications_for_patient,
 )
@@ -57,6 +58,7 @@ class PartnerTreatmentView(PartnerRequiredMixin, TemplateView):
             "completed_count": len(completed),
             "total_count": total,
             "progress_percent": percent,
+            "report": get_current_report(patient),
         })
         return context
 

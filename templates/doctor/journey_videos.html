@@ -1,0 +1,67 @@
+{% extends "layouts/doctor_base.html" %}
+
+{% block title %}Videos da Jornada | Clinica AMARE{% endblock %}
+{% block page_title %}Gerenciar Videos da Jornada{% endblock %}
+{% block page_intro %}Cadastre, edite e controle quais videos ficam visiveis para as pacientes em cada etapa do tratamento.{% endblock %}
+
+{% block content %}
+  <section class="amare-card overflow-hidden">
+    <div class="flex flex-col gap-3 border-b border-border p-5 sm:flex-row sm:items-center sm:justify-between">
+      <div>
+        <p class="amare-kicker">Biblioteca</p>
+        <h2 class="mt-2 font-serif text-2xl font-bold">Videos cadastrados</h2>
+      </div>
+      <a href="{% url 'treatments:doctor-video-create' %}" class="amare-button-primary">+ Novo Video</a>
+    </div>
+
+    {% if videos %}
+      <div class="overflow-x-auto">
+        <table class="w-full min-w-[44rem] text-left text-sm">
+          <thead class="border-b border-border bg-linen/55 text-text-muted">
+            <tr>
+              <th class="px-4 py-4 font-bold">Titulo</th>
+              <th class="px-4 py-4 font-bold">Etapa</th>
+              <th class="px-4 py-4 font-bold">Status</th>
+              <th class="px-4 py-4 text-right font-bold">Acoes</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for video in videos %}
+              <tr class="border-b border-border last:border-b-0">
+                <td class="px-4 py-4">
+                  <p class="font-bold text-text-strong">{{ video.title }}</p>
+                  {% if video.duration %}<p class="mt-1 text-xs text-text-muted">{{ video.duration }}</p>{% endif %}
+                </td>
+                <td class="px-4 py-4 text-text-muted">Etapa {{ video.step }}</td>
+                <td class="px-4 py-4">
+                  {% if video.is_active %}
+                    <span class="amare-chip">Ativo</span>
+                  {% else %}
+                    <span class="amare-chip opacity-45">Inativo</span>
+                  {% endif %}
+                </td>
+                <td class="px-4 py-4">
+                  <div class="flex flex-wrap justify-end gap-2">
+                    <form method="post" action="{% url 'treatments:doctor-video-toggle' video.id %}">
+                      {% csrf_token %}
+                      <button class="amare-button-secondary">{% if video.is_active %}Desativar{% else %}Ativar{% endif %}</button>
+                    </form>
+                    <a href="{% url 'treatments:doctor-video-edit' video.id %}" class="amare-button-secondary">Editar</a>
+                    <form method="post" action="{% url 'treatments:doctor-video-delete' video.id %}" onsubmit="return confirm('Remover este video da jornada?');">
+                      {% csrf_token %}
+                      <button class="amare-button-secondary text-danger">Excluir</button>
+                    </form>
+                  </div>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <div class="p-6">
+        {% include "components/empty_state.html" with title="Nenhum video cadastrado" copy="Use Novo Video para criar o primeiro conteudo auxiliar por etapa." %}
+      </div>
+    {% endif %}
+  </section>
+{% endblock %}

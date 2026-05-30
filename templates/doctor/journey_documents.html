@@ -1,0 +1,56 @@
+{% extends "layouts/doctor_base.html" %}
+
+{% block title %}Documentos da Jornada | Clinica AMARE{% endblock %}
+{% block page_title %}Gerenciar Documentos da Jornada{% endblock %}
+{% block page_intro %}Cadastre arquivos por paciente, tratamento e semana para liberar documentos nas jornadas.{% endblock %}
+
+{% block content %}
+  <section class="amare-card overflow-hidden">
+    <div class="flex flex-col gap-3 border-b border-border p-5 sm:flex-row sm:items-center sm:justify-between">
+      <div>
+        <p class="amare-kicker">Documentos</p>
+        <h2 class="mt-2 font-serif text-2xl font-bold">Arquivos cadastrados</h2>
+      </div>
+      <a href="{% url 'treatments:doctor-document-create' %}" class="amare-button-primary">+ Novo Documento</a>
+    </div>
+
+    {% if documents %}
+      <div class="overflow-x-auto">
+        <table class="w-full min-w-[44rem] text-left text-sm">
+          <thead class="border-b border-border bg-linen/55 text-text-muted">
+            <tr>
+              <th class="px-4 py-4 font-bold">Arquivo</th>
+              <th class="px-4 py-4 font-bold">Paciente</th>
+              <th class="px-4 py-4 font-bold">Semana</th>
+              <th class="px-4 py-4 font-bold">Tamanho</th>
+              <th class="px-4 py-4 text-right font-bold">Acoes</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for document in documents %}
+              <tr class="border-b border-border last:border-b-0">
+                <td class="px-4 py-4 font-bold text-text-strong">{{ document.name }}</td>
+                <td class="px-4 py-4 text-text-muted">{{ document.treatment.patient.full_name }}</td>
+                <td class="px-4 py-4 text-text-muted">Semana {{ document.week }}</td>
+                <td class="px-4 py-4 text-text-muted">{{ document.size_label }}</td>
+                <td class="px-4 py-4">
+                  <div class="flex flex-wrap justify-end gap-2">
+                    <a href="{% url 'treatments:doctor-document-edit' document.id %}" class="amare-button-secondary">Editar</a>
+                    <form method="post" action="{% url 'treatments:doctor-document-delete' document.id %}" onsubmit="return confirm('Remover este documento da jornada?');">
+                      {% csrf_token %}
+                      <button class="amare-button-secondary text-danger">Excluir</button>
+                    </form>
+                  </div>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <div class="p-6">
+        {% include "components/empty_state.html" with title="Nenhum documento cadastrado" copy="Use Novo Documento para publicar o primeiro arquivo da Jornada." %}
+      </div>
+    {% endif %}
+  </section>
+{% endblock %}

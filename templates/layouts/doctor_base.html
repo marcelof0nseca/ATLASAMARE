@@ -21,6 +21,12 @@
       <a href="{% url 'users:doctor-patient-list' %}" class="rounded-2xl px-4 py-2 {% if active_nav == 'patients' %}bg-rose text-white{% else %}border border-border bg-white text-text-strong{% endif %}">
         Pacientes
       </a>
+      <a href="{% url 'treatments:doctor-videos' %}" class="rounded-2xl px-4 py-2 {% if active_nav == 'videos' %}bg-rose text-white{% else %}border border-border bg-white text-text-strong{% endif %}">
+        Videos da Jornada
+      </a>
+      <a href="{% url 'treatments:doctor-documents' %}" class="rounded-2xl px-4 py-2 {% if active_nav == 'documents' %}bg-rose text-white{% else %}border border-border bg-white text-text-strong{% endif %}">
+        Documentos
+      </a>
     </div>
 
     {% block content %}{% endblock %}

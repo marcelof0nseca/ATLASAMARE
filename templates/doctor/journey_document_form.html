@@ -1,0 +1,61 @@
+{% extends "layouts/doctor_base.html" %}
+
+{% block title %}{{ form_title }} | Documentos da Jornada | Clinica AMARE{% endblock %}
+{% block page_title %}{{ form_title }}{% endblock %}
+{% block page_intro %}Associe o arquivo a um tratamento ativo e a uma semana da Jornada.{% endblock %}
+
+{% block content %}
+  <section class="amare-card p-6">
+    <form method="post" enctype="multipart/form-data" class="space-y-5">
+      {% csrf_token %}
+
+      {% if form.non_field_errors %}
+        <div class="rounded-lg border border-danger bg-white p-4 text-sm text-danger">
+          {{ form.non_field_errors }}
+        </div>
+      {% endif %}
+
+      <div class="grid gap-5 md:grid-cols-2">
+        <div>
+          <label for="{{ form.treatment.id_for_label }}" class="mb-2 block text-sm font-bold text-text-strong">Tratamento</label>
+          {{ form.treatment }}
+          {% for error in form.treatment.errors %}<p class="mt-2 text-sm text-danger">{{ error }}</p>{% endfor %}
+        </div>
+        <div>
+          <label for="{{ form.name.id_for_label }}" class="mb-2 block text-sm font-bold text-text-strong">Nome do arquivo</label>
+          {{ form.name }}
+          {% for error in form.name.errors %}<p class="mt-2 text-sm text-danger">{{ error }}</p>{% endfor %}
+        </div>
+      </div>
+
+      <div class="grid gap-5 md:grid-cols-3">
+        <div>
+          <label for="{{ form.week.id_for_label }}" class="mb-2 block text-sm font-bold text-text-strong">Semana</label>
+          {{ form.week }}
+          {% for error in form.week.errors %}<p class="mt-2 text-sm text-danger">{{ error }}</p>{% endfor %}
+        </div>
+        <div>
+          <label for="{{ form.uploaded_at.id_for_label }}" class="mb-2 block text-sm font-bold text-text-strong">Data de acesso</label>
+          {{ form.uploaded_at }}
+          {% for error in form.uploaded_at.errors %}<p class="mt-2 text-sm text-danger">{{ error }}</p>{% endfor %}
+        </div>
+        <div>
+          <label for="{{ form.size_label.id_for_label }}" class="mb-2 block text-sm font-bold text-text-strong">Tamanho</label>
+          {{ form.size_label }}
+          {% for error in form.size_label.errors %}<p class="mt-2 text-sm text-danger">{{ error }}</p>{% endfor %}
+        </div>
+      </div>
+
+      <div>
+        <label for="{{ form.file.id_for_label }}" class="mb-2 block text-sm font-bold text-text-strong">Arquivo</label>
+        {{ form.file }}
+        {% for error in form.file.errors %}<p class="mt-2 text-sm text-danger">{{ error }}</p>{% endfor %}
+      </div>
+
+      <div class="flex flex-col gap-3 sm:flex-row">
+        <button class="amare-button-primary">Salvar documento</button>
+        <a href="{% url 'treatments:doctor-documents' %}" class="amare-button-secondary">Cancelar</a>
+      </div>
+    </form>
+  </section>
+{% endblock %}

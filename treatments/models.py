@@ -1,6 +1,9 @@
+import uuid
+
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models import Q
+from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
 
@@ -87,5 +90,71 @@ class TreatmentStep(models.Model):
             ).exclude(status=self.Status.COMPLETED)
             if previous_not_completed.exists():
                 raise ValidationError(_("Etapas anteriores precisam estar concluídas antes desta etapa."))
+
+
+class JourneyDocument(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    treatment = models.ForeignKey(Treatment, on_delete=models.CASCADE, related_name="documents")
+    name = models.CharField(max_length=160)
+    week = models.PositiveSmallIntegerField()
+    uploaded_at = models.DateTimeField()
+    size_label = models.CharField(max_length=24)
+    file = models.FileField(upload_to="journey_documents/")
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["week", "uploaded_at", "name"]
+        verbose_name = _("documento da jornada")
+        verbose_name_plural = _("documentos da jornada")
+
+    def __str__(self) -> str:
+        return f"Semana {self.week} - {self.name}"
+
+    @property
+    def original_name(self) -> str:
+        return self.name
+
+    @property
+    def file_url(self) -> str:
+        return self.file.url if self.file else ""
+
+    def get_download_url(self) -> str:
+        return reverse("treatments:documents-download", args=[self.id])
+
+
+class JourneyVideo(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    title = models.CharField(max_length=160)
+    description = models.TextField()
+    step = models.PositiveSmallIntegerField()
+    video_url = models.URLField(blank=True)
+    video_file = models.FileField(upload_to="journey_videos/", blank=True)
+    thumbnail_url = models.URLField(blank=True)
+    thumbnail_file = models.FileField(upload_to="journey_video_thumbnails/", blank=True)
+    duration = models.CharField(max_length=24, blank=True)
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ["step", "title"]
+        verbose_name = _("video da jornada")
+        verbose_name_plural = _("videos da jornada")
+
+    def __str__(self) -> str:
+        return f"Etapa {self.step} - {self.title}"
+
+    @property
+    def video_source(self) -> str:
+        if self.video_file:
+            return self.video_file.url
+        return self.video_url
+
+    @property
+    def thumbnail_source(self) -> str:
+        if self.thumbnail_file:
+            return self.thumbnail_file.url
+        return self.thumbnail_url
+
 
 # Create your models here.

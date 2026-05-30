@@ -4,11 +4,11 @@ from django.conf.urls.static import static
 from django.urls import include, path
 
 urlpatterns = [
+    path("", include("treatments.urls")),
     path("admin/", admin.site.urls),
     path("", include("core.urls")),
     path("", include("users.urls")),
     path("", include("users.partner_urls")),
-    path("", include("treatments.urls")),
     path("", include("appointments.urls")),
     path("", include("medications.urls")),
     path("", include("assistant.urls")),

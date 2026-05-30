@@ -1,0 +1,45 @@
+{% extends "layouts/patient_base.html" %}
+
+{% block title %}Videos Auxiliares | Jornada | Clinica AMARE{% endblock %}
+{% block page_title %}Videos Auxiliares{% endblock %}
+{% block page_intro %}Aqui estao os videos disponibilizados pela clinica para auxiliar voce durante cada etapa do tratamento.{% endblock %}
+
+{% block content %}
+  <section class="space-y-6">
+    <div class="flex gap-2 overflow-x-auto pb-1">
+      <a href="{% url 'treatments:videos' %}" class="amare-tab {% if not selected_step %}amare-tab-active{% endif %}">Todas</a>
+      {% for step in video_steps %}
+        <a href="{% url 'treatments:videos' %}?step={{ step.number }}" class="amare-tab {% if selected_step == step.number|stringformat:'s' %}amare-tab-active{% endif %}">Etapa {{ step.number }}</a>
+      {% endfor %}
+    </div>
+
+    <div class="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+      {% for video in videos %}
+        <article class="amare-card overflow-hidden">
+          <div class="flex h-36 items-center justify-center bg-linen">
+            {% if video.thumbnail_source %}
+              <img src="{{ video.thumbnail_source }}" alt="" class="h-full w-full object-cover">
+            {% else %}
+              <svg class="h-12 w-12 text-golden" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M8 5v14l11-7Z"/>
+              </svg>
+            {% endif %}
+          </div>
+          <div class="p-5">
+            <p class="amare-kicker">Etapa {{ video.step }}</p>
+            <h2 class="mt-2 font-serif text-xl font-bold">{{ video.title }}</h2>
+            {% if video.duration %}
+              <p class="mt-2 text-sm font-semibold text-text-muted">{{ video.duration }}</p>
+            {% endif %}
+            <p class="mt-3 text-sm leading-6 text-text-muted">{{ video.description|truncatechars:120 }}</p>
+            <a href="{% url 'treatments:video-detail' video.id %}" class="amare-button-primary mt-5 w-full">Assistir</a>
+          </div>
+        </article>
+      {% empty %}
+        <div class="md:col-span-2 xl:col-span-3">
+          {% include "components/empty_state.html" with title="Nenhum video disponivel" copy="Quando a clinica liberar videos para esta jornada, eles aparecerao aqui por etapa." %}
+        </div>
+      {% endfor %}
+    </div>
+  </section>
+{% endblock %}

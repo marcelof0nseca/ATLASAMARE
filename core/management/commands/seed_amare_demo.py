@@ -9,7 +9,7 @@ from assistant.models import AIInteraction, MayaConversation
 from assistant.services import ensure_default_conversations
 from core.models import CommunityPost, Partner, PatientTask, SupportCommunity, TreatmentReport
 from medications.models import Medication
-from treatments.models import Treatment, TreatmentStep
+from treatments.models import JourneyDocument, JourneyVideo, Treatment, TreatmentStep
 from users.models import User
 
 
@@ -66,6 +66,7 @@ class Command(BaseCommand):
         self._seed_treatment_for_luiza(created_patients[1], now)
         self._seed_empty_state_for_carol(created_patients[2])
         self._seed_explore_content(created_patients, now)
+        self._seed_journey_videos()
         self.stdout.write(self.style.SUCCESS("Dados demo da Clínica AMARE prontos."))
 
     def _seed_treatment_for_ana(self, patient, now):
@@ -96,6 +97,13 @@ class Command(BaseCommand):
                 ("Progesterona", now.replace(hour=8, minute=0, second=0, microsecond=0)),
                 ("Ácido fólico", now.replace(hour=20, minute=0, second=0, microsecond=0)),
                 ("Progesterona", (now + timedelta(days=1)).replace(hour=8, minute=0, second=0, microsecond=0)),
+            ],
+        )
+        self._seed_journey_documents(
+            treatment,
+            [
+                ("Ultrassom.pdf", 1, now - timedelta(days=8), "18 KB", "Ultrassom demo AMARE."),
+                ("Exames Hormonal.pdf", 2, now - timedelta(days=2), "9 KB", "Exames hormonais demo AMARE."),
             ],
         )
         PatientTask.objects.update_or_create(
@@ -159,6 +167,10 @@ class Command(BaseCommand):
         self._seed_medications(
             patient,
             [("Vitamina D", now.replace(hour=9, minute=30, second=0, microsecond=0))],
+        )
+        self._seed_journey_documents(
+            treatment,
+            [("Plano de cuidados.pdf", 1, now - timedelta(days=14), "12 KB", "Plano de cuidados demo AMARE.")],
         )
         report, _ = TreatmentReport.objects.get_or_create(
             patient=patient,
@@ -363,6 +375,60 @@ class Command(BaseCommand):
                 patient=patient,
                 name=name,
                 scheduled_for=scheduled_for,
+            )
+
+    def _seed_journey_documents(self, treatment, items):
+        for name, week, uploaded_at, size_label, content in items:
+            document, _ = JourneyDocument.objects.get_or_create(
+                treatment=treatment,
+                name=name,
+                week=week,
+                defaults={"uploaded_at": uploaded_at, "size_label": size_label},
+            )
+            document.uploaded_at = uploaded_at
+            document.size_label = size_label
+            if not document.file:
+                safe_name = name.lower().replace(" ", "-")
+                document.file.save(safe_name, ContentFile(content), save=False)
+            document.save()
+
+    def _seed_journey_videos(self):
+        videos = [
+            (
+                "Preparacao para o exame",
+                "Orientacoes simples para chegar mais tranquila ao exame e saber o que esperar.",
+                1,
+                "https://www.youtube.com/embed/dQw4w9WgXcQ",
+                "4 min",
+                True,
+            ),
+            (
+                "Aplicacao da medicacao",
+                "Passo a passo visual para organizar a rotina antes da aplicacao.",
+                5,
+                "https://www.youtube.com/embed/dQw4w9WgXcQ",
+                "6 min",
+                True,
+            ),
+            (
+                "Coleta de exames",
+                "Explicacao de apoio para entender a coleta e reduzir duvidas comuns.",
+                7,
+                "https://www.youtube.com/embed/dQw4w9WgXcQ",
+                "5 min",
+                True,
+            ),
+        ]
+        for title, description, step, video_url, duration, is_active in videos:
+            JourneyVideo.objects.update_or_create(
+                title=title,
+                defaults={
+                    "description": description,
+                    "step": step,
+                    "video_url": video_url,
+                    "duration": duration,
+                    "is_active": is_active,
+                },
             )
 
     def _upsert_interaction(self, user, conversation, question, answer, intent, risk_level, suggested_next_step):

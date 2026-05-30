@@ -1,0 +1,52 @@
+{% extends base_template %}
+
+{% block title %}Semana {{ week }} | Documentos | Clinica AMARE{% endblock %}
+{% block page_title %}Semana {{ week }}{% endblock %}
+{% block page_intro %}Voce tem {{ documents|length }} documentos disponiveis.{% endblock %}
+
+{% block content %}
+  <section class="space-y-5">
+    <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+      <a href="{{ documents_url }}" class="amare-button-secondary w-full sm:w-auto">Voltar para Documentos</a>
+    </div>
+
+    <article class="amare-card overflow-hidden">
+      {% if documents %}
+        <div class="overflow-x-auto">
+          <table class="w-full min-w-[44rem] text-left text-sm">
+            <thead class="border-b border-border bg-linen/55 text-text-muted">
+              <tr>
+                <th class="px-4 py-4 font-bold">Arquivo</th>
+                <th class="px-4 py-4 font-bold">Data de acesso</th>
+                <th class="px-4 py-4 font-bold">Tamanho</th>
+                <th class="px-4 py-4 text-center font-bold">Download</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for document in documents %}
+                <tr class="border-b border-border last:border-b-0">
+                  <td class="px-4 py-4 font-bold text-text-strong">{{ document.name }}</td>
+                  <td class="px-4 py-4 text-text-muted">{{ document.uploaded_at|date:"d/m/Y" }}</td>
+                  <td class="px-4 py-4 text-text-muted">{{ document.size_label }}</td>
+                  <td class="px-4 py-4">
+                    <a href="{{ document.get_download_url }}" target="_blank" rel="noopener noreferrer" class="mx-auto inline-flex h-10 w-10 items-center justify-center rounded-lg text-golden transition hover:border-golden hover:bg-linen" aria-label="Baixar {{ document.name }}">
+                      <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                        <path d="M12 3v12"/>
+                        <path d="m7 10 5 5 5-5"/>
+                        <path d="M5 21h14"/>
+                      </svg>
+                    </a>
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      {% else %}
+        <div class="p-6">
+          {% include "components/empty_state.html" with title="Nenhum documento nesta semana" copy="Quando a clinica liberar arquivos para esta etapa, eles aparecerao aqui." %}
+        </div>
+      {% endif %}
+    </article>
+  </section>
+{% endblock %}

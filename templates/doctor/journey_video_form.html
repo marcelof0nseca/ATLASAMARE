@@ -1,0 +1,83 @@
+{% extends "layouts/doctor_base.html" %}
+
+{% block title %}{{ form_title }} | Videos da Jornada | Clinica AMARE{% endblock %}
+{% block page_title %}{{ form_title }}{% endblock %}
+{% block page_intro %}Todo video precisa estar associado a uma etapa da Jornada para aparecer no contexto correto da paciente.{% endblock %}
+
+{% block content %}
+  <section class="amare-card p-6">
+    <form method="post" enctype="multipart/form-data" class="space-y-5">
+      {% csrf_token %}
+
+      {% if form.non_field_errors %}
+        <div class="rounded-lg border border-danger bg-white p-4 text-sm text-danger">
+          {{ form.non_field_errors }}
+        </div>
+      {% endif %}
+
+      <div class="grid gap-5 md:grid-cols-2">
+        <div>
+          <label for="{{ form.title.id_for_label }}" class="mb-2 block text-sm font-bold text-text-strong">Titulo</label>
+          {{ form.title }}
+          {% for error in form.title.errors %}<p class="mt-2 text-sm text-danger">{{ error }}</p>{% endfor %}
+        </div>
+
+        <div>
+          <label for="{{ form.step.id_for_label }}" class="mb-2 block text-sm font-bold text-text-strong">Etapa relacionada</label>
+          {{ form.step }}
+          {% for error in form.step.errors %}<p class="mt-2 text-sm text-danger">{{ error }}</p>{% endfor %}
+        </div>
+      </div>
+
+      <div>
+        <label for="{{ form.description.id_for_label }}" class="mb-2 block text-sm font-bold text-text-strong">Descricao</label>
+        {{ form.description }}
+        {% for error in form.description.errors %}<p class="mt-2 text-sm text-danger">{{ error }}</p>{% endfor %}
+      </div>
+
+      <div class="grid gap-5 md:grid-cols-2">
+        <div>
+          <label for="{{ form.video_url.id_for_label }}" class="mb-2 block text-sm font-bold text-text-strong">URL do video</label>
+          {{ form.video_url }}
+          {% for error in form.video_url.errors %}<p class="mt-2 text-sm text-danger">{{ error }}</p>{% endfor %}
+        </div>
+
+        <div>
+          <label for="{{ form.video_file.id_for_label }}" class="mb-2 block text-sm font-bold text-text-strong">Upload do video</label>
+          {{ form.video_file }}
+          {% for error in form.video_file.errors %}<p class="mt-2 text-sm text-danger">{{ error }}</p>{% endfor %}
+        </div>
+      </div>
+
+      <div class="grid gap-5 md:grid-cols-3">
+        <div>
+          <label for="{{ form.duration.id_for_label }}" class="mb-2 block text-sm font-bold text-text-strong">Duracao</label>
+          {{ form.duration }}
+          {% for error in form.duration.errors %}<p class="mt-2 text-sm text-danger">{{ error }}</p>{% endfor %}
+        </div>
+
+        <div>
+          <label for="{{ form.thumbnail_url.id_for_label }}" class="mb-2 block text-sm font-bold text-text-strong">URL da thumbnail</label>
+          {{ form.thumbnail_url }}
+          {% for error in form.thumbnail_url.errors %}<p class="mt-2 text-sm text-danger">{{ error }}</p>{% endfor %}
+        </div>
+
+        <div>
+          <label for="{{ form.thumbnail_file.id_for_label }}" class="mb-2 block text-sm font-bold text-text-strong">Thumbnail</label>
+          {{ form.thumbnail_file }}
+          {% for error in form.thumbnail_file.errors %}<p class="mt-2 text-sm text-danger">{{ error }}</p>{% endfor %}
+        </div>
+      </div>
+
+      <label for="{{ form.is_active.id_for_label }}" class="flex items-start gap-3 text-sm leading-6 text-text-strong">
+        {{ form.is_active }}
+        <span>Video ativo para pacientes</span>
+      </label>
+
+      <div class="flex flex-col gap-3 sm:flex-row">
+        <button class="amare-button-primary">Salvar video</button>
+        <a href="{% url 'treatments:doctor-videos' %}" class="amare-button-secondary">Cancelar</a>
+      </div>
+    </form>
+  </section>
+{% endblock %}
