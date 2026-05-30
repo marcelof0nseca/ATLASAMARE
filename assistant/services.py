@@ -163,11 +163,28 @@ MEDICATION_CHANGE_KEYWORDS = [
     "qual medicamento",
 ]
 
+GENERAL_CHAT_KEYWORDS = [
+    "oi",
+    "ola",
+    "olá",
+    "bom dia",
+    "boa tarde",
+    "boa noite",
+    "tudo bem",
+    "como voce esta",
+    "como você está",
+    "quem e voce",
+    "quem é você",
+    "obrigada",
+    "obrigado",
+]
+
 MAYA_INSTRUCTIONS = (
     "Você é Maya, uma assistente virtual acolhedora de uma clínica de fertilidade. "
     "Responda sempre em português do Brasil, com linguagem simples, humana, calma e organizada. "
     "Seu papel é acompanhar a paciente com acolhimento, clareza e baixa carga cognitiva. "
     "Você pode explicar etapas, ajudar a organizar a rotina e acolher emocionalmente. "
+    "Quando a paciente fizer uma saudação ou conversa geral, responda de forma natural, breve e convide a paciente a continuar. "
     "Não faça diagnóstico, não decida condutas clínicas, não personalize medicamentos e não substitua a equipe médica. "
     "Quando houver sintomas, risco clínico, urgência ou necessidade de decisão individual, acolha primeiro e oriente a falar com a equipe médica."
 )
@@ -313,6 +330,8 @@ def classify_question(normalized_question: str, conversation_kind: str) -> tuple
         return AIInteraction.Intent.ROUTINE, AIInteraction.RiskLevel.LOW
     if any(keyword in normalized_question for keyword in TREATMENT_KEYWORDS):
         return AIInteraction.Intent.TREATMENT, AIInteraction.RiskLevel.LOW
+    if any(keyword in normalized_question for keyword in GENERAL_CHAT_KEYWORDS):
+        return AIInteraction.Intent.GENERAL, AIInteraction.RiskLevel.LOW
 
     if conversation_kind == MayaConversation.Kind.FEELINGS:
         return AIInteraction.Intent.FEELINGS, AIInteraction.RiskLevel.LOW
@@ -508,11 +527,16 @@ def build_treatment_reply(normalized_question: str, user) -> MayaReply:
 
 
 def build_general_reply(user, conversation_kind: str) -> MayaReply:
-    if conversation_kind == MayaConversation.Kind.FEELINGS:
-        return build_feelings_reply(user)
-    if conversation_kind == MayaConversation.Kind.ROUTINE:
-        return build_routine_reply("", user)
-    return build_treatment_reply("", user)
+    return MayaReply(
+        answer=(
+            "Oi, estou aqui com você. Posso te ajudar a entender sua etapa atual, organizar sua rotina "
+            "ou só acolher um pouco como você está se sentindo hoje."
+        ),
+        mode=AIInteraction.Mode.FALLBACK,
+        intent=AIInteraction.Intent.GENERAL,
+        risk_level=AIInteraction.RiskLevel.LOW,
+        suggested_next_step="Me conte o que você quer olhar primeiro: tratamento, rotina ou como você está se sentindo.",
+    )
 
 
 def build_support_anchor(user) -> str:

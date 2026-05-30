@@ -216,6 +216,27 @@ class MayaConversationTests(TestCase):
         self.assertEqual(payload["messages"][1]["role"], "user")
         self.assertIn("Bearer groq-key", request.headers["Authorization"])
 
+    @override_settings(
+        MAYA_LLM_PROVIDER="groq",
+        MAYA_GROQ_API_KEY="groq-key",
+        MAYA_GROQ_MODEL="llama-3.1-8b-instant",
+        MAYA_GROQ_BASE_URL="https://api.groq.com/openai/v1/chat/completions",
+    )
+    def test_general_greeting_uses_llm_when_groq_is_configured(self):
+        with patch("assistant.services.urllib_request.urlopen") as urlopen_mock:
+            urlopen_mock.return_value = FakeLLMResponse(
+                {"choices": [{"message": {"content": "Oi! Estou bem e pronta para te acompanhar."}}]}
+            )
+            interaction = answer_question_with_maya(
+                self.patient,
+                "Oi, tudo bem?",
+                conversation=self.conversations[MayaConversation.Kind.TREATMENT],
+            )
+
+        self.assertEqual(interaction.mode, AIInteraction.Mode.LLM)
+        self.assertEqual(interaction.intent, AIInteraction.Intent.GENERAL)
+        self.assertIn("pronta", interaction.answer.lower())
+
     def test_send_route_resolves_to_send_view(self):
         match = resolve("/maya/send/")
         self.assertEqual(match.func.view_class, MayaSendMessageView)
