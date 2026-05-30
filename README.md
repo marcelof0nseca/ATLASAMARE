@@ -127,6 +127,10 @@ docs/
 8. Inicie o servidor:
    `python manage.py runserver`
 
+Durante desenvolvimento, use o comando abaixo para iniciar o Django e deixar o Tailwind recompilando automaticamente quando templates ou estilos mudarem:
+
+`npm run dev`
+
 ## Dados demo
 
 O comando `seed_amare_demo` cria:

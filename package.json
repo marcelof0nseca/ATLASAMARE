@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
+    "dev": "powershell -ExecutionPolicy Bypass -File ./scripts/dev.ps1",
     "build:css": "tailwindcss -i ./assets/styles/app.css -o ./static/css/app.css --minify",
     "watch:css": "tailwindcss -i ./assets/styles/app.css -o ./static/css/app.css --watch"
   },
