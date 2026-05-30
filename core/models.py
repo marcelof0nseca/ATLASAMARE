@@ -111,6 +111,41 @@ class Partner(models.Model):
         return [tag.strip() for tag in self.tags.split(",") if tag.strip()]
 
 
+class SupportCommunity(models.Model):
+    class Category(models.TextChoices):
+        EMOTIONAL = "emotional", _("Apoio emocional")
+        FERTILITY = "fertility", _("Fertilidade")
+        ROUTINE = "routine", _("Rotina")
+        FAMILY = "family", _("Familia e rede")
+        WELLBEING = "wellbeing", _("Bem-estar")
+
+    name = models.CharField(max_length=120)
+    category = models.CharField(max_length=30, choices=Category.choices)
+    audience = models.CharField(max_length=140)
+    description = models.CharField(max_length=320)
+    support_type = models.CharField(max_length=120)
+    contact_label = models.CharField(max_length=80, default="Acessar comunidade")
+    contact_url = models.URLField()
+    tags = models.CharField(max_length=180, blank=True, help_text=_("Separe por virgulas."))
+    is_featured = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=True)
+    sort_order = models.PositiveSmallIntegerField(default=1)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ["sort_order", "name"]
+        verbose_name = _("comunidade de apoio")
+        verbose_name_plural = _("comunidades de apoio")
+
+    def __str__(self) -> str:
+        return self.name
+
+    @property
+    def tag_list(self) -> list[str]:
+        return [tag.strip() for tag in self.tags.split(",") if tag.strip()]
+
+
 class CommunityPost(models.Model):
     class Status(models.TextChoices):
         PENDING = "pending", _("Pendente")

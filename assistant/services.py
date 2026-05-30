@@ -324,9 +324,9 @@ def classify_question(normalized_question: str, conversation_kind: str) -> tuple
 
 
 def answer_with_llm_or_fallback(question: str, normalized_question: str, user, conversation, intent: str, risk_level: str) -> MayaReply:
-    if settings.MAYA_OPENAI_API_KEY and settings.MAYA_OPENAI_MODEL:
+    if maya_llm_is_configured():
         try:
-            answer = call_openai(question, user, conversation, intent, risk_level)
+            answer = call_llm_provider(question, user, conversation, intent, risk_level)
             return MayaReply(
                 answer=answer,
                 mode=AIInteraction.Mode.LLM,
@@ -337,6 +337,18 @@ def answer_with_llm_or_fallback(question: str, normalized_question: str, user, c
         except Exception:
             pass
     return fallback_reply(normalized_question, user, conversation.kind, intent, risk_level)
+
+
+def maya_llm_is_configured() -> bool:
+    if settings.MAYA_LLM_PROVIDER == "gemini":
+        return bool(settings.MAYA_GEMINI_API_KEY and settings.MAYA_GEMINI_MODEL)
+    return bool(settings.MAYA_OPENAI_API_KEY and settings.MAYA_OPENAI_MODEL)
+
+
+def call_llm_provider(question: str, user, conversation: MayaConversation, intent: str, risk_level: str) -> str:
+    if settings.MAYA_LLM_PROVIDER == "gemini":
+        return call_gemini_chat_completions(question, user, conversation, intent, risk_level)
+    return call_openai_responses(question, user, conversation, intent, risk_level)
 
 
 def fallback_reply(normalized_question: str, user, conversation_kind: str, intent: str, risk_level: str) -> MayaReply:
@@ -576,7 +588,46 @@ def build_recent_history(conversation: MayaConversation) -> str:
     return "\n".join(lines)
 
 
-def call_openai(question: str, user, conversation: MayaConversation, intent: str, risk_level: str) -> str:
+def call_gemini_chat_completions(question: str, user, conversation: MayaConversation, intent: str, risk_level: str) -> str:
+    payload = {
+        "model": settings.MAYA_GEMINI_MODEL,
+        "messages": [
+            {"role": "system", "content": MAYA_INSTRUCTIONS},
+            {"role": "user", "content": build_llm_user_context(question, user, conversation, intent, risk_level)},
+        ],
+    }
+    http_request = urllib_request.Request(
+        settings.MAYA_GEMINI_BASE_URL,
+        data=json.dumps(payload).encode("utf-8"),
+        headers={
+            "Authorization": f"Bearer {settings.MAYA_GEMINI_API_KEY}",
+            "Content-Type": "application/json",
+        },
+        method="POST",
+    )
+    with urllib_request.urlopen(http_request, timeout=20) as response:
+        data = json.loads(response.read().decode("utf-8"))
+    for choice in data.get("choices", []):
+        message = choice.get("message") or {}
+        content = message.get("content")
+        if content:
+            return content
+    raise error.HTTPError(settings.MAYA_GEMINI_BASE_URL, 500, "Resposta invalida da Maya", hdrs=None, fp=None)
+
+
+def build_llm_user_context(question: str, user, conversation: MayaConversation, intent: str, risk_level: str) -> str:
+    return (
+        f"Conversa selecionada: {conversation.title}\n"
+        f"Descricao da conversa: {conversation.description}\n"
+        f"Intencao detectada: {intent}\n"
+        f"Nivel de risco: {risk_level}\n"
+        f"Contexto seguro: {build_safe_context_summary(user)}\n"
+        f"Historico recente:\n{build_recent_history(conversation)}\n"
+        f"Pergunta atual: {question}"
+    )
+
+
+def call_openai_responses(question: str, user, conversation: MayaConversation, intent: str, risk_level: str) -> str:
     payload = {
         "model": settings.MAYA_OPENAI_MODEL,
         "instructions": MAYA_INSTRUCTIONS,

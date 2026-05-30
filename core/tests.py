@@ -2,7 +2,7 @@ from django.core.files.base import ContentFile
 from django.test import TestCase
 from django.urls import reverse
 
-from .models import CommunityPost, CommunityReaction, PatientTask, TreatmentReport
+from .models import CommunityPost, CommunityReaction, PatientTask, SupportCommunity, TreatmentReport
 from users.models import User
 
 
@@ -56,6 +56,64 @@ class PatientExperienceTests(TestCase):
         self.client.post(reverse("core:community-react", args=[post.id]))
         self.client.post(reverse("core:community-react", args=[post.id]))
         self.assertEqual(CommunityReaction.objects.filter(post=post, patient=self.patient).count(), 1)
+
+    def test_support_community_tag_list_and_ordering(self):
+        second = SupportCommunity.objects.create(
+            name="Rede B",
+            category=SupportCommunity.Category.EMOTIONAL,
+            audience="Pacientes",
+            description="Apoio emocional em grupo.",
+            support_type="Grupo online",
+            contact_url="https://example.com/b",
+            tags="ansiedade, online, acolhimento",
+            sort_order=2,
+        )
+        first = SupportCommunity.objects.create(
+            name="Rede A",
+            category=SupportCommunity.Category.FERTILITY,
+            audience="Pacientes em tratamento",
+            description="Conteudo educativo.",
+            support_type="Comunidade educativa",
+            contact_url="https://example.com/a",
+            sort_order=1,
+        )
+
+        self.assertEqual(second.tag_list, ["ansiedade", "online", "acolhimento"])
+        self.assertEqual(list(SupportCommunity.objects.all()), [first, second])
+
+    def test_community_page_shows_only_active_support_communities_and_keeps_posts(self):
+        active = SupportCommunity.objects.create(
+            name="Rede Ativa",
+            category=SupportCommunity.Category.FERTILITY,
+            audience="Pacientes",
+            description="Apoio externo para pacientes.",
+            support_type="Grupo online",
+            contact_url="https://example.com/ativa",
+            is_active=True,
+        )
+        SupportCommunity.objects.create(
+            name="Rede Inativa",
+            category=SupportCommunity.Category.ROUTINE,
+            audience="Pacientes",
+            description="Nao deve aparecer.",
+            support_type="Grupo",
+            contact_url="https://example.com/inativa",
+            is_active=False,
+        )
+        post = CommunityPost.objects.create(
+            author=self.patient,
+            category=CommunityPost.Category.FEELINGS,
+            body="Uma coisa por vez me ajudou.",
+            status=CommunityPost.Status.APPROVED,
+        )
+
+        response = self.client.get(reverse("core:community"))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, active.name)
+        self.assertNotContains(response, "Rede Inativa")
+        self.assertContains(response, post.body)
+        self.assertContains(response, "Enviar para revisao")
 
     def test_locked_report_does_not_download_and_available_report_does(self):
         locked = TreatmentReport.objects.create(patient=self.patient, title="Laudo")

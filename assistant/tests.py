@@ -1,6 +1,9 @@
 from datetime import timedelta
+import json
+from urllib import error
+from unittest.mock import patch
 
-from django.test import Client, TestCase
+from django.test import Client, TestCase, override_settings
 from django.urls import resolve, reverse
 from django.utils import timezone
 
@@ -12,6 +15,20 @@ from users.models import User
 from .models import AIInteraction, MayaConversation
 from .services import answer_question_with_maya, ensure_default_conversations
 from .views import MayaSendMessageView
+
+
+class FakeLLMResponse:
+    def __init__(self, payload):
+        self.payload = payload
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc, traceback):
+        return False
+
+    def read(self):
+        return json.dumps(self.payload).encode("utf-8")
 
 
 class MayaConversationTests(TestCase):
@@ -48,7 +65,7 @@ class MayaConversationTests(TestCase):
         Medication.objects.create(
             patient=self.patient,
             name="Progesterona",
-            scheduled_for=timezone.now() + timedelta(hours=2),
+            scheduled_for=timezone.localtime().replace(hour=20, minute=0, second=0, microsecond=0),
         )
         Appointment.objects.create(
             patient=self.patient,
@@ -106,15 +123,72 @@ class MayaConversationTests(TestCase):
         self.assertIn("próximo passo", interaction.suggested_next_step.lower())
 
     def test_sensitive_symptom_in_feelings_conversation_redirects_to_team(self):
-        interaction = answer_question_with_maya(
-            self.patient,
-            "Estou com dor forte, devo mudar o remédio?",
-            conversation=self.conversations[MayaConversation.Kind.FEELINGS],
-        )
+        with patch("assistant.services.urllib_request.urlopen") as urlopen_mock:
+            interaction = answer_question_with_maya(
+                self.patient,
+                "Estou com dor forte, devo mudar o remédio?",
+                conversation=self.conversations[MayaConversation.Kind.FEELINGS],
+            )
         self.assertEqual(interaction.mode, AIInteraction.Mode.FALLBACK)
         self.assertEqual(interaction.intent, AIInteraction.Intent.SYMPTOM)
         self.assertEqual(interaction.risk_level, AIInteraction.RiskLevel.HIGH)
         self.assertIn("equipe médica", interaction.answer.lower())
+        urlopen_mock.assert_not_called()
+
+    @override_settings(MAYA_LLM_PROVIDER="gemini", MAYA_GEMINI_API_KEY="", MAYA_GEMINI_MODEL="gemini-3.5-flash")
+    def test_gemini_without_key_uses_fallback(self):
+        with patch("assistant.services.urllib_request.urlopen") as urlopen_mock:
+            interaction = answer_question_with_maya(
+                self.patient,
+                "Qual e o proximo passo do tratamento?",
+                conversation=self.conversations[MayaConversation.Kind.TREATMENT],
+            )
+
+        self.assertEqual(interaction.mode, AIInteraction.Mode.FALLBACK)
+        urlopen_mock.assert_not_called()
+
+    @override_settings(
+        MAYA_LLM_PROVIDER="gemini",
+        MAYA_GEMINI_API_KEY="test-key",
+        MAYA_GEMINI_MODEL="gemini-3.5-flash",
+        MAYA_GEMINI_BASE_URL="https://generativelanguage.googleapis.com/v1beta/openai/chat/completions",
+    )
+    def test_gemini_provider_builds_chat_completions_payload(self):
+        with patch("assistant.services.urllib_request.urlopen") as urlopen_mock:
+            urlopen_mock.return_value = FakeLLMResponse(
+                {"choices": [{"message": {"content": "Resposta gerada pela Gemini."}}]}
+            )
+            interaction = answer_question_with_maya(
+                self.patient,
+                "Me explica minha etapa atual?",
+                conversation=self.conversations[MayaConversation.Kind.TREATMENT],
+            )
+
+        request = urlopen_mock.call_args.args[0]
+        payload = json.loads(request.data.decode("utf-8"))
+        self.assertEqual(interaction.mode, AIInteraction.Mode.LLM)
+        self.assertEqual(interaction.answer, "Resposta gerada pela Gemini.")
+        self.assertEqual(payload["model"], "gemini-3.5-flash")
+        self.assertEqual(payload["messages"][0]["role"], "system")
+        self.assertEqual(payload["messages"][1]["role"], "user")
+        self.assertIn("Bearer test-key", request.headers["Authorization"])
+
+    @override_settings(
+        MAYA_LLM_PROVIDER="gemini",
+        MAYA_GEMINI_API_KEY="test-key",
+        MAYA_GEMINI_MODEL="gemini-3.5-flash",
+    )
+    def test_gemini_api_error_falls_back(self):
+        with patch("assistant.services.urllib_request.urlopen") as urlopen_mock:
+            urlopen_mock.side_effect = error.URLError("timeout")
+            interaction = answer_question_with_maya(
+                self.patient,
+                "Como posso me organizar com a agenda?",
+                conversation=self.conversations[MayaConversation.Kind.ROUTINE],
+            )
+
+        self.assertEqual(interaction.mode, AIInteraction.Mode.FALLBACK)
+        self.assertEqual(interaction.intent, AIInteraction.Intent.ROUTINE)
 
     def test_send_route_resolves_to_send_view(self):
         match = resolve("/maya/send/")

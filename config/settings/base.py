@@ -123,3 +123,10 @@ REST_FRAMEWORK = {
 MAYA_OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "")
 MAYA_OPENAI_MODEL = os.getenv("OPENAI_MODEL", "")
 MAYA_OPENAI_BASE_URL = os.getenv("OPENAI_BASE_URL", "https://api.openai.com/v1/responses")
+MAYA_LLM_PROVIDER = os.getenv("MAYA_LLM_PROVIDER", "openai").strip().lower()
+MAYA_GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")
+MAYA_GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-3.5-flash")
+MAYA_GEMINI_BASE_URL = os.getenv(
+    "GEMINI_BASE_URL",
+    "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions",
+)

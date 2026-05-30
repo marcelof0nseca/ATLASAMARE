@@ -8,7 +8,7 @@ from appointments.models import Appointment
 from medications.models import Medication
 from treatments.models import Treatment
 
-from .models import CommunityPost, PatientTask, TreatmentReport
+from .models import CommunityPost, PatientTask, SupportCommunity, TreatmentReport
 
 
 def build_patient_dashboard(user):
@@ -160,5 +160,6 @@ def get_explore_context(user):
     return {
         "approved_posts": CommunityPost.objects.filter(status=CommunityPost.Status.APPROVED)[:3],
         "featured_partners": Partner.objects.filter(is_active=True, is_featured=True)[:4],
+        "featured_support_communities": SupportCommunity.objects.filter(is_active=True, is_featured=True)[:4],
         "pending_posts_count": CommunityPost.objects.filter(author=user, status=CommunityPost.Status.PENDING).count(),
     }

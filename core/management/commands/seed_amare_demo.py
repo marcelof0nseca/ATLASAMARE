@@ -7,7 +7,7 @@ from django.utils import timezone
 from appointments.models import Appointment
 from assistant.models import AIInteraction, MayaConversation
 from assistant.services import ensure_default_conversations
-from core.models import CommunityPost, Partner, PatientTask, TreatmentReport
+from core.models import CommunityPost, Partner, PatientTask, SupportCommunity, TreatmentReport
 from medications.models import Medication
 from treatments.models import Treatment, TreatmentStep
 from users.models import User
@@ -244,6 +244,58 @@ class Command(BaseCommand):
                     "description": description,
                     "tags": tags,
                     "contact_url": "https://wa.me/5581998003535",
+                    "is_featured": featured,
+                    "is_active": True,
+                    "sort_order": index,
+                },
+            )
+
+        support_community_data = [
+            (
+                "Rede Fertilidade com Calma",
+                SupportCommunity.Category.FERTILITY,
+                "Pacientes em tratamento de reproducao assistida",
+                "Grupo educativo com encontros online sobre rotina, duvidas gerais e acolhimento entre pacientes.",
+                "Grupo online moderado",
+                "educacao,online,acolhimento",
+                True,
+                "https://example.com/fertilidade-com-calma",
+            ),
+            (
+                "Circulo de Espera",
+                SupportCommunity.Category.EMOTIONAL,
+                "Pacientes em fases de espera, beta e preparacao",
+                "Comunidade focada em escuta, ansiedade e pequenas estrategias para atravessar periodos de incerteza.",
+                "Comunidade de apoio emocional",
+                "ansiedade,espera,escuta",
+                True,
+                "https://example.com/circulo-de-espera",
+            ),
+            (
+                "Parceiros na Jornada",
+                SupportCommunity.Category.FAMILY,
+                "Acompanhantes, casais e rede de apoio",
+                "Espaco com materiais e conversas para quem acompanha uma paciente durante o tratamento.",
+                "Conteudo para rede de apoio",
+                "familia,parceiros,rede",
+                False,
+                "https://example.com/parceiros-na-jornada",
+            ),
+        ]
+        for index, (name, category, audience, description, support_type, tags, featured, url) in enumerate(
+            support_community_data,
+            start=1,
+        ):
+            SupportCommunity.objects.update_or_create(
+                name=name,
+                defaults={
+                    "category": category,
+                    "audience": audience,
+                    "description": description,
+                    "support_type": support_type,
+                    "contact_label": "Acessar comunidade",
+                    "contact_url": url,
+                    "tags": tags,
                     "is_featured": featured,
                     "is_active": True,
                     "sort_order": index,

@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.utils import timezone
 
-from .models import CommunityPost, CommunityReaction, Partner, PatientTask, TreatmentReport
+from .models import CommunityPost, CommunityReaction, Partner, PatientTask, SupportCommunity, TreatmentReport
 
 
 @admin.register(PatientTask)
@@ -49,6 +49,14 @@ class CommunityPostAdmin(admin.ModelAdmin):
     @admin.action(description="Rejeitar relatos selecionados")
     def reject_posts(self, request, queryset):
         queryset.update(status=CommunityPost.Status.REJECTED)
+
+
+@admin.register(SupportCommunity)
+class SupportCommunityAdmin(admin.ModelAdmin):
+    list_display = ("name", "category", "audience", "support_type", "is_featured", "is_active", "sort_order")
+    list_filter = ("category", "is_featured", "is_active")
+    search_fields = ("name", "audience", "description", "support_type", "tags")
+    list_editable = ("is_featured", "is_active", "sort_order")
 
 
 @admin.register(CommunityReaction)

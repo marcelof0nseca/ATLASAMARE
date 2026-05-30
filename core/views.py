@@ -8,7 +8,7 @@ from django.views.generic import RedirectView, TemplateView
 
 from .forms import CommunityPostForm, PatientTaskForm
 from .mixins import PatientRequiredMixin
-from .models import CommunityPost, CommunityReaction, Partner, PatientTask, TreatmentReport
+from .models import CommunityPost, CommunityReaction, Partner, PatientTask, SupportCommunity, TreatmentReport
 from .services import build_patient_dashboard, build_patient_routine, get_explore_context
 
 
@@ -132,6 +132,7 @@ class CommunityFeedView(PatientRequiredMixin, TemplateView):
         )
         context.update(
             {
+                "support_communities": SupportCommunity.objects.filter(is_active=True),
                 "posts": posts,
                 "post_form": CommunityPostForm(),
                 "my_pending_posts": CommunityPost.objects.filter(
