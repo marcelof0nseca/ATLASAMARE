@@ -4,8 +4,8 @@
 {% block body %}
   <aside class="amare-patient-sidebar">
     <div class="mb-8 flex items-center justify-between gap-3 px-2">
-      <a href="{% url 'core:dashboard' %}" class="inline-flex items-center">
-        <img src="{% static 'images/logoamare.png' %}" alt="Clínica Amare" class="h-12 w-auto object-contain">
+      <a href="{% url 'core:dashboard' %}" class="amare-brand-link">
+        <img src="{% static 'images/logoamare.png' %}" alt="Clínica Amare" class="amare-brand-logo amare-brand-logo-sidebar">
       </a>
       <span class="rounded-lg bg-linen px-2 py-1 text-[11px] font-semibold uppercase tracking-[0.12em] text-text-muted">Paciente</span>
     </div>
@@ -52,11 +52,11 @@
   </aside>
 
   <header class="amare-patient-navbar">
-    <a href="{% url 'core:dashboard' %}" class="inline-flex items-center lg:hidden">
-      <img src="{% static 'images/logoamare.png' %}" alt="Clínica Amare" class="h-11 w-auto object-contain">
+    <a href="{% url 'core:dashboard' %}" class="amare-brand-link lg:hidden">
+      <img src="{% static 'images/logoamare.png' %}" alt="Clínica Amare" class="amare-brand-logo amare-brand-logo-topbar">
     </a>
-    <div class="hidden items-center gap-4 lg:flex">
-      <img src="{% static 'images/logoamare.png' %}" alt="Clínica Amare" class="h-11 w-auto object-contain">
+    <div class="hidden min-w-0 items-center gap-4 lg:flex">
+      <img src="{% static 'images/logoamare.png' %}" alt="Clínica Amare" class="amare-brand-logo amare-brand-logo-topbar">
       <div>
       <p class="amare-kicker">Clínica Amare</p>
       <p class="mt-1 text-sm font-medium text-text-muted">Plataforma ATLAS</p>

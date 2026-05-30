@@ -187,6 +187,26 @@
     @apply fixed inset-y-0 left-0 z-30 hidden w-64 border-r border-border bg-white/85 px-3 py-5 backdrop-blur-xl lg:block;
   }
 
+  .amare-brand-link {
+    @apply inline-flex min-w-0 shrink-0 items-center;
+  }
+
+  .amare-brand-logo {
+    @apply block h-auto w-auto object-contain;
+    max-width: min(10rem, 46vw);
+    max-height: 2.75rem;
+  }
+
+  .amare-brand-logo-sidebar {
+    max-width: 8.5rem;
+    max-height: 3rem;
+  }
+
+  .amare-brand-logo-topbar {
+    max-width: min(9.5rem, 42vw);
+    max-height: 2.5rem;
+  }
+
   .amare-patient-page-title {
     @apply font-display text-4xl font-medium leading-none text-text-strong sm:text-5xl;
   }
