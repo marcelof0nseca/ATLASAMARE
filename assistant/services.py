@@ -179,11 +179,29 @@ GENERAL_CHAT_KEYWORDS = [
     "obrigado",
 ]
 
+FACTUAL_SYSTEM_KEYWORDS = [
+    "proximo passo",
+    "proximos passos",
+    "proxima etapa",
+    "etapa atual",
+    "minha etapa",
+    "minhas etapas",
+    "timeline",
+    "proxima dose",
+    "proximo compromisso",
+    "minha agenda",
+]
+
 MAYA_INSTRUCTIONS = (
     "Você é Maya, uma assistente virtual acolhedora de uma clínica de fertilidade. "
     "Responda sempre em português do Brasil, com linguagem simples, humana, calma e organizada. "
     "Seu papel é acompanhar a paciente com acolhimento, clareza e baixa carga cognitiva. "
-    "Você pode explicar etapas, ajudar a organizar a rotina e acolher emocionalmente. "
+    "Você pode orientar a paciente sobre onde encontrar etapas, ajudar a organizar a rotina e acolher emocionalmente. "
+    "Responda em no máximo 2 parágrafos curtos. "
+    "Use apenas informações que estejam no contexto seguro enviado pelo sistema. "
+    "Não invente datas, dias da semana, duração de etapas, decisões clínicas, condutas, resultados esperados ou detalhes como criopreservação se isso não estiver no contexto. "
+    "Quando falar de próximos passos, diga 'pelo que está registrado' e cite apenas etapa atual, próximo passo, próxima dose ou próximo compromisso presentes no contexto. "
+    "Não explique procedimentos, laboratório, transferência, medicamentos ou decisões clínicas a menos que esses detalhes estejam explicitamente no contexto. "
     "Quando a paciente fizer uma saudação ou conversa geral, responda de forma natural e breve, sem inferir sintomas, emoções ou estado clínico que ela não mencionou. "
     "Nesses casos, apenas cumprimente e convide a paciente a contar se quer falar sobre tratamento, rotina ou sentimentos. "
     "Não faça diagnóstico, não decida condutas clínicas, não personalize medicamentos e não substitua a equipe médica. "
@@ -344,6 +362,11 @@ def classify_question(normalized_question: str, conversation_kind: str) -> tuple
 
 
 def answer_with_llm_or_fallback(question: str, normalized_question: str, user, conversation, intent: str, risk_level: str) -> MayaReply:
+    if intent in {AIInteraction.Intent.TREATMENT, AIInteraction.Intent.ROUTINE} and any(
+        keyword in normalized_question for keyword in FACTUAL_SYSTEM_KEYWORDS
+    ):
+        return fallback_reply(normalized_question, user, conversation.kind, intent, risk_level)
+
     if maya_llm_is_configured():
         try:
             answer = call_llm_provider(question, user, conversation, intent, risk_level)
@@ -352,7 +375,7 @@ def answer_with_llm_or_fallback(question: str, normalized_question: str, user, c
                 mode=AIInteraction.Mode.LLM,
                 intent=intent,
                 risk_level=risk_level,
-                suggested_next_step=suggested_next_step_for_intent(user, conversation.kind, intent, risk_level),
+                suggested_next_step="",
             )
         except Exception:
             pass
@@ -497,16 +520,29 @@ def build_treatment_reply(normalized_question: str, user) -> MayaReply:
     elif any(keyword in normalized_question for keyword in ["proximo passo", "proxima etapa", "o que vem depois", "o que vem a seguir"]):
         if next_step:
             answer = (
-                f"De forma geral, o próximo passo costuma ser {next_step.name.lower()}. "
-                "Ele aparece na timeline para ajudar você a acompanhar o caminho com mais previsibilidade."
+                f"Pelo que está registrado, sua etapa atual é {current_step.name.lower() if current_step else 'a etapa em andamento'} "
+                f"e o próximo passo é {next_step.name.lower()}. Você pode acompanhar isso na timeline, sem precisar guardar tudo de cabeça."
             )
         elif current_step:
             answer = (
-                f"No momento, a etapa em destaque é {current_step.name.lower()}. "
-                "Quando houver uma nova atualização do tratamento, o próximo passo vai aparecer na timeline."
+                f"Pelo que está registrado, sua etapa atual é {current_step.name.lower()}. "
+                "Quando a equipe atualizar uma nova etapa, ela aparece na timeline."
             )
         else:
-            answer = "As etapas do tratamento já estão organizadas. Assim que a primeira começar, o próximo passo ficará mais claro."
+            answer = "Quando a equipe iniciar ou atualizar sua jornada, a timeline vai mostrar a etapa atual e o próximo passo."
+    elif any(keyword in normalized_question for keyword in ["proximos passos", "proximas etapas"]):
+        if next_step:
+            answer = (
+                f"Pelo que está registrado, sua etapa atual é {current_step.name.lower() if current_step else 'a etapa em andamento'} "
+                f"e o próximo passo é {next_step.name.lower()}. Você pode acompanhar isso na timeline, sem precisar guardar tudo de cabeça."
+            )
+        elif current_step:
+            answer = (
+                f"Pelo que está registrado, sua etapa atual é {current_step.name.lower()}. "
+                "Quando a equipe atualizar uma nova etapa, ela aparece na timeline."
+            )
+        else:
+            answer = "Quando a equipe iniciar ou atualizar sua jornada, a timeline vai mostrar a etapa atual e o próximo passo."
     elif current_step:
         answer = (
             f"Hoje a etapa em destaque é {current_step.name.lower()}. "
@@ -575,10 +611,19 @@ def suggested_next_step_for_intent(user, conversation_kind: str, intent: str, ri
     return "Siga por partes e, se precisar, pergunte novamente com mais contexto."
 
 
-def build_safe_context_summary(user) -> str:
+def build_safe_context_summary(user, intent: str = AIInteraction.Intent.GENERAL) -> str:
+    today = timezone.localdate()
     treatment = Treatment.objects.filter(patient=user, is_active=True).prefetch_related("steps").first()
     current_step = treatment.current_step.name if treatment and treatment.current_step else "Sem etapa em andamento"
     next_step = treatment.next_step.name if treatment and treatment.next_step else "Sem próxima etapa definida"
+    treatment_text = (
+        f"Data local de hoje: {today:%d/%m/%Y}. "
+        f"Etapa atual: {current_step}. "
+        f"Próximo passo: {next_step}."
+    )
+    if intent == AIInteraction.Intent.TREATMENT:
+        return treatment_text
+
     next_dose = Medication.objects.filter(
         patient=user,
         scheduled_for__date=timezone.localdate(),
@@ -599,8 +644,7 @@ def build_safe_context_summary(user) -> str:
         else "Sem compromisso próximo"
     )
     return (
-        f"Etapa atual: {current_step}. "
-        f"Próximo passo: {next_step}. "
+        f"{treatment_text} "
         f"Próxima dose: {dose_text}. "
         f"Próximo compromisso: {appointment_text}."
     )
@@ -613,13 +657,14 @@ def build_recent_history(conversation: MayaConversation) -> str:
     lines = []
     for interaction in reversed(list(recent_messages)):
         lines.append(f"Paciente: {interaction.question}")
-        lines.append(f"Maya: {interaction.answer}")
     return "\n".join(lines)
 
 
 def call_gemini_chat_completions(question: str, user, conversation: MayaConversation, intent: str, risk_level: str) -> str:
     payload = {
         "model": settings.MAYA_GEMINI_MODEL,
+        "temperature": 0.35,
+        "max_tokens": 260,
         "messages": [
             {"role": "system", "content": MAYA_INSTRUCTIONS},
             {"role": "user", "content": build_llm_user_context(question, user, conversation, intent, risk_level)},
@@ -649,6 +694,8 @@ def call_gemini_chat_completions(question: str, user, conversation: MayaConversa
 def call_groq_chat_completions(question: str, user, conversation: MayaConversation, intent: str, risk_level: str) -> str:
     payload = {
         "model": settings.MAYA_GROQ_MODEL,
+        "temperature": 0.35,
+        "max_tokens": 260,
         "messages": [
             {"role": "system", "content": MAYA_INSTRUCTIONS},
             {"role": "user", "content": build_llm_user_context(question, user, conversation, intent, risk_level)},
@@ -681,8 +728,8 @@ def build_llm_user_context(question: str, user, conversation: MayaConversation, 
         f"Descricao da conversa: {conversation.description}\n"
         f"Intencao detectada: {intent}\n"
         f"Nivel de risco: {risk_level}\n"
-        f"Contexto seguro: {build_safe_context_summary(user)}\n"
-        f"Historico recente:\n{build_recent_history(conversation)}\n"
+        f"Contexto seguro: {build_safe_context_summary(user, intent)}\n"
+        f"Historico recente de perguntas da paciente, apenas para continuidade de conversa e nao como fonte factual:\n{build_recent_history(conversation)}\n"
         f"Pergunta atual: {question}"
     )
 
