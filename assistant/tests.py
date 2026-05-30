@@ -215,6 +215,8 @@ class MayaConversationTests(TestCase):
         self.assertEqual(payload["messages"][0]["role"], "system")
         self.assertEqual(payload["messages"][1]["role"], "user")
         self.assertIn("Bearer groq-key", request.headers["Authorization"])
+        self.assertEqual(request.headers["Accept"], "application/json")
+        self.assertEqual(request.headers["User-agent"], "Clinica-AMARE/1.0")
 
     @override_settings(
         MAYA_LLM_PROVIDER="groq",

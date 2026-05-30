@@ -184,7 +184,8 @@ MAYA_INSTRUCTIONS = (
     "Responda sempre em português do Brasil, com linguagem simples, humana, calma e organizada. "
     "Seu papel é acompanhar a paciente com acolhimento, clareza e baixa carga cognitiva. "
     "Você pode explicar etapas, ajudar a organizar a rotina e acolher emocionalmente. "
-    "Quando a paciente fizer uma saudação ou conversa geral, responda de forma natural, breve e convide a paciente a continuar. "
+    "Quando a paciente fizer uma saudação ou conversa geral, responda de forma natural e breve, sem inferir sintomas, emoções ou estado clínico que ela não mencionou. "
+    "Nesses casos, apenas cumprimente e convide a paciente a contar se quer falar sobre tratamento, rotina ou sentimentos. "
     "Não faça diagnóstico, não decida condutas clínicas, não personalize medicamentos e não substitua a equipe médica. "
     "Quando houver sintomas, risco clínico, urgência ou necessidade de decisão individual, acolha primeiro e oriente a falar com a equipe médica."
 )
@@ -630,6 +631,8 @@ def call_gemini_chat_completions(question: str, user, conversation: MayaConversa
         headers={
             "Authorization": f"Bearer {settings.MAYA_GEMINI_API_KEY}",
             "Content-Type": "application/json",
+            "Accept": "application/json",
+            "User-Agent": "Clinica-AMARE/1.0",
         },
         method="POST",
     )
@@ -657,6 +660,8 @@ def call_groq_chat_completions(question: str, user, conversation: MayaConversati
         headers={
             "Authorization": f"Bearer {settings.MAYA_GROQ_API_KEY}",
             "Content-Type": "application/json",
+            "Accept": "application/json",
+            "User-Agent": "Clinica-AMARE/1.0",
         },
         method="POST",
     )
