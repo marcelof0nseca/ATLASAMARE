@@ -14,11 +14,11 @@
 
 {% block body %}
   <aside class="amare-patient-sidebar">
-    <div class="mb-8 flex items-center justify-between gap-3 px-2">
+    <div class="mb-8 flex flex-col items-start gap-3 px-2">
       <a href="{% url 'partner:dashboard' %}" class="amare-brand-link">
         <img src="{% static 'images/amare-logo.png' %}" alt="Clínica Amare" class="amare-brand-logo amare-brand-logo-sidebar">
       </a>
-      <span class="rounded-lg bg-linen px-2 py-1 text-[11px] font-semibold uppercase tracking-[0.12em] text-text-muted">Acompanhante</span>
+      <span class="w-full rounded-lg bg-linen px-2 py-1 text-center text-[11px] font-semibold uppercase leading-4 tracking-[0.08em] text-text-muted">Acompanhante</span>
     </div>
 
     <nav aria-label="Navegação do acompanhante">
