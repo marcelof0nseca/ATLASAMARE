@@ -2457,6 +2457,10 @@ button:focus-visible,
     width: auto;
   }
 
+  .sm\:max-w-md {
+    max-width: 28rem;
+  }
+
   .sm\:flex-shrink {
     flex-shrink: 1;
   }

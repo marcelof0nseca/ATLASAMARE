@@ -112,7 +112,10 @@
             <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg>
           </button>
         </div>
-        <p class="text-xs leading-5 text-text-muted">Se houver sinal de cuidado clinico, a Maya vai orientar contato com a equipe.</p>
+        <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <p class="text-xs leading-5 text-text-muted sm:max-w-md">Se houver sinal de cuidado clínico, a Maya vai orientar contato com a equipe.</p>
+          {% include "components/clinic_whatsapp_link.html" with label="Falar com a clínica" caption="WhatsApp da Clínica AMARE" class_name="amare-contact-link w-full justify-start bg-white sm:w-auto" %}
+        </div>
       </form>
       </div>
     </section>
