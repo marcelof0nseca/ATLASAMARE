@@ -541,6 +541,7 @@ button { cursor: pointer; border: none; background: none; font-family: var(--fon
   height: 44px;
   object-fit: contain;
   display: block;
+  mix-blend-mode: multiply;
 }
 
 .trust-item-name {
