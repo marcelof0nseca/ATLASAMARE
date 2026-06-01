@@ -95,7 +95,7 @@ class PatientJourneyDocumentsView(PatientRequiredMixin, TemplateView):
         context = super().get_context_data(**kwargs)
         context.update(
             {
-                "active_nav": "treatment",
+                "active_nav": "documents",
                 "treatment": treatment,
                 "weeks": build_document_weeks(treatment, self.week_url_name),
                 "back_url": reverse("treatments:timeline"),
@@ -127,7 +127,7 @@ class PatientJourneyWeekDocumentsView(PatientRequiredMixin, TemplateView):
         context = super().get_context_data(**kwargs)
         context.update(
             {
-                "active_nav": "treatment",
+                "active_nav": "documents",
                 "week": week,
                 "documents": documents,
                 "documents_url": reverse(self.documents_url_name),
@@ -226,7 +226,7 @@ class PatientJourneyVideoListView(PatientRequiredMixin, TemplateView):
         context = super().get_context_data(**kwargs)
         context.update(
             {
-                "active_nav": "treatment",
+                "active_nav": "videos",
                 "videos": videos,
                 "video_steps": build_video_steps(list(JourneyVideo.objects.filter(is_active=True))),
                 "selected_step": selected_step,
@@ -242,7 +242,7 @@ class PatientJourneyVideoDetailView(PatientRequiredMixin, TemplateView):
         context = super().get_context_data(**kwargs)
         context.update(
             {
-                "active_nav": "treatment",
+                "active_nav": "videos",
                 "video": get_object_or_404(JourneyVideo, pk=self.kwargs["pk"], is_active=True),
             }
         )
