@@ -1,25 +1,25 @@
 /* ============================================================
    AMARE — Login Page: editorial design
    "Carta" direction · Cormorant Garamond + Manrope
-   Design Handoff v1 · rosé accent #B6796F
+   Design Handoff v1 · AMARE palette
    ============================================================ */
 
 /* ── Design tokens ──────────────────────────────────────────── */
 :root {
-  --lp-cream:        #F3E9D7;
-  --lp-cream-soft:   #FAF3E6;
-  --lp-paper:        #FFFCF6;
-  --lp-ink:          #2A1F15;
-  --lp-ink-2:        #5F4B3A;
-  --lp-ink-3:        #9A876F;
-  --lp-line:         rgba(42, 31, 21, 0.18);
+  --lp-cream:        #FAF4E8;
+  --lp-cream-soft:   #FFF8F6;
+  --lp-paper:        #FFFFFF;
+  --lp-ink:          #4B3D56;
+  --lp-ink-2:        #5E5066;
+  --lp-ink-3:        #797493;
+  --lp-line:         rgba(75, 61, 86, 0.18);
 
-  --lp-accent:       #B6796F;
-  --lp-accent-deep:  #8E5A52;
-  --lp-accent-soft:  #D9B5AD;
-  --lp-accent-tint:  rgba(182, 121, 111, 0.10);
+  --lp-accent:       #C47D8C;
+  --lp-accent-deep:  #B56D7C;
+  --lp-accent-soft:  #E7B9C3;
+  --lp-accent-tint:  rgba(196, 125, 140, 0.12);
 
-  --lp-sage:         #8B9D7E;
+  --lp-sage:         #8DA69A;
 
   --lp-serif: 'Cormorant Garamond', 'Hoefler Text', Georgia, serif;
   --lp-sans:  'Manrope', ui-sans-serif, system-ui, sans-serif;
@@ -40,9 +40,9 @@
   display: flex;
   flex-direction: column;
   background:
-    radial-gradient(ellipse at top left, rgba(196, 125, 140, 0.12), transparent 42rem),
-    radial-gradient(ellipse at bottom right, rgba(141, 166, 154, 0.14), transparent 46rem),
-    linear-gradient(180deg, #ffffff 0%, #faf4e8 100%);
+    radial-gradient(ellipse at top left, rgba(196, 125, 140, 0.18), transparent 42rem),
+    radial-gradient(ellipse at bottom right, rgba(196, 125, 140, 0.10), transparent 46rem),
+    linear-gradient(180deg, #ffffff 0%, #fff8f6 52%, #faf4e8 100%);
   color: var(--lp-ink);
   font-family: var(--lp-sans);
   -webkit-font-smoothing: antialiased;
@@ -308,7 +308,7 @@
   font-size: 19px;
   letter-spacing: 0.01em;
   cursor: pointer;
-  box-shadow: 0 6px 20px -8px rgba(182, 121, 111, 0.55);
+  box-shadow: 0 6px 20px -8px rgba(196, 125, 140, 0.55);
   transition: background 0.45s ease, transform 0.2s ease, box-shadow 0.3s ease;
   min-width: 160px;
   justify-content: center;
@@ -318,7 +318,7 @@
 .lp-submit:hover:not([disabled]) {
   background: var(--lp-accent-deep);
   transform: translateY(-1px);
-  box-shadow: 0 8px 24px -6px rgba(182, 121, 111, 0.5);
+  box-shadow: 0 8px 24px -6px rgba(196, 125, 140, 0.5);
 }
 .lp-submit:hover:not([disabled]) .lp-submit-arrow {
   transform: translateX(4px);
