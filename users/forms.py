@@ -76,6 +76,13 @@ class ProfileForm(forms.ModelForm):
         }
 
 
+class ProfilePushForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ["push_notifications_enabled"]
+        labels = {"push_notifications_enabled": "Notificações web ativas"}
+
+
 class ProfileNameForm(forms.ModelForm):
     class Meta:
         model = User

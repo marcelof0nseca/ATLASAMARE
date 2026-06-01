@@ -13,6 +13,7 @@ from core.models import CommunityPost
 from .forms import (
     ChangePasswordForm,
     DoctorPatientCreateForm,
+    ProfilePushForm,
     LoginForm,
     PasswordResetRequestForm,
     ProfileEmergencyForm,
@@ -107,6 +108,7 @@ _SECTION_FORMS = {
     "personal":      ProfilePersonalForm,
     "emergency":     ProfileEmergencyForm,
     "notifications": ProfileNotificationsForm,
+    "push":          ProfilePushForm,
 }
 
 

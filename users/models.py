@@ -43,6 +43,7 @@ class User(AbstractUser):
         verbose_name=_("paciente acompanhado"),
     )
     wants_in_app_reminders = models.BooleanField(default=True)
+    push_notifications_enabled = models.BooleanField(default=False, verbose_name=_("notificações web ativas"))
 
     # ── Dados pessoais ────────────────────────────────────────────────────────
     avatar = models.ImageField(upload_to="avatars/", null=True, blank=True)

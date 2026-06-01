@@ -90,7 +90,7 @@
       });
     </script>
   </head>
-  <body class="relative" hx-boost="true">
+  <body class="relative" hx-boost="true" data-user-id="{% if request.user.is_authenticated %}{{ request.user.id }}{% endif %}">
     <div id="amare-progress"></div>
     <div class="pointer-events-none absolute inset-x-0 top-0 h-72 bg-gradient-to-b from-mandys-pink/20 via-linen to-transparent"></div>
     <div id="toast-root" class="fixed right-4 top-4 z-50 w-[min(24rem,calc(100vw-2rem))]"></div>
