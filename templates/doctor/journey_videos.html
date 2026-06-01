@@ -1,17 +1,17 @@
 {% extends "layouts/doctor_base.html" %}
 
-{% block title %}Videos da Jornada | Clinica AMARE{% endblock %}
-{% block page_title %}Gerenciar Videos da Jornada{% endblock %}
-{% block page_intro %}Cadastre, edite e controle quais videos ficam visiveis para as pacientes em cada etapa do tratamento.{% endblock %}
+{% block title %}Vídeos da Jornada | Clínica AMARE{% endblock %}
+{% block page_title %}Gerenciar vídeos da Jornada{% endblock %}
+{% block page_intro %}Cadastre, edite e controle quais vídeos ficam visíveis para as pacientes em cada etapa do tratamento.{% endblock %}
 
 {% block content %}
   <section class="amare-card overflow-hidden">
     <div class="flex flex-col gap-3 border-b border-border p-5 sm:flex-row sm:items-center sm:justify-between">
       <div>
         <p class="amare-kicker">Biblioteca</p>
-        <h2 class="mt-2 font-serif text-2xl font-bold">Videos cadastrados</h2>
+        <h2 class="mt-2 font-serif text-2xl font-bold">Vídeos cadastrados</h2>
       </div>
-      <a href="{% url 'treatments:doctor-video-create' %}" class="amare-button-primary">+ Novo Video</a>
+      <a href="{% url 'treatments:doctor-video-create' %}" class="amare-button-primary">+ Novo vídeo</a>
     </div>
 
     {% if videos %}
@@ -19,7 +19,7 @@
         <table class="w-full min-w-[44rem] text-left text-sm">
           <thead class="border-b border-border bg-linen/55 text-text-muted">
             <tr>
-              <th class="px-4 py-4 font-bold">Titulo</th>
+              <th class="px-4 py-4 font-bold">Título</th>
               <th class="px-4 py-4 font-bold">Etapa</th>
               <th class="px-4 py-4 font-bold">Status</th>
               <th class="px-4 py-4 text-right font-bold">Acoes</th>
@@ -47,7 +47,7 @@
                       <button class="amare-button-secondary">{% if video.is_active %}Desativar{% else %}Ativar{% endif %}</button>
                     </form>
                     <a href="{% url 'treatments:doctor-video-edit' video.id %}" class="amare-button-secondary">Editar</a>
-                    <form method="post" action="{% url 'treatments:doctor-video-delete' video.id %}" onsubmit="return confirm('Remover este video da jornada?');">
+                    <form method="post" action="{% url 'treatments:doctor-video-delete' video.id %}" onsubmit="return confirm('Remover este vídeo da jornada?');">
                       {% csrf_token %}
                       <button class="amare-button-secondary text-danger">Excluir</button>
                     </form>
@@ -60,7 +60,7 @@
       </div>
     {% else %}
       <div class="p-6">
-        {% include "components/empty_state.html" with title="Nenhum video cadastrado" copy="Use Novo Video para criar o primeiro conteudo auxiliar por etapa." %}
+        {% include "components/empty_state.html" with title="Nenhum vídeo cadastrado" copy="Use Novo vídeo para criar o primeiro conteúdo auxiliar por etapa." %}
       </div>
     {% endif %}
   </section>

@@ -33,7 +33,7 @@
 - Paciente acessa apenas os proprios dados
 - Medico acessa apenas pacientes sob sua responsabilidade
 - Atualizacao de etapas so ocorre via acoes validas do fluxo
-- Conclusao de medicacao so pode acontecer uma vez por dose
+- Conclusão de medicação só pode acontecer uma vez por dose
 - Conversas e interacoes da Maya ficam restritas a propria paciente
 
 ## Banco

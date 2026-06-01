@@ -45,15 +45,15 @@ class JourneyVideoForm(forms.ModelForm):
             "is_active",
         ]
         labels = {
-            "title": "Titulo",
-            "description": "Descricao",
+            "title": "Título",
+            "description": "Descrição",
             "step": "Etapa relacionada",
-            "duration": "Duracao",
-            "video_url": "URL do video",
-            "video_file": "Upload do video",
+            "duration": "Duração",
+            "video_url": "URL do vídeo",
+            "video_file": "Upload do vídeo",
             "thumbnail_url": "URL da thumbnail",
             "thumbnail_file": "Thumbnail",
-            "is_active": "Video ativo para pacientes",
+            "is_active": "Vídeo ativo para pacientes",
         }
         widgets = {
             "description": forms.Textarea(attrs={"rows": 5}),
@@ -65,5 +65,5 @@ class JourneyVideoForm(forms.ModelForm):
         video_url = cleaned_data.get("video_url")
         video_file = cleaned_data.get("video_file")
         if not video_url and not video_file:
-            raise forms.ValidationError("Informe uma URL ou envie um arquivo de video.")
+            raise forms.ValidationError("Informe uma URL ou envie um arquivo de vídeo.")
         return cleaned_data

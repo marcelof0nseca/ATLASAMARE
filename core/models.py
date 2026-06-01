@@ -80,7 +80,7 @@ class TreatmentReport(models.Model):
 class Partner(models.Model):
     class Category(models.TextChoices):
         PSYCHOLOGY = "psychology", _("Psicologia")
-        NUTRITION = "nutrition", _("Nutricao")
+        NUTRITION = "nutrition", _("Nutrição")
         ACUPUNCTURE = "acupuncture", _("Acupuntura")
         PHYSIOTHERAPY = "physiotherapy", _("Fisioterapia")
         WELLBEING = "wellbeing", _("Bem-estar")
@@ -89,7 +89,7 @@ class Partner(models.Model):
     category = models.CharField(max_length=30, choices=Category.choices)
     specialty = models.CharField(max_length=140)
     description = models.CharField(max_length=260)
-    tags = models.CharField(max_length=180, blank=True, help_text=_("Separe por virgulas."))
+    tags = models.CharField(max_length=180, blank=True, help_text=_("Separe por vírgulas."))
     contact_label = models.CharField(max_length=80, default="Entrar em contato")
     contact_url = models.URLField(blank=True)
     is_featured = models.BooleanField(default=False)
@@ -116,7 +116,7 @@ class SupportCommunity(models.Model):
         EMOTIONAL = "emotional", _("Apoio emocional")
         FERTILITY = "fertility", _("Fertilidade")
         ROUTINE = "routine", _("Rotina")
-        FAMILY = "family", _("Familia e rede")
+        FAMILY = "family", _("Família e rede")
         WELLBEING = "wellbeing", _("Bem-estar")
 
     name = models.CharField(max_length=120)
@@ -126,7 +126,7 @@ class SupportCommunity(models.Model):
     support_type = models.CharField(max_length=120)
     contact_label = models.CharField(max_length=80, default="Acessar comunidade")
     contact_url = models.URLField()
-    tags = models.CharField(max_length=180, blank=True, help_text=_("Separe por virgulas."))
+    tags = models.CharField(max_length=180, blank=True, help_text=_("Separe por vírgulas."))
     is_featured = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     sort_order = models.PositiveSmallIntegerField(default=1)
@@ -156,7 +156,7 @@ class CommunityPost(models.Model):
         TREATMENT = "treatment", _("Tratamento")
         ROUTINE = "routine", _("Rotina")
         FEELINGS = "feelings", _("Acolhimento")
-        HOPE = "hope", _("Esperanca")
+        HOPE = "hope", _("Esperança")
 
     author = models.ForeignKey(
         "users.User",
@@ -206,8 +206,8 @@ class CommunityReaction(models.Model):
         constraints = [
             models.UniqueConstraint(fields=["post", "patient"], name="unique_community_reaction_per_patient")
         ]
-        verbose_name = _("reacao da comunidade")
-        verbose_name_plural = _("reacoes da comunidade")
+        verbose_name = _("reação da comunidade")
+        verbose_name_plural = _("reações da comunidade")
 
     def __str__(self) -> str:
         return f"{self.patient.full_name} -> {self.post_id}"

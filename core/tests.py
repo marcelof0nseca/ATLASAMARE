@@ -72,7 +72,7 @@ class PatientExperienceTests(TestCase):
             name="Rede A",
             category=SupportCommunity.Category.FERTILITY,
             audience="Pacientes em tratamento",
-            description="Conteudo educativo.",
+            description="Conteúdo educativo.",
             support_type="Comunidade educativa",
             contact_url="https://example.com/a",
             sort_order=1,
@@ -95,7 +95,7 @@ class PatientExperienceTests(TestCase):
             name="Rede Inativa",
             category=SupportCommunity.Category.ROUTINE,
             audience="Pacientes",
-            description="Nao deve aparecer.",
+            description="Não deve aparecer.",
             support_type="Grupo",
             contact_url="https://example.com/inativa",
             is_active=False,
@@ -113,11 +113,11 @@ class PatientExperienceTests(TestCase):
         self.assertContains(response, active.name)
         self.assertNotContains(response, "Rede Inativa")
         self.assertContains(response, post.body)
-        self.assertContains(response, "Enviar para revisao")
+        self.assertContains(response, "Enviar para revisão")
 
     def test_support_communities_page_has_dedicated_external_links(self):
         SupportCommunity.objects.create(
-            name="Forum anonimo de tentantes",
+            name="Fórum anônimo de tentantes",
             category=SupportCommunity.Category.FERTILITY,
             audience="Tentantes",
             description="Comunidade BabyCenter Brasil.",
@@ -142,7 +142,7 @@ class PatientExperienceTests(TestCase):
         response = self.client.get(reverse("core:communities"))
 
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "Forum anonimo de tentantes")
+        self.assertContains(response, "Fórum anônimo de tentantes")
         self.assertContains(response, "https://brasil.babycenter.com/comunidade")
         self.assertContains(response, "Relatos reais e acolhimento")
         self.assertContains(response, "https://www.instagram.com/explore/search/keyword/?q=%23vidadetentante")
@@ -157,6 +157,6 @@ class PatientExperienceTests(TestCase):
             title="Laudo liberado",
             status=TreatmentReport.Status.AVAILABLE,
         )
-        available.file.save("laudo.txt", ContentFile("conteudo"), save=True)
+        available.file.save("laudo.txt", ContentFile("conteúdo"), save=True)
         response = self.client.get(reverse("core:report-download", args=[available.id]))
         self.assertEqual(response.status_code, 200)

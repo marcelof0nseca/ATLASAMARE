@@ -1,9 +1,9 @@
 {% extends "layouts/patient_base.html" %}
 {% load static %}
 
-{% block title %}Comunidades | Clinica AMARE{% endblock %}
-{% block page_title %}Voce nao esta sozinha{% endblock %}
-{% block page_intro %}A jornada da fertilidade e mais leve quando compartilhada. Estes espacos externos reunem experiencias, relatos e apoio entre tentantes.{% endblock %}
+{% block title %}Comunidades | Clínica AMARE{% endblock %}
+{% block page_title %}Você não está sozinha{% endblock %}
+{% block page_intro %}A jornada da fertilidade é mais leve quando compartilhada. Estes espaços externos reúnem experiências, relatos e apoio entre tentantes.{% endblock %}
 
 {% block content %}
   <section class="amare-card overflow-hidden">
@@ -13,10 +13,10 @@
         <div>
           <p class="amare-kicker">Comunidades</p>
           <h2 class="mt-2 font-serif text-3xl font-medium text-text-strong sm:text-4xl">
-            Voce nao esta sozinha, {{ request.user.first_name|default:request.user.full_name|default:"paciente" }}
+            Você não está sozinha, {{ request.user.first_name|default:request.user.full_name|default:"paciente" }}
           </h2>
           <p class="mt-4 max-w-3xl text-sm leading-6 text-text-muted">
-            Existem diversas comunidades e grupos de apoio onde voce pode trocar experiencias com outras mulheres de forma anonima ou acompanhar relatos publicos de tentantes.
+            Existem diversas comunidades e grupos de apoio onde você pode trocar experiências com outras mulheres de forma anônima ou acompanhar relatos públicos de tentantes.
           </p>
         </div>
       </div>
@@ -58,14 +58,14 @@
         </article>
       {% empty %}
         <div class="p-8 lg:col-span-2">
-          {% include "components/empty_state.html" with title="Comunidades em curadoria" copy="Quando a equipe cadastrar comunidades de apoio, elas aparecerao aqui." %}
+          {% include "components/empty_state.html" with title="Comunidades em curadoria" copy="Quando a equipe cadastrar comunidades de apoio, elas aparecerão aqui." %}
         </div>
       {% endfor %}
     </div>
 
     <div class="border-t border-border px-6 py-4 text-center sm:px-8">
       <p class="text-xs font-semibold italic leading-5 text-text-strong">
-        Estes links levam a comunidades externas independentes. A clinica recomenda o uso para apoio emocional e troca de experiencias entre pacientes.
+        Estes links levam a comunidades externas independentes. A clínica recomenda o uso para apoio emocional e troca de experiências entre pacientes.
       </p>
     </div>
   </section>

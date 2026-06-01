@@ -116,7 +116,7 @@ class PatientJourneyWeekDocumentsView(PatientRequiredMixin, TemplateView):
         weeks = build_document_weeks(treatment, "treatments:documents-week")
         selected_week = next((item for item in weeks if item["number"] == week), None)
         if not selected_week or not selected_week["unlocked"]:
-            messages.info(request, "Documentos ainda nao disponiveis.")
+            messages.info(request, "Documentos ainda não disponíveis.")
             return redirect(self.documents_url_name)
         return super().get(request, *args, **kwargs)
 
@@ -171,7 +171,7 @@ class PartnerJourneyWeekDocumentsView(PartnerRequiredMixin, TemplateView):
         weeks = build_document_weeks(treatment, "treatments:partner-documents-week")
         selected_week = next((item for item in weeks if item["number"] == week), None)
         if not selected_week or not selected_week["unlocked"]:
-            messages.info(request, "Documentos ainda nao disponiveis.")
+            messages.info(request, "Documentos ainda não disponíveis.")
             return redirect(self.documents_url_name)
         return super().get(request, *args, **kwargs)
 
@@ -206,9 +206,9 @@ class JourneyDocumentDownloadView(PatientOrPartnerRequiredMixin, View):
         unlocked_weeks = build_document_weeks(document.treatment, "treatments:documents-week")
         selected_week = next((item for item in unlocked_weeks if item["number"] == document.week), None)
         if not selected_week or not selected_week["unlocked"]:
-            raise Http404("Documento indisponivel")
+            raise Http404("Documento indisponível")
         if not document.file:
-            raise Http404("Arquivo indisponivel")
+            raise Http404("Arquivo indisponível")
 
         response = FileResponse(document.file.open("rb"), as_attachment=False, filename=document.original_name)
         response["Content-Disposition"] = f'inline; filename="{document.original_name}"'
@@ -269,13 +269,13 @@ class DoctorJourneyVideoCreateView(DoctorRequiredMixin, CreateView):
     success_url = reverse_lazy("treatments:doctor-videos")
 
     def form_valid(self, form):
-        messages.success(self.request, "Video da jornada cadastrado.")
+        messages.success(self.request, "Vídeo da jornada cadastrado.")
         return super().form_valid(form)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["active_nav"] = "videos"
-        context["form_title"] = "Novo Video"
+        context["form_title"] = "Novo vídeo"
         return context
 
 
@@ -286,13 +286,13 @@ class DoctorJourneyVideoUpdateView(DoctorRequiredMixin, UpdateView):
     success_url = reverse_lazy("treatments:doctor-videos")
 
     def form_valid(self, form):
-        messages.success(self.request, "Video da jornada atualizado.")
+        messages.success(self.request, "Vídeo da jornada atualizado.")
         return super().form_valid(form)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["active_nav"] = "videos"
-        context["form_title"] = "Editar Video"
+        context["form_title"] = "Editar vídeo"
         return context
 
 
@@ -301,7 +301,7 @@ class DoctorJourneyVideoDeleteView(DoctorRequiredMixin, DeleteView):
     success_url = reverse_lazy("treatments:doctor-videos")
 
     def post(self, request, *args, **kwargs):
-        messages.success(request, "Video removido da jornada.")
+        messages.success(request, "Vídeo removido da jornada.")
         return super().post(request, *args, **kwargs)
 
 
@@ -311,7 +311,7 @@ class DoctorJourneyVideoToggleView(DoctorRequiredMixin, View):
         video.is_active = not video.is_active
         video.save(update_fields=["is_active", "updated_at"])
         status = "ativado" if video.is_active else "desativado"
-        messages.success(request, f"Video {status}.")
+        messages.success(request, f"Vídeo {status}.")
         return redirect("treatments:doctor-videos")
 
 
@@ -348,7 +348,7 @@ class DoctorJourneyDocumentCreateView(DoctorRequiredMixin, CreateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["active_nav"] = "documents"
-        context["form_title"] = "Novo Documento"
+        context["form_title"] = "Novo documento"
         return context
 
 
@@ -372,7 +372,7 @@ class DoctorJourneyDocumentUpdateView(DoctorRequiredMixin, UpdateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["active_nav"] = "documents"
-        context["form_title"] = "Editar Documento"
+        context["form_title"] = "Editar documento"
         return context
 
 

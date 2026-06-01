@@ -20,7 +20,7 @@ class PatientTaskForm(forms.ModelForm):
         fields = ["title", "notes"]
         labels = {
             "title": "Tarefa",
-            "notes": "Observacao",
+            "notes": "Observação",
         }
         widgets = {
             "notes": forms.TextInput(attrs={"placeholder": "Ex.: separar documentos para a consulta"}),
@@ -39,7 +39,7 @@ class CommunityPostForm(forms.ModelForm):
             "body": forms.Textarea(
                 attrs={
                     "rows": 6,
-                    "placeholder": "Compartilhe algo que possa acolher outra paciente. Nao inclua dados pessoais ou orientacoes medicas.",
+                    "placeholder": "Compartilhe algo que possa acolher outra paciente. Não inclua dados pessoais ou orientações médicas.",
                 }
             )
         }

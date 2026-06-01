@@ -1,12 +1,12 @@
 {% extends base_template %}
 
-{% block title %}Documentos | Jornada | Clinica AMARE{% endblock %}
+{% block title %}Documentos | Jornada | Clínica AMARE{% endblock %}
 {% block page_title %}Documentos{% endblock %}
 {% block page_intro %}Aqui estão armazenados todos os documentos disponibilizados pela clínica durante sua jornada.{% endblock %}
 
 {% block content %}
   <section class="space-y-5">
-<div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+    <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
       {% for week in weeks %}
         {% if week.unlocked %}
           <a href="{{ week.url }}" class="amare-card block p-6 transition hover:border-golden">

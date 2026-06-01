@@ -1,6 +1,6 @@
 {% extends "layouts/patient_base.html" %}
 
-{% block title %}Jornada | Clinica AMARE{% endblock %}
+{% block title %}Jornada | Clínica AMARE{% endblock %}
 {% block page_title %}Sua jornada de tratamento{% endblock %}
 {% block page_intro %}A timeline mostra o caminho em ordem, com destaque para o momento atual e para o que vem depois.{% endblock %}
 
@@ -30,7 +30,7 @@
       {% for step in treatment.steps.all %}
 
         {% if step.status == 'completed' %}
-          {# Concluido: borda verde, fundo verde suave #}
+          {# Concluído: borda verde, fundo verde suave #}
           <article class="relative overflow-hidden rounded-xl p-5 shadow-serene" style="border: 1.5px solid rgba(34,197,94,0.55); background: rgba(240,253,244,0.7)">
             <div class="absolute right-4 top-4">
               <div class="tl-check">
@@ -73,7 +73,7 @@
           </article>
 
         {% else %}
-          {# Pendente: funde com o fundo da pagina #}
+          {# Pendente: funde com o fundo da página #}
           <article class="relative overflow-hidden rounded-xl border border-linen bg-linen p-5">
             <div class="flex flex-col gap-4 sm:flex-row sm:items-start">
               <div class="min-w-0">
@@ -89,12 +89,12 @@
 
       {% endfor %}
     {% else %}
-      {% include "components/empty_state.html" with title="Ainda não há um tratamento ativo" copy="Quando a clinica iniciar sua jornada, as etapas vao aparecer aqui com o destaque certo para o momento atual." %}
+      {% include "components/empty_state.html" with title="Ainda não há um tratamento ativo" copy="Quando a clínica iniciar sua jornada, as etapas aparecerão aqui com o destaque certo para o momento atual." %}
     {% endif %}
   </div>
 
   <aside class="space-y-5">
-<article class="amare-card p-6">
+    <article class="amare-card p-6">
       <p class="amare-kicker">Resumo</p>
       <h2 class="mt-2 font-serif text-2xl font-bold">Onde estou?</h2>
       <dl class="mt-5 space-y-4 text-sm">

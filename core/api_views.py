@@ -120,7 +120,7 @@ class CommunityReactionAPIView(APIView):
     def post(self, request, pk):
         post = CommunityPost.objects.filter(pk=pk, status=CommunityPost.Status.APPROVED).first()
         if not post:
-            return Response({"detail": "Relato nao encontrado."}, status=404)
+            return Response({"detail": "Relato não encontrado."}, status=404)
         CommunityReaction.objects.get_or_create(post=post, patient=request.user)
         return Response({"support_count": post.reactions.count()})
 

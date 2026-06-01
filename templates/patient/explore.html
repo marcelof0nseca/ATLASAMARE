@@ -1,8 +1,8 @@
 {% extends "layouts/patient_base.html" %}
 
-{% block title %}Explorar | Clinica AMARE{% endblock %}
+{% block title %}Explorar | Clínica AMARE{% endblock %}
 {% block page_title %}Explorar apoios{% endblock %}
-{% block page_intro %}Um espaco para suporte alem da rotina clinica direta: comunidade moderada e rede multidisciplinar confiavel.{% endblock %}
+{% block page_intro %}Um espaço para suporte além da rotina clínica direta: comunidade moderada e rede multidisciplinar confiável.{% endblock %}
 
 {% block content %}
   <section class="grid gap-5 lg:grid-cols-2">
@@ -10,7 +10,7 @@
       <p class="amare-kicker">Comunidade</p>
       <h2 class="mt-3 font-display text-5xl font-semibold leading-none text-golden">Apoio e relatos</h2>
       <p class="mt-5 text-sm leading-6 text-text-muted">
-        Acesse redes externas de apoio e leia experiencias aprovadas pela equipe.
+        Acesse redes externas de apoio e leia experiências aprovadas pela equipe.
       </p>
       <div class="mt-6 flex flex-wrap gap-2">
         <span class="amare-chip">{{ featured_support_communities|length }} comunidade{{ featured_support_communities|length|pluralize }}</span>
@@ -22,13 +22,13 @@
       <p class="amare-kicker">Parceiros</p>
       <h2 class="mt-3 font-display text-5xl font-semibold leading-none text-golden">Rede multidisciplinar</h2>
       <p class="mt-5 text-sm leading-6 text-text-muted">
-        Encontre psicologia, nutricao, acupuntura e outros apoios complementares com contato externo.
+        Encontre psicologia, nutrição, acupuntura e outros apoios complementares com contato externo.
       </p>
       <div class="mt-6 flex flex-wrap gap-2">
         {% for partner in featured_partners %}
           <span class="amare-chip">{{ partner.get_category_display }}</span>
         {% empty %}
-          <span class="amare-chip">Catalogo em curadoria</span>
+          <span class="amare-chip">Catálogo em curadoria</span>
         {% endfor %}
       </div>
     </a>
@@ -45,7 +45,7 @@
             <p class="mt-2 text-sm leading-6 text-text-muted">{{ community.description|truncatechars:140 }}</p>
           </div>
         {% empty %}
-          <p class="text-sm leading-6 text-text-muted">Comunidades cadastradas como destaque aparecerao aqui.</p>
+          <p class="text-sm leading-6 text-text-muted">Comunidades cadastradas como destaque aparecerão aqui.</p>
         {% endfor %}
       </div>
     </article>
@@ -59,7 +59,7 @@
             <p class="mt-2 text-sm leading-6 text-text-strong">{{ post.body|truncatechars:170 }}</p>
           </div>
         {% empty %}
-          <p class="text-sm leading-6 text-text-muted">Os relatos aprovados aparecerao aqui.</p>
+          <p class="text-sm leading-6 text-text-muted">Os relatos aprovados aparecerão aqui.</p>
         {% endfor %}
       </div>
     </article>
@@ -74,7 +74,7 @@
             <p class="mt-2 text-sm leading-6 text-text-muted">{{ partner.description|truncatechars:150 }}</p>
           </div>
         {% empty %}
-          <p class="text-sm leading-6 text-text-muted">Parceiros cadastrados como destaque aparecerao aqui.</p>
+          <p class="text-sm leading-6 text-text-muted">Parceiros cadastrados como destaque aparecerão aqui.</p>
         {% endfor %}
       </div>
     </article>

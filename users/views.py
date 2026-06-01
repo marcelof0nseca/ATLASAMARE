@@ -171,7 +171,7 @@ class DoctorPatientCreateView(DoctorRequiredMixin, FormView):
 
     def form_valid(self, form):
         patient = form.save()
-        messages.success(self.request, "Paciente cadastrada e vinculada a voce.")
+        messages.success(self.request, "Paciente cadastrada e vinculada a você.")
         return HttpResponseRedirect(reverse("users:doctor-patient-detail", args=[patient.id]))
 
     def get_context_data(self, **kwargs):

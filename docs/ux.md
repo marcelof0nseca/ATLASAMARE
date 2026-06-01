@@ -3,7 +3,7 @@
 ## Principios
 
 - mostrar sempre a etapa atual
-- mostrar sempre o proximo passo
+- mostrar sempre o próximo passo
 - reduzir carga cognitiva
 - dar feedback claro e humano
 - manter navegacao curta e previsivel
@@ -25,11 +25,11 @@
 
 ## Microcopy base
 
-- "Voce esta nesta etapa do tratamento."
-- "Seu proximo passo e este."
-- "Tudo certo, medicacao marcada."
-- "A Maya ajuda com duvidas sobre tratamento, rotina e acolhimento emocional, sem substituir sua equipe medica."
-- "Nao ha compromissos por aqui agora. Quando algo novo for agendado, voce vera aqui."
+- "Você está nesta etapa do tratamento."
+- "Seu próximo passo é este."
+- "Tudo certo, medicação marcada."
+- "A Maya ajuda com dúvidas sobre tratamento, rotina e acolhimento emocional, sem substituir sua equipe médica."
+- "Não há compromissos por aqui agora. Quando algo novo for agendado, você verá aqui."
 
 ## Componentes reutilizaveis
 
@@ -37,15 +37,15 @@
 - badge de status com texto explicito
 - empty state acolhedor
 - drawer/modal de confirmacao
-- itens de agenda e medicacao
+- itens de agenda e medicação
 - aviso fixo de seguranca da Maya
 - cartoes de conversa guiada da Maya
 - selo de cuidado quando a mensagem pede contato com a equipe
 
 ## Maya
 
-- separar a experiencia em `Meu tratamento`, `Minha rotina` e `Como estou me sentindo`
-- preservar contexto por conversa para a paciente nao se perder
+- separar a experiência em `Meu tratamento`, `Minha rotina` e `Como estou me sentindo`
+- preservar contexto por conversa para a paciente não se perder
 - responder com tom calmo, humano e organizado
 - acolher sintomas com transparencia e orientar contato com a equipe, sem tentar diagnosticar
-- manter a interface parecida com conversa, mas com trilhos claros e previsiveis
+- manter a interface parecida com conversa, mas com trilhos claros e previsíveis

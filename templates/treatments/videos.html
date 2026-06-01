@@ -1,8 +1,8 @@
 {% extends "layouts/patient_base.html" %}
 
-{% block title %}Videos Auxiliares | Jornada | Clinica AMARE{% endblock %}
-{% block page_title %}Videos Auxiliares{% endblock %}
-{% block page_intro %}Aqui estao os videos disponibilizados pela clinica para auxiliar voce durante cada etapa do tratamento.{% endblock %}
+{% block title %}Vídeos auxiliares | Jornada | Clínica AMARE{% endblock %}
+{% block page_title %}Vídeos auxiliares{% endblock %}
+{% block page_intro %}Aqui estão os vídeos disponibilizados pela clínica para auxiliar você durante cada etapa do tratamento.{% endblock %}
 
 {% block content %}
   <section class="space-y-6">
@@ -37,7 +37,7 @@
         </article>
       {% empty %}
         <div class="md:col-span-2 xl:col-span-3">
-          {% include "components/empty_state.html" with title="Nenhum video disponivel" copy="Quando a clinica liberar videos para esta jornada, eles aparecerao aqui por etapa." %}
+          {% include "components/empty_state.html" with title="Nenhum vídeo disponível" copy="Quando a clínica liberar vídeos para esta jornada, eles aparecerão aqui por etapa." %}
         </div>
       {% endfor %}
     </div>

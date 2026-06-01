@@ -1,14 +1,14 @@
 <p align="center">
-  <img src="static/images/logoamare.png" alt="Logo da Clinica AMARE" width="360">
+  <img src="static/images/logoamare.png" alt="Logo da Clínica AMARE" width="360">
 </p>
 
-# Clinica AMARE
+# Clínica AMARE
 
 Sistema Web para Acompanhamento da Jornada de Fertilidade
 
 ## Sobre o Projeto
 
-A Clinica AMARE e uma aplicacao web desenvolvida para apoiar pacientes e equipe medica no acompanhamento da jornada de fertilidade com mais clareza, acolhimento e baixa carga cognitiva.
+A Clínica AMARE é uma aplicação web desenvolvida para apoiar pacientes e equipe médica no acompanhamento da jornada de fertilidade com mais clareza, acolhimento e baixa carga cognitiva.
 
 ## Integrantes
 
@@ -41,7 +41,7 @@ A Clinica AMARE e uma aplicacao web desenvolvida para apoiar pacientes e equipe 
 Projeto academico desenvolvido para fins educacionais.  
 Disciplina: Projetos 2
 
-## O que ja esta implementado
+## O que já está implementado
 
 - Monolito Django com areas web para paciente e medico
 - API REST em `/api/v1` com DRF
@@ -146,13 +146,13 @@ Senha padrao dos usuarios demo: `amare123!`
 
 ## Maya
 
-- Organiza a experiencia em tres conversas guiadas:
+- Organiza a experiência em três conversas guiadas:
   - `Meu tratamento`
   - `Minha rotina`
   - `Como estou me sentindo`
 - Classifica cada pergunta por intencao e risco antes de responder
 - Usa respostas educativas, acolhedoras e com baixa carga cognitiva
-- Mantem historico separado por conversa para a paciente nao se perder
+- Mantém histórico separado por conversa para a paciente não se perder
 - Se `OPENAI_API_KEY` e `OPENAI_MODEL` estiverem definidos, tenta responder via API antes do fallback
 - Perguntas com sintomas, urgencia ou decisao clinica sao redirecionadas para a equipe medica
 

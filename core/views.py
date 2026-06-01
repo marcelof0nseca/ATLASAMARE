@@ -63,7 +63,7 @@ class PatientTaskCreateView(PatientRequiredMixin, RedirectView):
             task.save()
             messages.success(request, "Tarefa adicionada a sua rotina.")
         else:
-            messages.error(request, "Nao foi possivel criar essa tarefa agora.")
+            messages.error(request, "Não foi possível criar essa tarefa agora.")
         return redirect("core:routine")
 
 
@@ -79,7 +79,7 @@ class PatientTaskUpdateView(PatientRequiredMixin, RedirectView):
             updated_task.save()
             messages.success(request, "Tarefa atualizada.")
         else:
-            messages.error(request, "Nao foi possivel atualizar essa tarefa.")
+            messages.error(request, "Não foi possível atualizar essa tarefa.")
         return redirect("core:routine")
 
 
@@ -173,7 +173,7 @@ class CommunityPostCreateView(PatientRequiredMixin, RedirectView):
             post.pseudonym = "Paciente AMARE"
             post.status = CommunityPost.Status.PENDING
             post.save()
-            messages.success(request, "Seu relato foi enviado para revisao antes de aparecer na comunidade.")
+            messages.success(request, "Seu relato foi enviado para revisão antes de aparecer na comunidade.")
         else:
             messages.error(request, "Revise o relato antes de enviar.")
         return redirect("core:community")
@@ -196,7 +196,7 @@ class ReportDownloadView(PatientOrPartnerRequiredMixin, RedirectView):
         patient = request.user.linked_patient if request.user.is_partner else request.user
         report = get_object_or_404(TreatmentReport, pk=pk, patient=patient)
         if not report.is_available:
-            raise Http404("Laudo ainda nao liberado.")
+            raise Http404("Laudo ainda não liberado.")
         return FileResponse(report.file.open("rb"), as_attachment=True, filename=report.file.name.split("/")[-1])
 
 

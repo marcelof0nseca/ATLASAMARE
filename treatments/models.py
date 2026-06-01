@@ -138,8 +138,8 @@ class JourneyVideo(models.Model):
 
     class Meta:
         ordering = ["step", "title"]
-        verbose_name = _("video da jornada")
-        verbose_name_plural = _("videos da jornada")
+        verbose_name = _("vídeo da jornada")
+        verbose_name_plural = _("vídeos da jornada")
 
     def __str__(self) -> str:
         return f"Etapa {self.step} - {self.title}"

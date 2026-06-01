@@ -1,17 +1,17 @@
 {% extends "layouts/patient_base.html" %}
 
-{% block title %}Comunidade | Clinica AMARE{% endblock %}
+{% block title %}Comunidade | Clínica AMARE{% endblock %}
 {% block page_title %}Comunidade de apoio{% endblock %}
-{% block page_intro %}Encontre redes externas de acolhimento e leia relatos anonimos revisados antes de aparecerem.{% endblock %}
+{% block page_intro %}Encontre redes externas de acolhimento e leia relatos anônimos revisados antes de aparecerem.{% endblock %}
 
 {% block content %}
   <section class="amare-card p-6">
     <div class="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
       <div>
         <p class="amare-kicker">Comunidades externas</p>
-        <h2 class="mt-2 font-serif text-3xl font-medium text-text-strong">Redes que podem caminhar com voce</h2>
+        <h2 class="mt-2 font-serif text-3xl font-medium text-text-strong">Redes que podem caminhar com você</h2>
         <p class="mt-3 max-w-3xl text-sm leading-6 text-text-muted">
-          Estes espacos sao pontos de apoio fora da plataforma. Confira a proposta de cada comunidade antes de acessar.
+          Estes espaços são pontos de apoio fora da plataforma. Confira a proposta de cada comunidade antes de acessar.
         </p>
       </div>
       <span class="amare-chip">Links externos</span>
@@ -42,7 +42,7 @@
       {% empty %}
         <div class="rounded-xl border border-border bg-white/80 p-5 lg:col-span-3">
           <p class="font-serif text-xl font-medium text-text-strong">Comunidades em curadoria</p>
-          <p class="mt-2 text-sm leading-6 text-text-muted">A equipe ainda nao cadastrou comunidades externas de apoio.</p>
+          <p class="mt-2 text-sm leading-6 text-text-muted">A equipe ainda não cadastrou comunidades externas de apoio.</p>
         </div>
       {% endfor %}
     </div>
@@ -54,7 +54,7 @@
         <p class="amare-kicker">Enviar relato</p>
         <h2 class="mt-2 font-serif text-2xl font-bold">Compartilhe com cuidado</h2>
         <p class="mt-3 text-sm leading-6 text-text-muted">
-          Seu relato passa por revisao antes de aparecer. Nao inclua nome, telefone, exames ou orientacoes medicas.
+          Seu relato passa por revisão antes de aparecer. Não inclua nome, telefone, exames ou orientações médicas.
         </p>
         <form method="post" action="{% url 'core:community-create' %}" class="mt-5 space-y-4">
           {% csrf_token %}
@@ -66,7 +66,7 @@
             <label for="{{ post_form.body.id_for_label }}" class="mb-2 block text-sm font-bold">Relato</label>
             {{ post_form.body }}
           </div>
-          <button class="amare-button-primary w-full">Enviar para revisao</button>
+          <button class="amare-button-primary w-full">Enviar para revisão</button>
         </form>
       </article>
 
@@ -79,7 +79,7 @@
               <p class="mt-3 text-sm leading-6 text-text-muted">{{ post.body|truncatechars:140 }}</p>
             </div>
           {% empty %}
-            <p class="text-sm leading-6 text-text-muted">Voce nao tem relatos aguardando revisao.</p>
+            <p class="text-sm leading-6 text-text-muted">Você não tem relatos aguardando revisão.</p>
           {% endfor %}
         </div>
       </article>
@@ -102,7 +102,7 @@
           </form>
         </article>
       {% empty %}
-        {% include "components/empty_state.html" with title="Ainda nao ha relatos aprovados" copy="Quando a equipe aprovar os primeiros relatos, eles aparecerao neste feed." %}
+        {% include "components/empty_state.html" with title="Ainda não há relatos aprovados" copy="Quando a equipe aprovar os primeiros relatos, eles aparecerão neste feed." %}
       {% endfor %}
     </section>
   </section>

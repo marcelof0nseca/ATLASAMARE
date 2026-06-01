@@ -1,8 +1,8 @@
 {% extends base_template %}
 
-{% block title %}Semana {{ week }} | Documentos | Clinica AMARE{% endblock %}
+{% block title %}Semana {{ week }} | Documentos | Clínica AMARE{% endblock %}
 {% block page_title %}Semana {{ week }}{% endblock %}
-{% block page_intro %}Voce tem {{ documents|length }} documentos disponiveis.{% endblock %}
+{% block page_intro %}Você tem {{ documents|length }} documentos disponíveis.{% endblock %}
 
 {% block content %}
   <section class="space-y-5">
@@ -57,7 +57,7 @@
         </div>
       {% else %}
         <div class="p-6">
-          {% include "components/empty_state.html" with title="Nenhum documento nesta semana" copy="Quando a clinica liberar arquivos para esta etapa, eles aparecerao aqui." %}
+          {% include "components/empty_state.html" with title="Nenhum documento nesta semana" copy="Quando a clínica liberar arquivos para esta etapa, eles aparecerão aqui." %}
         </div>
       {% endif %}
     </article>

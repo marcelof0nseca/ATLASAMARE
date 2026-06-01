@@ -740,11 +740,11 @@ def call_groq_chat_completions(question: str, user, conversation: MayaConversati
 def build_llm_user_context(question: str, user, conversation: MayaConversation, intent: str, risk_level: str) -> str:
     return (
         f"Conversa selecionada: {conversation.title}\n"
-        f"Descricao da conversa: {conversation.description}\n"
+        f"Descrição da conversa: {conversation.description}\n"
         f"Intencao detectada: {intent}\n"
         f"Nivel de risco: {risk_level}\n"
         f"Contexto seguro: {build_safe_context_summary(user, intent)}\n"
-        f"Historico recente de perguntas da paciente, apenas para continuidade de conversa e nao como fonte factual:\n{build_recent_history(conversation)}\n"
+        f"Histórico recente de perguntas da paciente, apenas para continuidade de conversa e não como fonte factual:\n{build_recent_history(conversation)}\n"
         f"Pergunta atual: {question}"
     )
 

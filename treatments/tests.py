@@ -177,26 +177,26 @@ class JourneyVideoTests(TestCase):
         self.patient = User.objects.create_user(
             email="patient.video@amare.local",
             password="amare123!",
-            full_name="Paciente Video",
+            full_name="Paciente Vídeo",
             role=User.Role.PATIENT,
         )
         self.doctor = User.objects.create_user(
             email="doctor.video@amare.local",
             password="amare123!",
-            full_name="Medica Video",
+            full_name="Médica Vídeo",
             role=User.Role.DOCTOR,
         )
         self.active_video = JourneyVideo.objects.create(
-            title="Preparacao para o exame",
-            description="Orientacoes para esta etapa.",
+            title="Preparação para o exame",
+            description="Orientações para esta etapa.",
             step=1,
             video_url="https://example.com/video",
             duration="4 min",
             is_active=True,
         )
         self.inactive_video = JourneyVideo.objects.create(
-            title="Video interno",
-            description="Conteudo ainda em revisao.",
+            title="Vídeo interno",
+            description="Conteúdo ainda em revisão.",
             step=2,
             video_url="https://example.com/interno",
             is_active=False,
@@ -206,8 +206,8 @@ class JourneyVideoTests(TestCase):
         self.client.force_login(self.patient)
         response = self.client.get(reverse("treatments:videos"))
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "Preparacao para o exame")
-        self.assertNotContains(response, "Video interno")
+        self.assertContains(response, "Preparação para o exame")
+        self.assertNotContains(response, "Vídeo interno")
 
     def test_patient_cannot_open_inactive_video(self):
         self.client.force_login(self.patient)
@@ -219,8 +219,8 @@ class JourneyVideoTests(TestCase):
         response = self.client.post(
             reverse("treatments:doctor-video-create"),
             {
-                "title": "Aplicacao da medicacao",
-                "description": "Passo a passo da aplicacao.",
+                "title": "Aplicação da medicação",
+                "description": "Passo a passo da aplicação.",
                 "step": 5,
                 "duration": "6 min",
                 "video_url": "https://example.com/medicacao",
@@ -228,7 +228,7 @@ class JourneyVideoTests(TestCase):
             },
         )
         self.assertRedirects(response, reverse("treatments:doctor-videos"))
-        self.assertTrue(JourneyVideo.objects.filter(title="Aplicacao da medicacao", is_active=True).exists())
+        self.assertTrue(JourneyVideo.objects.filter(title="Aplicação da medicação", is_active=True).exists())
 
     def test_doctor_can_toggle_video_status(self):
         self.client.force_login(self.doctor)
