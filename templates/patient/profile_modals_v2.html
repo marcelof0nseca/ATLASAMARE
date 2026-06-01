@@ -1,0 +1,236 @@
+{% load static %}
+
+<style>
+.amare-modal {
+  display: none;
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  z-index: 9999;
+  background: rgba(0,0,0,0.65);
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  box-sizing: border-box;
+}
+.modal-card {
+  position: relative;
+  width: 100%; max-width: 28rem;
+  max-height: calc(100vh - 32px); overflow-y: auto;
+  background: #fff; border-radius: 1rem; padding: 1.5rem;
+  box-shadow: 0 25px 60px -12px rgba(0,0,0,0.45);
+}
+.modal-kicker {
+  font-size: 10px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: #9a876f;
+}
+.modal-title {
+  margin-top: 2px; font-family: 'Cormorant Garamond', Georgia, serif; font-size: 1.4rem; font-weight: 700; color: #2a1f15;
+}
+.modal-close {
+  background: none; border: none; cursor: pointer; padding: 4px; color: #9a876f; line-height: 1;
+  border-radius: 6px; transition: color .15s;
+}
+.modal-close:hover { color: #2a1f15; }
+.modal-label {
+  display: block; margin-bottom: 4px; font-size: 11px; font-weight: 700;
+  letter-spacing: .12em; text-transform: uppercase; color: #9a876f;
+}
+.modal-check-row {
+  display: flex; align-items: flex-start; gap: 12px; cursor: pointer;
+  border: 1px solid var(--border, #e8ddd1); border-radius: 12px;
+  background: rgba(255,255,255,.75); padding: 12px 16px;
+  font-size: 14px; color: #2a1f15; font-weight: 500;
+}
+</style>
+
+<!-- Modal: Foto e nome -->
+<div id="modal-name" class="amare-modal" onclick="closeModal()">
+  <div class="modal-card" onclick="event.stopPropagation()">
+    <div style="display:flex;align-items:center;justify-content:space-between">
+      <span class="modal-kicker">Perfil</span>
+      <button class="modal-close" onclick="closeModal()"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+    </div>
+    <p class="modal-title">Foto e nome</p>
+    <form method="post" enctype="multipart/form-data" action="{% url 'users:profile-update' 'name' %}" style="margin-top:20px">
+      {% csrf_token %}
+      <div style="display:flex;align-items:center;gap:16px;margin-bottom:16px">
+        <div style="width:56px;height:56px;border-radius:9999px;overflow:hidden;border:1px solid #e8ddd1;background:#f3e9d7;flex-shrink:0">
+          {% if request.user.avatar %}<img id="av-preview" src="{{ request.user.avatar.url }}" style="width:56px;height:56px;object-fit:cover">
+          {% else %}<div id="av-placeholder" style="width:56px;height:56px;display:flex;align-items:center;justify-content:center;font-family:serif;font-size:22px;font-weight:700;color:#9a876f">{{ request.user.full_name|first|upper }}</div>
+          <img id="av-preview" src="" style="display:none;width:56px;height:56px;object-fit:cover">{% endif %}
+        </div>
+        <div>
+          <label for="id_av_file" style="cursor:pointer;font-size:13px;font-weight:600;color:#a88142;text-decoration:underline;text-underline-offset:2px">Trocar foto</label>
+          <input type="file" name="avatar" id="id_av_file" accept="image/*" style="display:none">
+        </div>
+      </div>
+      <div style="margin-bottom:16px">
+        <label class="modal-label">Nome</label>
+        <input type="text" name="full_name" value="{{ request.user.full_name }}" required maxlength="150" class="amare-input" style="width:100%">
+      </div>
+      <button type="submit" class="amare-button-primary" style="width:100%">Salvar</button>
+    </form>
+  </div>
+</div>
+
+<!-- Modal: Dados pessoais -->
+<div id="modal-personal" class="amare-modal" onclick="closeModal()">
+  <div class="modal-card" onclick="event.stopPropagation()">
+    <div style="display:flex;align-items:center;justify-content:space-between">
+      <span class="modal-kicker">Perfil</span>
+      <button class="modal-close" onclick="closeModal()"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+    </div>
+    <p class="modal-title">Dados pessoais</p>
+    <form method="post" action="{% url 'users:profile-update' 'personal' %}" style="margin-top:20px">
+      {% csrf_token %}
+      <div style="margin-bottom:16px">
+        <label class="modal-label">Telefone</label>
+        <input type="tel" name="phone" value="{{ request.user.phone }}" maxlength="20" class="amare-input" style="width:100%">
+      </div>
+      <div style="margin-bottom:20px">
+        <label class="modal-label">Data de nascimento</label>
+        <input type="date" name="date_of_birth" value="{{ request.user.date_of_birth|date:'Y-m-d' }}" class="amare-input" style="width:100%">
+      </div>
+      <button type="submit" class="amare-button-primary" style="width:100%">Salvar</button>
+    </form>
+  </div>
+</div>
+
+<!-- Modal: Contato de emergencia -->
+<div id="modal-emergency" class="amare-modal" onclick="closeModal()">
+  <div class="modal-card" onclick="event.stopPropagation()">
+    <div style="display:flex;align-items:center;justify-content:space-between">
+      <span class="modal-kicker">Perfil</span>
+      <button class="modal-close" onclick="closeModal()"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+    </div>
+    <p class="modal-title">Contato de emergencia</p>
+    <p style="margin-top:4px;font-size:13px;color:#9a876f">Pessoa de confianca a contactar em urgencias.</p>
+    <form method="post" action="{% url 'users:profile-update' 'emergency' %}" style="margin-top:20px">
+      {% csrf_token %}
+      <div style="margin-bottom:16px">
+        <label class="modal-label">Nome</label>
+        <input type="text" name="emergency_contact_name" value="{{ request.user.emergency_contact_name }}" maxlength="150" class="amare-input" style="width:100%">
+      </div>
+      <div style="margin-bottom:20px">
+        <label class="modal-label">Telefone</label>
+        <input type="tel" name="emergency_contact_phone" value="{{ request.user.emergency_contact_phone }}" maxlength="20" class="amare-input" style="width:100%">
+      </div>
+      <button type="submit" class="amare-button-primary" style="width:100%">Salvar</button>
+    </form>
+  </div>
+</div>
+
+<!-- Modal: Alterar senha -->
+<div id="modal-password" class="amare-modal" onclick="closeModal()">
+  <div class="modal-card" onclick="event.stopPropagation()">
+    <div style="display:flex;align-items:center;justify-content:space-between">
+      <span class="modal-kicker">Acesso</span>
+      <button class="modal-close" onclick="closeModal()"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+    </div>
+    <p class="modal-title">Alterar senha</p>
+    <p style="margin-top:4px;font-size:13px;color:#9a876f">Minimo de 8 caracteres.</p>
+    <form method="post" action="{% url 'users:change-password' %}" style="margin-top:20px">
+      {% csrf_token %}
+      <div style="margin-bottom:16px">
+        <label class="modal-label">Senha atual</label>
+        <input type="password" name="current_password" autocomplete="current-password" required class="amare-input" style="width:100%">
+      </div>
+      <div style="margin-bottom:16px">
+        <label class="modal-label">Nova senha</label>
+        <input type="password" name="new_password" autocomplete="new-password" required minlength="8" class="amare-input" style="width:100%">
+      </div>
+      <div style="margin-bottom:20px">
+        <label class="modal-label">Confirmar nova senha</label>
+        <input type="password" name="confirm_password" autocomplete="new-password" required minlength="8" class="amare-input" style="width:100%">
+      </div>
+      <button type="submit" class="amare-button-primary" style="width:100%">Alterar senha</button>
+    </form>
+  </div>
+</div>
+
+<!-- Modal: No aplicativo -->
+<div id="modal-notif_app" class="amare-modal" onclick="closeModal()">
+  <div class="modal-card" onclick="event.stopPropagation()">
+    <div style="display:flex;align-items:center;justify-content:space-between">
+      <span class="modal-kicker">Notificacoes</span>
+      <button class="modal-close" onclick="closeModal()"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+    </div>
+    <p class="modal-title">No aplicativo</p>
+    <form method="post" action="{% url 'users:profile-update' 'notifications' %}" style="margin-top:20px">
+      {% csrf_token %}
+      <input type="hidden" name="email_reminders_appointments" value="{% if request.user.email_reminders_appointments %}on{% endif %}">
+      <input type="hidden" name="email_reminders_journey" value="{% if request.user.email_reminders_journey %}on{% endif %}">
+      <input type="hidden" name="email_reminders_maya" value="{% if request.user.email_reminders_maya %}on{% endif %}">
+      <input type="hidden" name="reminder_frequency" value="{{ request.user.reminder_frequency }}">
+      <label class="modal-check-row" style="margin-bottom:20px">
+        <input type="checkbox" name="wants_in_app_reminders" {% if request.user.wants_in_app_reminders %}checked{% endif %} style="margin-top:2px;width:16px;height:16px;flex-shrink:0">
+        <div>
+          <p style="font-weight:600;margin-bottom:2px">Lembretes dentro do aplicativo</p>
+          <p style="font-size:12px;color:#9a876f">Alertas enquanto voce usa a plataforma.</p>
+        </div>
+      </label>
+      <button type="submit" class="amare-button-primary" style="width:100%">Salvar</button>
+    </form>
+  </div>
+</div>
+
+<!-- Modal: Por e-mail -->
+<div id="modal-notif_email" class="amare-modal" onclick="closeModal()">
+  <div class="modal-card" onclick="event.stopPropagation()">
+    <div style="display:flex;align-items:center;justify-content:space-between">
+      <span class="modal-kicker">Notificacoes</span>
+      <button class="modal-close" onclick="closeModal()"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+    </div>
+    <p class="modal-title">Por e-mail</p>
+    <form method="post" action="{% url 'users:profile-update' 'notifications' %}" style="margin-top:20px">
+      {% csrf_token %}
+      <input type="hidden" name="wants_in_app_reminders" value="{% if request.user.wants_in_app_reminders %}on{% endif %}">
+      <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px">
+        <label class="modal-check-row">
+          <input type="checkbox" name="email_reminders_appointments" {% if request.user.email_reminders_appointments %}checked{% endif %} style="margin-top:2px;width:16px;height:16px;flex-shrink:0">
+          <span>Consultas</span>
+        </label>
+        <label class="modal-check-row">
+          <input type="checkbox" name="email_reminders_journey" {% if request.user.email_reminders_journey %}checked{% endif %} style="margin-top:2px;width:16px;height:16px;flex-shrink:0">
+          <span>Atualizacoes da jornada</span>
+        </label>
+        <label class="modal-check-row">
+          <input type="checkbox" name="email_reminders_maya" {% if request.user.email_reminders_maya %}checked{% endif %} style="margin-top:2px;width:16px;height:16px;flex-shrink:0">
+          <span>Resumos da Maya</span>
+        </label>
+      </div>
+      <div style="margin-bottom:20px">
+        <label class="modal-label">Frequencia</label>
+        <select name="reminder_frequency" class="amare-input" style="width:100%">
+          {% for value, label in form.fields.reminder_frequency.choices %}
+            <option value="{{ value }}" {% if request.user.reminder_frequency == value %}selected{% endif %}>{{ label }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <button type="submit" class="amare-button-primary" style="width:100%">Salvar</button>
+    </form>
+  </div>
+</div>
+
+<!-- Modal: Meus relatos -->
+{% if request.user.is_patient %}
+<div id="modal-relatos" class="amare-modal" onclick="closeModal()">
+  <div class="modal-card" onclick="event.stopPropagation()">
+    <div style="display:flex;align-items:center;justify-content:space-between">
+      <span class="modal-kicker">Comunidade</span>
+      <button class="modal-close" onclick="closeModal()"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+    </div>
+    <p class="modal-title">Meus relatos</p>
+    <div style="margin-top:16px;max-height:280px;overflow-y:auto;display:flex;flex-direction:column;gap:10px">
+      {% for post in community_posts %}
+        <div style="border:1px solid #e8ddd1;border-radius:12px;background:rgba(255,255,255,.75);padding:16px">
+          {% include "components/status_badge.html" with status=post.status %}
+          <p style="margin-top:8px;font-size:13px;line-height:1.6;color:#5f4b3a">{{ post.body|truncatechars:160 }}</p>
+        </div>
+      {% empty %}
+        <p style="font-size:14px;color:#9a876f">Voce ainda nao enviou relatos para revisao.</p>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% endif %}

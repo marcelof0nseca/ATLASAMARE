@@ -76,6 +76,52 @@ class ProfileForm(forms.ModelForm):
         }
 
 
+class ProfileNameForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ["avatar", "full_name"]
+        labels = {"avatar": "Foto de perfil", "full_name": "Nome"}
+        widgets = {"avatar": forms.ClearableFileInput()}
+
+
+class ProfilePersonalForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ["phone", "date_of_birth"]
+        labels = {"phone": "Telefone", "date_of_birth": "Data de nascimento"}
+        widgets = {"date_of_birth": forms.DateInput(attrs={"type": "date"})}
+
+
+class ProfileEmergencyForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ["emergency_contact_name", "emergency_contact_phone"]
+        labels = {
+            "emergency_contact_name": "Nome",
+            "emergency_contact_phone": "Telefone",
+        }
+
+
+class ProfileNotificationsForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = [
+            "wants_in_app_reminders",
+            "email_reminders_appointments",
+            "email_reminders_journey",
+            "email_reminders_maya",
+            "reminder_frequency",
+        ]
+        labels = {
+            "wants_in_app_reminders": "Lembretes dentro do aplicativo",
+            "email_reminders_appointments": "Consultas",
+            "email_reminders_journey": "Atualizações da jornada",
+            "email_reminders_maya": "Resumos da Maya",
+            "reminder_frequency": "Frequência",
+        }
+        widgets = {"reminder_frequency": forms.Select()}
+
+
 class ChangePasswordForm(forms.Form):
     current_password = forms.CharField(
         label="Senha atual",

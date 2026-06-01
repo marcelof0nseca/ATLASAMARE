@@ -10,7 +10,17 @@ from django.views.generic import DetailView, FormView, ListView, UpdateView, Vie
 from core.mixins import DoctorRequiredMixin
 from core.models import CommunityPost
 
-from .forms import ChangePasswordForm, DoctorPatientCreateForm, LoginForm, PasswordResetRequestForm, ProfileForm
+from .forms import (
+    ChangePasswordForm,
+    DoctorPatientCreateForm,
+    LoginForm,
+    PasswordResetRequestForm,
+    ProfileEmergencyForm,
+    ProfileForm,
+    ProfileNameForm,
+    ProfileNotificationsForm,
+    ProfilePersonalForm,
+)
 from .models import User
 from .services import build_doctor_patient_context, get_managed_patient
 
@@ -86,10 +96,34 @@ class ProfileView(LoginRequiredMixin, UpdateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["active_nav"] = "profile"
-        context["password_form"] = ChangePasswordForm(user=self.request.user)
+        context["form"] = ProfileForm(instance=self.request.user)
         if self.request.user.is_patient:
             context["community_posts"] = CommunityPost.objects.filter(author=self.request.user)[:5]
         return context
+
+
+_SECTION_FORMS = {
+    "name":          ProfileNameForm,
+    "personal":      ProfilePersonalForm,
+    "emergency":     ProfileEmergencyForm,
+    "notifications": ProfileNotificationsForm,
+}
+
+
+class ProfileSectionView(LoginRequiredMixin, View):
+    def post(self, request, section):
+        form_class = _SECTION_FORMS.get(section)
+        if not form_class:
+            return redirect("users:profile")
+        form = form_class(request.POST, request.FILES, instance=request.user)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Atualizado com sucesso.")
+        else:
+            for errs in form.errors.values():
+                for e in errs:
+                    messages.error(request, e)
+        return redirect("users:profile")
 
 
 class ChangePasswordView(LoginRequiredMixin, View):

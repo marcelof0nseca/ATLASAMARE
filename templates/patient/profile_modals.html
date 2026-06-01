@@ -1,0 +1,282 @@
+{% load static %}
+
+{% comment %}
+  Modais da página de perfil.
+  Todos compartilham a mesma estrutura: backdrop + painel centralizado com Alpine.js.
+  A variável `modal` vive no x-data do componente pai (profile.html).
+{% endcomment %}
+
+{# ── Macro: backdrop + wrapper ─────────────────────────────────────────────
+   Uso interno: cada modal repete o backdrop e o wrapper.
+   No Django templates não temos macros, então extraímos apenas os modais.
+──────────────────────────────────────────────────────────────────────────── #}
+
+{# ── 1. Foto e nome ────────────────────────────────────────────────────── #}
+<template x-teleport="body">
+  <div x-show="modal === 'name'" x-cloak>
+    <div class="fixed inset-0 z-40 bg-black/20 backdrop-blur-sm"
+         x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
+         x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
+         @click="modal = null"></div>
+    <div class="fixed left-1/2 top-1/2 z-50 w-full max-w-md -translate-x-1/2 -translate-y-1/2 px-4"
+         x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100"
+         x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100 scale-100" x-transition:leave-end="opacity-0 scale-95"
+         @click.stop>
+      <article class="amare-card p-6 shadow-xl">
+        {% include "patient/_modal_header.html" with title="Foto e nome" kicker="Perfil" %}
+        <form method="post" enctype="multipart/form-data" action="{% url 'users:profile-update' 'name' %}" class="mt-5 space-y-4">
+          {% csrf_token %}
+          <div class="flex items-center gap-4">
+            <div class="h-16 w-16 flex-shrink-0 overflow-hidden rounded-full border border-border bg-linen">
+              {% if request.user.avatar %}
+                <img id="modal-avatar-preview" src="{{ request.user.avatar.url }}" alt="Foto" class="h-16 w-16 object-cover">
+              {% else %}
+                <div id="modal-avatar-placeholder" class="flex h-16 w-16 items-center justify-center font-serif text-2xl font-bold text-text-muted">
+                  {{ request.user.full_name|first|upper }}
+                </div>
+                <img id="modal-avatar-preview" src="" alt="Foto" class="hidden h-16 w-16 object-cover">
+              {% endif %}
+            </div>
+            <div>
+              <label for="id_avatar_modal" class="amare-button-secondary cursor-pointer text-xs">Trocar foto</label>
+              <input type="file" name="avatar" id="id_avatar_modal" accept="image/*" class="hidden">
+            </div>
+          </div>
+          <div>
+            <label class="mb-1 block text-xs font-bold uppercase tracking-widest text-text-muted">Nome</label>
+            <input type="text" name="full_name" value="{{ request.user.full_name }}" required
+                   class="amare-input w-full" maxlength="150">
+          </div>
+          <button type="submit" class="amare-button-primary w-full">Salvar</button>
+        </form>
+      </article>
+    </div>
+  </div>
+</template>
+
+{# ── 2. Dados pessoais ─────────────────────────────────────────────────── #}
+<template x-teleport="body">
+  <div x-show="modal === 'personal'" x-cloak>
+    <div class="fixed inset-0 z-40 bg-black/20 backdrop-blur-sm"
+         x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
+         x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
+         @click="modal = null"></div>
+    <div class="fixed left-1/2 top-1/2 z-50 w-full max-w-md -translate-x-1/2 -translate-y-1/2 px-4"
+         x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100"
+         x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100 scale-100" x-transition:leave-end="opacity-0 scale-95"
+         @click.stop>
+      <article class="amare-card p-6 shadow-xl">
+        {% include "patient/_modal_header.html" with title="Dados pessoais" kicker="Perfil" %}
+        <form method="post" action="{% url 'users:profile-update' 'personal' %}" class="mt-5 space-y-4">
+          {% csrf_token %}
+          <div>
+            <label class="mb-1 block text-xs font-bold uppercase tracking-widest text-text-muted">Telefone</label>
+            <input type="tel" name="phone" value="{{ request.user.phone }}" class="amare-input w-full" maxlength="20">
+          </div>
+          <div>
+            <label class="mb-1 block text-xs font-bold uppercase tracking-widest text-text-muted">Data de nascimento</label>
+            <input type="date" name="date_of_birth"
+                   value="{{ request.user.date_of_birth|date:'Y-m-d' }}"
+                   class="amare-input w-full">
+          </div>
+          <button type="submit" class="amare-button-primary w-full">Salvar</button>
+        </form>
+      </article>
+    </div>
+  </div>
+</template>
+
+{# ── 3. Contato de emergência ──────────────────────────────────────────── #}
+<template x-teleport="body">
+  <div x-show="modal === 'emergency'" x-cloak>
+    <div class="fixed inset-0 z-40 bg-black/20 backdrop-blur-sm"
+         x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
+         x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
+         @click="modal = null"></div>
+    <div class="fixed left-1/2 top-1/2 z-50 w-full max-w-md -translate-x-1/2 -translate-y-1/2 px-4"
+         x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100"
+         x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100 scale-100" x-transition:leave-end="opacity-0 scale-95"
+         @click.stop>
+      <article class="amare-card p-6 shadow-xl">
+        {% include "patient/_modal_header.html" with title="Contato de emergência" kicker="Perfil" %}
+        <p class="mt-1 text-xs text-text-muted">Pessoa de confiança a contactar em situações de urgência.</p>
+        <form method="post" action="{% url 'users:profile-update' 'emergency' %}" class="mt-5 space-y-4">
+          {% csrf_token %}
+          <div>
+            <label class="mb-1 block text-xs font-bold uppercase tracking-widest text-text-muted">Nome</label>
+            <input type="text" name="emergency_contact_name" value="{{ request.user.emergency_contact_name }}"
+                   class="amare-input w-full" maxlength="150">
+          </div>
+          <div>
+            <label class="mb-1 block text-xs font-bold uppercase tracking-widest text-text-muted">Telefone</label>
+            <input type="tel" name="emergency_contact_phone" value="{{ request.user.emergency_contact_phone }}"
+                   class="amare-input w-full" maxlength="20">
+          </div>
+          <button type="submit" class="amare-button-primary w-full">Salvar</button>
+        </form>
+      </article>
+    </div>
+  </div>
+</template>
+
+{# ── 4. Alterar senha ──────────────────────────────────────────────────── #}
+<template x-teleport="body">
+  <div x-show="modal === 'password'" x-cloak>
+    <div class="fixed inset-0 z-40 bg-black/20 backdrop-blur-sm"
+         x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
+         x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
+         @click="modal = null"></div>
+    <div class="fixed left-1/2 top-1/2 z-50 w-full max-w-md -translate-x-1/2 -translate-y-1/2 px-4"
+         x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100"
+         x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100 scale-100" x-transition:leave-end="opacity-0 scale-95"
+         @click.stop>
+      <article class="amare-card p-6 shadow-xl">
+        {% include "patient/_modal_header.html" with title="Alterar senha" kicker="Acesso" %}
+        <p class="mt-1 text-xs text-text-muted">Use uma senha com ao menos 8 caracteres.</p>
+        <form method="post" action="{% url 'users:change-password' %}" class="mt-5 space-y-4">
+          {% csrf_token %}
+          <div>
+            <label class="mb-1 block text-xs font-bold uppercase tracking-widest text-text-muted">Senha atual</label>
+            <input type="password" name="current_password" autocomplete="current-password" required class="amare-input w-full">
+          </div>
+          <div>
+            <label class="mb-1 block text-xs font-bold uppercase tracking-widest text-text-muted">Nova senha</label>
+            <input type="password" name="new_password" autocomplete="new-password" required minlength="8" class="amare-input w-full">
+          </div>
+          <div>
+            <label class="mb-1 block text-xs font-bold uppercase tracking-widest text-text-muted">Confirmar nova senha</label>
+            <input type="password" name="confirm_password" autocomplete="new-password" required minlength="8" class="amare-input w-full">
+          </div>
+          <button type="submit" class="amare-button-primary w-full">Alterar senha</button>
+        </form>
+      </article>
+    </div>
+  </div>
+</template>
+
+{# ── 5. Notificações no app ────────────────────────────────────────────── #}
+<template x-teleport="body">
+  <div x-show="modal === 'notif_app'" x-cloak>
+    <div class="fixed inset-0 z-40 bg-black/20 backdrop-blur-sm"
+         x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
+         x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
+         @click="modal = null"></div>
+    <div class="fixed left-1/2 top-1/2 z-50 w-full max-w-md -translate-x-1/2 -translate-y-1/2 px-4"
+         x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100"
+         x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100 scale-100" x-transition:leave-end="opacity-0 scale-95"
+         @click.stop>
+      <article class="amare-card p-6 shadow-xl">
+        {% include "patient/_modal_header.html" with title="No aplicativo" kicker="Notificações" %}
+        <form method="post" action="{% url 'users:profile-update' 'notifications' %}" class="mt-5 space-y-3">
+          {% csrf_token %}
+          {# Campos ocultos para manter os valores dos outros campos de notificação #}
+          <input type="hidden" name="email_reminders_appointments" value="{% if request.user.email_reminders_appointments %}on{% endif %}">
+          <input type="hidden" name="email_reminders_journey" value="{% if request.user.email_reminders_journey %}on{% endif %}">
+          <input type="hidden" name="email_reminders_maya" value="{% if request.user.email_reminders_maya %}on{% endif %}">
+          <input type="hidden" name="reminder_frequency" value="{{ request.user.reminder_frequency }}">
+          <label class="flex cursor-pointer items-start gap-3 rounded-xl border border-border bg-white/75 px-4 py-4 text-sm leading-6 text-text-strong">
+            <input type="checkbox" name="wants_in_app_reminders" {% if request.user.wants_in_app_reminders %}checked{% endif %}
+                   class="mt-0.5 h-4 w-4 rounded">
+            <div>
+              <p class="font-semibold">Lembretes dentro do aplicativo</p>
+              <p class="text-xs text-text-muted">Alertas e lembretes aparecem enquanto você usa a plataforma.</p>
+            </div>
+          </label>
+          <button type="submit" class="amare-button-primary w-full">Salvar</button>
+        </form>
+      </article>
+    </div>
+  </div>
+</template>
+
+{# ── 6. Notificações por e-mail ────────────────────────────────────────── #}
+<template x-teleport="body">
+  <div x-show="modal === 'notif_email'" x-cloak>
+    <div class="fixed inset-0 z-40 bg-black/20 backdrop-blur-sm"
+         x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
+         x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
+         @click="modal = null"></div>
+    <div class="fixed left-1/2 top-1/2 z-50 w-full max-w-md -translate-x-1/2 -translate-y-1/2 px-4"
+         x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100"
+         x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100 scale-100" x-transition:leave-end="opacity-0 scale-95"
+         @click.stop>
+      <article class="amare-card p-6 shadow-xl">
+        {% include "patient/_modal_header.html" with title="Por e-mail" kicker="Notificações" %}
+        <form method="post" action="{% url 'users:profile-update' 'notifications' %}" class="mt-5 space-y-3">
+          {% csrf_token %}
+          <input type="hidden" name="wants_in_app_reminders" value="{% if request.user.wants_in_app_reminders %}on{% endif %}">
+          {% for label, name in forloop_email_fields %}{% endfor %}
+          <label class="flex cursor-pointer items-start gap-3 rounded-xl border border-border bg-white/75 px-4 py-3 text-sm text-text-strong">
+            <input type="checkbox" name="email_reminders_appointments" {% if request.user.email_reminders_appointments %}checked{% endif %} class="mt-0.5 h-4 w-4 rounded">
+            <span>Consultas</span>
+          </label>
+          <label class="flex cursor-pointer items-start gap-3 rounded-xl border border-border bg-white/75 px-4 py-3 text-sm text-text-strong">
+            <input type="checkbox" name="email_reminders_journey" {% if request.user.email_reminders_journey %}checked{% endif %} class="mt-0.5 h-4 w-4 rounded">
+            <span>Atualizações da jornada</span>
+          </label>
+          <label class="flex cursor-pointer items-start gap-3 rounded-xl border border-border bg-white/75 px-4 py-3 text-sm text-text-strong">
+            <input type="checkbox" name="email_reminders_maya" {% if request.user.email_reminders_maya %}checked{% endif %} class="mt-0.5 h-4 w-4 rounded">
+            <span>Resumos da Maya</span>
+          </label>
+          <div>
+            <label class="mb-1 block text-xs font-bold uppercase tracking-widest text-text-muted">Frequência</label>
+            <select name="reminder_frequency" class="amare-input w-full">
+              {% for value, label in form.fields.reminder_frequency.choices %}
+                <option value="{{ value }}" {% if request.user.reminder_frequency == value %}selected{% endif %}>{{ label }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <button type="submit" class="amare-button-primary w-full">Salvar</button>
+        </form>
+      </article>
+    </div>
+  </div>
+</template>
+
+{# ── 7. Meus relatos ───────────────────────────────────────────────────── #}
+<template x-teleport="body">
+  <div x-show="modal === 'relatos'" x-cloak>
+    <div class="fixed inset-0 z-40 bg-black/20 backdrop-blur-sm"
+         x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
+         x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
+         @click="modal = null"></div>
+    <div class="fixed left-1/2 top-1/2 z-50 w-full max-w-md -translate-x-1/2 -translate-y-1/2 px-4"
+         x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100"
+         x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100 scale-100" x-transition:leave-end="opacity-0 scale-95"
+         @click.stop>
+      <article class="amare-card p-6 shadow-xl">
+        {% include "patient/_modal_header.html" with title="Meus relatos" kicker="Comunidade" %}
+        <div class="mt-5 max-h-80 space-y-3 overflow-y-auto pr-1">
+          {% for post in community_posts %}
+            <div class="rounded-xl border border-border bg-white/75 p-4">
+              {% include "components/status_badge.html" with status=post.status %}
+              <p class="mt-2 text-sm leading-6 text-text-muted">{{ post.body|truncatechars:180 }}</p>
+            </div>
+          {% empty %}
+            <p class="text-sm text-text-muted">Você ainda não enviou relatos para revisão.</p>
+          {% endfor %}
+        </div>
+      </article>
+    </div>
+  </div>
+</template>
+
+{# Avatar preview JS #}
+<script>
+(function () {
+  var input = document.getElementById('id_avatar_modal');
+  if (!input) return;
+  input.addEventListener('change', function () {
+    var file = this.files[0];
+    if (!file) return;
+    var reader = new FileReader();
+    reader.onload = function (e) {
+      var preview = document.getElementById('modal-avatar-preview');
+      var placeholder = document.getElementById('modal-avatar-placeholder');
+      if (preview) { preview.src = e.target.result; preview.classList.remove('hidden'); }
+      if (placeholder) placeholder.classList.add('hidden');
+    };
+    reader.readAsDataURL(file);
+  });
+})();
+</script>
