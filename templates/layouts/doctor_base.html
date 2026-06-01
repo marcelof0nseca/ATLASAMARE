@@ -1,34 +1,115 @@
 {% extends "layouts/base.html" %}
+{% load static %}
 
 {% block body %}
-  <main class="amare-shell pb-10">
-    <header class="mb-8 flex flex-col gap-4 rounded-3xl border border-border bg-surface/80 p-5 shadow-serene backdrop-blur sm:flex-row sm:items-center sm:justify-between">
-      <div>
-        {% include "components/site_logo.html" with href="/doctor/patients/" wrapper_class="rounded-[1.4rem] border border-white/70 bg-white/85 px-4 py-3 shadow-serene" image_class="block h-auto w-full max-w-[11.5rem] object-contain" subtitle="Área médica" %}
-        <h1 class="mt-4 text-3xl font-semibold">{% block page_title %}{% endblock %}</h1>
-        <p class="mt-2 max-w-3xl text-sm leading-6 text-text-muted">{% block page_intro %}{% endblock %}</p>
-      </div>
-      <div class="flex items-center gap-3">
-        <span class="hidden text-sm text-text-muted sm:inline">Dr(a). {{ request.user.full_name }}</span>
-        <form method="post" action="{% url 'users:logout' %}">
-          {% csrf_token %}
-          <button class="amare-button-secondary">Sair</button>
-        </form>
-      </div>
-    </header>
 
-    <div class="mb-6 flex gap-3 text-sm">
-      <a href="{% url 'users:doctor-patient-list' %}" class="rounded-2xl px-4 py-2 {% if active_nav == 'patients' %}bg-rose text-white{% else %}border border-border bg-white text-text-strong{% endif %}">
-        Pacientes
+  {# ── Sidebar (desktop) ──────────────────────────────────────────────────── #}
+  <aside class="amare-patient-sidebar">
+    <div class="mb-8 flex items-center justify-between gap-3 px-2">
+      <a href="{% url 'users:doctor-patient-list' %}" class="amare-brand-link">
+        <img src="{% static 'images/amare-logo.png' %}" alt="Clinica Amare" class="amare-brand-logo amare-brand-logo-sidebar">
       </a>
-      <a href="{% url 'treatments:doctor-videos' %}" class="rounded-2xl px-4 py-2 {% if active_nav == 'videos' %}bg-rose text-white{% else %}border border-border bg-white text-text-strong{% endif %}">
-        Videos da Jornada
-      </a>
-      <a href="{% url 'treatments:doctor-documents' %}" class="rounded-2xl px-4 py-2 {% if active_nav == 'documents' %}bg-rose text-white{% else %}border border-border bg-white text-text-strong{% endif %}">
-        Documentos
-      </a>
+      <span class="rounded-lg bg-linen px-2 py-1 text-[11px] font-semibold uppercase tracking-[0.12em] text-text-muted">Medica</span>
     </div>
+
+    <nav aria-label="Navegacao da medica">
+      <ul class="space-y-1">
+        <li>
+          <a class="amare-nav-link {% if active_nav == 'patients' %}amare-nav-link-active{% endif %}" href="{% url 'users:doctor-patient-list' %}">
+            <svg class="h-[18px] w-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            Pacientes
+          </a>
+        </li>
+        <li>
+          <a class="amare-nav-link {% if active_nav == 'new-patient' %}amare-nav-link-active{% endif %}" href="{% url 'users:doctor-patient-create' %}">
+            <svg class="h-[18px] w-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
+            Nova Paciente
+          </a>
+        </li>
+        <li>
+          <a class="amare-nav-link {% if active_nav == 'videos' %}amare-nav-link-active{% endif %}" href="{% url 'treatments:doctor-videos' %}">
+            <svg class="h-[18px] w-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+            Videoaulas
+          </a>
+        </li>
+        <li>
+          <a class="amare-nav-link {% if active_nav == 'documents' %}amare-nav-link-active{% endif %}" href="{% url 'treatments:doctor-documents' %}">
+            <svg class="h-[18px] w-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+            Documentos
+          </a>
+        </li>
+      </ul>
+    </nav>
+
+    <div class="absolute inset-x-3 bottom-5 rounded-xl border border-border bg-linen/80 p-4">
+      <p class="amare-kicker">ATLAS</p>
+      <p class="mt-2 font-serif text-sm font-medium leading-5 text-text-strong">Gerencie pacientes, jornada e conteudo em um unico lugar.</p>
+    </div>
+  </aside>
+
+  {# ── Navbar (top) ────────────────────────────────────────────────────────── #}
+  <header class="amare-patient-navbar">
+    <a href="{% url 'users:doctor-patient-list' %}" class="amare-brand-link lg:hidden">
+      <img src="{% static 'images/amare-logo.png' %}" alt="Clinica Amare" class="amare-brand-logo amare-brand-logo-topbar">
+    </a>
+    <div class="hidden min-w-0 items-center gap-4 lg:flex">
+      <img src="{% static 'images/amare-logo.png' %}" alt="Clinica Amare" class="amare-brand-logo amare-brand-logo-topbar">
+      <div>
+        <p class="amare-kicker">Clinica Amare</p>
+        <p class="mt-1 text-sm font-medium text-text-muted">Painel Medico</p>
+      </div>
+    </div>
+
+    <div class="flex items-center gap-2">
+      <span class="hidden text-sm text-text-muted sm:inline">{{ request.user.full_name }}</span>
+      <form method="post" action="{% url 'users:logout' %}">
+        {% csrf_token %}
+        <button class="inline-flex h-10 w-10 items-center justify-center rounded-full text-text-muted transition hover:text-golden" aria-label="Sair">
+          <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5"/><path d="M21 12H9"/></svg>
+        </button>
+      </form>
+    </div>
+  </header>
+
+  {# ── Main content ────────────────────────────────────────────────────────── #}
+  <main class="amare-shell">
+    <section class="mb-8 border-b border-border pb-6">
+      <p class="amare-kicker">Medica</p>
+      <h1 class="amare-patient-page-title mt-3">{% block page_title %}{% endblock %}</h1>
+      <p class="mt-3 max-w-3xl font-serif text-lg leading-8 text-text-muted">{% block page_intro %}{% endblock %}</p>
+    </section>
 
     {% block content %}{% endblock %}
   </main>
+
+  {# ── Bottom nav (mobile) ─────────────────────────────────────────────────── #}
+  <nav class="amare-bottom-nav fixed inset-x-3 bottom-3 z-30 rounded-xl border border-border bg-white/95 p-2 shadow-serene lg:hidden">
+    <ul class="grid grid-cols-4 gap-0.5 text-center sm:gap-1">
+      <li>
+        <a class="amare-nav-link justify-center {% if active_nav == 'patients' %}amare-nav-link-active{% endif %}"
+           href="{% url 'users:doctor-patient-list' %}" aria-label="Pacientes">
+          <svg class="h-[18px] w-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        </a>
+      </li>
+      <li>
+        <a class="amare-nav-link justify-center"
+           href="{% url 'users:doctor-patient-create' %}" aria-label="Nova Paciente">
+          <svg class="h-[18px] w-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
+        </a>
+      </li>
+      <li>
+        <a class="amare-nav-link justify-center {% if active_nav == 'videos' %}amare-nav-link-active{% endif %}"
+           href="{% url 'treatments:doctor-videos' %}" aria-label="Videoaulas">
+          <svg class="h-[18px] w-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+        </a>
+      </li>
+      <li>
+        <a class="amare-nav-link justify-center {% if active_nav == 'documents' %}amare-nav-link-active{% endif %}"
+           href="{% url 'treatments:doctor-documents' %}" aria-label="Documentos">
+          <svg class="h-[18px] w-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        </a>
+      </li>
+    </ul>
+  </nav>
+
 {% endblock %}
