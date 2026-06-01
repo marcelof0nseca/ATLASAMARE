@@ -2,215 +2,398 @@
 
 {% block title %}Rotina | Clinica AMARE{% endblock %}
 {% block page_title %}Sua rotina de cuidado{% endblock %}
-{% block page_intro %}Consultas, exames, medicacoes e tarefas pessoais aparecem juntas para voce decidir o proximo passo com menos esforco.{% endblock %}
+{% block page_intro %}Consultas, exames, medicacoes e tarefas pessoais em um so lugar.{% endblock %}
 
 {% block content %}
-  <section class="space-y-5">
-      <article class="amare-card overflow-hidden p-0">
-        <div class="border-b border-border bg-white/70 p-5 sm:p-6">
-          <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-            <div>
-              <p class="amare-kicker">Agenda</p>
-              <h2 class="mt-2 font-serif text-3xl font-medium text-text-strong">
-                {{ routine_calendar.month_label|date:"F \\d\\e Y" }}
-              </h2>
-              <p class="mt-2 max-w-2xl text-sm leading-6 text-text-muted">
-                Consultas, exames, medicações e tarefas aparecem no mesmo calendário para facilitar a leitura da semana.
-              </p>
-            </div>
-            <span class="amare-chip">Somente visualização</span>
-          </div>
 
-          <div class="mt-5 flex flex-wrap gap-2 text-xs font-semibold text-text-muted">
-            <span class="inline-flex items-center gap-2 rounded-lg bg-white px-3 py-2"><span class="h-2.5 w-2.5 rounded-full bg-golden"></span>Consulta ou exame</span>
-            <span class="inline-flex items-center gap-2 rounded-lg bg-white px-3 py-2"><span class="h-2.5 w-2.5 rounded-full bg-lesbian-green"></span>Medicação</span>
-            <span class="inline-flex items-center gap-2 rounded-lg bg-white px-3 py-2"><span class="h-2.5 w-2.5 rounded-full bg-warning"></span>Tarefa</span>
-          </div>
-        </div>
+<style>
+  .amare-modal {
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: 9999;
+    background: rgba(0,0,0,0.65);
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    box-sizing: border-box;
+  }
+  .modal-card {
+    position: relative;
+    width: 100%; max-width: 32rem;
+    max-height: calc(100vh - 32px); overflow-y: auto;
+    background: #fff; border-radius: 1rem; padding: 1.5rem;
+    box-shadow: 0 25px 60px -12px rgba(0,0,0,0.45);
+  }
+  .modal-kicker {
+    font-size: 10px; font-weight: 700; letter-spacing: .14em;
+    text-transform: uppercase; color: #9a876f;
+  }
+  .modal-title {
+    margin-top: 2px; font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 1.4rem; font-weight: 700; color: #2a1f15;
+  }
+  .modal-close {
+    background: none; border: none; cursor: pointer;
+    padding: 4px; color: #9a876f; border-radius: 6px;
+    transition: color .15s; line-height: 1;
+  }
+  .modal-close:hover { color: #2a1f15; }
+</style>
 
-        <div class="grid gap-0 xl:grid-cols-[1fr_18rem]">
-          <div class="overflow-x-auto p-4 sm:p-6">
-            <div class="min-w-[44rem]">
-              <div class="grid grid-cols-7 border-b border-border text-center text-xs font-semibold uppercase tracking-[0.12em] text-text-muted">
-                {% for weekday in routine_calendar.weekdays %}
-                  <div class="px-2 pb-3">{{ weekday }}</div>
-                {% endfor %}
-              </div>
+<!-- BARRA DE AÇÕES COMPACTA -->
+<div class="mb-4 flex flex-wrap gap-3">
 
-              <div class="grid auto-rows-[9.5rem] grid-cols-7 border-l border-border">
-                {% for week in routine_calendar.weeks %}
-                  {% for day in week %}
-                    <section class="flex h-full min-w-0 flex-col border-b border-r border-border bg-white/70 p-2 {% if not day.in_month %}opacity-45{% endif %}">
-                      <div class="mb-2 flex h-7 shrink-0 items-center justify-between">
-                        <span class="inline-flex h-7 w-7 items-center justify-center rounded-full text-sm font-semibold {% if day.is_today %}bg-golden text-white{% else %}text-text-strong{% endif %}">
-                          {{ day.number }}
-                        </span>
-                        {% if day.event_count %}
-                          <span class="text-[11px] font-semibold text-text-muted">{{ day.event_count }}</span>
-                        {% endif %}
-                      </div>
-
-                      <div class="min-h-0 flex-1 space-y-1.5 overflow-hidden">
-                        {% for appointment in day.appointments %}
-                          <div class="h-6 truncate rounded-md bg-golden px-2 py-1 text-[11px] font-semibold leading-4 text-white" title="{{ appointment.get_type_display }} - {{ appointment.scheduled_at|date:'H:i' }}">
-                            {{ appointment.scheduled_at|date:"H:i" }} {{ appointment.get_type_display }}
-                          </div>
-                        {% endfor %}
-                        {% for medication in day.medications|slice:":2" %}
-                          <div class="h-6 truncate rounded-md bg-lesbian-green/25 px-2 py-1 text-[11px] font-semibold leading-4 text-text-strong" title="{{ medication.name }} - {{ medication.scheduled_for|date:'H:i' }}">
-                            {{ medication.scheduled_for|date:"H:i" }} {{ medication.name }}
-                          </div>
-                        {% endfor %}
-                        {% for task in day.tasks|slice:":2" %}
-                          <div class="h-6 truncate rounded-md bg-warning/15 px-2 py-1 text-[11px] font-semibold leading-4 text-text-strong" title="{{ task.title }}">
-                            {% if task.due_at %}{{ task.due_at|date:"H:i" }} {% endif %}{{ task.title }}
-                          </div>
-                        {% endfor %}
-                        {% if day.event_count > 4 %}
-                          <p class="px-2 text-[11px] font-semibold text-text-muted">+ mais itens</p>
-                        {% endif %}
-                      </div>
-                    </section>
-                  {% endfor %}
-                {% endfor %}
-              </div>
-            </div>
-          </div>
-
-          <aside class="border-t border-border bg-linen/55 p-5 xl:border-l xl:border-t-0">
-            <p class="amare-kicker">Próximos</p>
-            <h3 class="mt-2 font-serif text-xl font-medium text-text-strong">Consultas e exames</h3>
-            <div class="mt-4 space-y-3">
-              {% for appointment in upcoming_appointments %}
-                <article class="rounded-lg border border-border bg-white p-3">
-                  <p class="text-sm font-semibold text-text-strong">{{ appointment.get_type_display }}</p>
-                  <p class="mt-1 text-xs font-semibold uppercase tracking-[0.08em] text-text-muted">
-                    {{ appointment.scheduled_at|date:"d/m" }} às {{ appointment.scheduled_at|date:"H:i" }}
-                  </p>
-                  {% if appointment.details %}
-                    <p class="mt-2 text-sm leading-5 text-text-muted">{{ appointment.details }}</p>
-                  {% endif %}
-                </article>
-              {% empty %}
-                <p class="text-sm leading-6 text-text-muted">Nenhum compromisso futuro cadastrado.</p>
-              {% endfor %}
-            </div>
-          </aside>
-        </div>
-      </article>
-
-    <div class="grid items-start gap-5 xl:grid-cols-[0.85fr_1.15fr]">
-      <aside class="space-y-5">
-        <article class="amare-card p-6">
-          <p class="amare-kicker">Agora</p>
-          <h2 class="mt-2 font-serif text-2xl font-bold">Primeiro cuidado do dia</h2>
-          <div class="mt-5">
-            {% if now_item %}
-              {% include "patient/partials/medication_row.html" with medication=now_item %}
-            {% else %}
-              <p class="text-sm leading-6 text-text-muted">Nao ha dose pendente para este momento. Voce pode seguir para a agenda ou tarefas pessoais.</p>
-            {% endif %}
-          </div>
-        </article>
-
-        <article class="amare-card p-6">
-          <p class="amare-kicker">Tarefas pessoais</p>
-          <h2 class="mt-2 font-serif text-2xl font-bold">Adicionar lembrete</h2>
-          <form method="post" action="{% url 'core:task-create' %}" class="mt-5 space-y-3">
-            {% csrf_token %}
-            <div>
-              <label for="{{ task_form.title.id_for_label }}" class="mb-2 block text-sm font-bold">Tarefa</label>
-              {{ task_form.title }}
-            </div>
-            <div>
-              <label for="{{ task_form.notes.id_for_label }}" class="mb-2 block text-sm font-bold">Observacao</label>
-              {{ task_form.notes }}
-            </div>
-            <div class="grid gap-3 sm:grid-cols-2">
-              <div>
-                <label for="{{ task_form.due_date.id_for_label }}" class="mb-2 block text-sm font-bold">Data</label>
-                {{ task_form.due_date }}
-              </div>
-              <div>
-                <label for="{{ task_form.due_time.id_for_label }}" class="mb-2 block text-sm font-bold">Hora</label>
-                {{ task_form.due_time }}
-              </div>
-            </div>
-            <button class="amare-button-primary w-full">Adicionar tarefa</button>
-          </form>
-        </article>
-      </aside>
-
-      <div class="space-y-5">
-      <article class="amare-card p-6">
-        <p class="amare-kicker">Medicacoes</p>
-        <h2 class="mt-2 font-serif text-2xl font-bold">Hoje e proximas doses</h2>
-        <div class="mt-5 grid gap-4 lg:grid-cols-2">
-          <div class="space-y-3">
-            <h3 class="text-sm font-bold uppercase text-text-muted">Restante de hoje</h3>
-            {% if today_items %}
-              {% for medication in today_items %}
-                {% include "patient/partials/medication_row.html" with medication=medication %}
-              {% endfor %}
-            {% else %}
-              <p class="text-sm leading-6 text-text-muted">Nao ha outras doses hoje.</p>
-            {% endif %}
-          </div>
-          <div class="space-y-3">
-            <h3 class="text-sm font-bold uppercase text-text-muted">Proximas</h3>
-            {% if upcoming_items %}
-              {% for medication in upcoming_items %}
-                {% include "patient/partials/medication_row.html" with medication=medication %}
-              {% endfor %}
-            {% else %}
-              <p class="text-sm leading-6 text-text-muted">Nenhuma dose futura cadastrada.</p>
-            {% endif %}
-          </div>
-        </div>
-      </article>
-
-      <article class="amare-card p-6">
-        <p class="amare-kicker">Checklist pessoal</p>
-        <h2 class="mt-2 font-serif text-2xl font-bold">Minhas tarefas</h2>
-        <div class="mt-5 space-y-3">
-          {% for task in tasks %}
-            <article class="rounded-xl border border-border bg-white/75 p-4">
-              <div class="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-                <div>
-                  <p class="font-bold text-text-strong">{{ task.title }}</p>
-                  {% if task.notes %}<p class="mt-1 text-sm leading-6 text-text-muted">{{ task.notes }}</p>{% endif %}
-                  <p class="mt-2 text-xs font-bold uppercase text-text-muted">
-                    {% if task.due_at %}{{ task.due_at|date:"d/m H:i" }}{% else %}Sem horario definido{% endif %}
-                  </p>
-                </div>
-                <div class="flex shrink-0 flex-wrap gap-2">
-                  {% include "components/status_badge.html" with status=task.status %}
-                  {% if task.status == "pending" %}
-                    <form method="post" action="{% url 'core:task-complete' task.id %}">
-                      {% csrf_token %}
-                      <button class="amare-button-secondary">Concluir</button>
-                    </form>
-                  {% endif %}
-                </div>
-              </div>
-              <details class="mt-3">
-                <summary class="cursor-pointer text-sm font-bold text-golden">Editar tarefa</summary>
-                <form method="post" action="{% url 'core:task-update' task.id %}" class="mt-3 grid gap-3 sm:grid-cols-2">
-                  {% csrf_token %}
-                  <input type="text" name="title" value="{{ task.title }}" aria-label="Tarefa">
-                  <input type="text" name="notes" value="{{ task.notes }}" aria-label="Observacao">
-                  <input type="date" name="due_date" value="{{ task.due_at|date:'Y-m-d' }}" aria-label="Data">
-                  <input type="time" name="due_time" value="{{ task.due_at|date:'H:i' }}" aria-label="Hora">
-                  <button class="amare-button-primary sm:col-span-2">Salvar tarefa</button>
-                </form>
-              </details>
-            </article>
-          {% empty %}
-            <p class="text-sm leading-6 text-text-muted">Voce ainda nao criou tarefas pessoais.</p>
-          {% endfor %}
-        </div>
-      </article>
+  <!-- Chip: Agora -->
+  <div onclick="openRoutineModal('agora')"
+       class="flex cursor-pointer items-center gap-3 rounded-xl border border-border bg-surface px-4 py-3 shadow-serene transition hover:border-golden hover:bg-linen/60">
+    <div class="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-linen border border-border">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-text-muted"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
     </div>
+    <div class="min-w-0">
+      <p class="text-xs font-semibold uppercase tracking-widest text-text-muted">Agora</p>
+      <p class="truncate text-sm font-bold text-text-strong">
+        {% if now_item %}{{ now_item.name }}{% else %}Sem dose pendente{% endif %}
+      </p>
     </div>
-  </section>
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="flex-shrink-0 text-text-muted"><path d="M9 18l6-6-6-6"/></svg>
+  </div>
+
+  <!-- Chip: Medicacoes -->
+  <div onclick="openRoutineModal('meds')"
+       class="flex cursor-pointer items-center gap-3 rounded-xl border border-border bg-surface px-4 py-3 shadow-serene transition hover:border-golden hover:bg-linen/60">
+    <div class="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-linen border border-border">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-text-muted"><path d="M10.5 20H4a2 2 0 0 1-2-2V5c0-1.1.9-2 2-2h3.93a2 2 0 0 1 1.66.9l.82 1.2a2 2 0 0 0 1.66.9H20a2 2 0 0 1 2 2v3"/><circle cx="18" cy="18" r="3"/><path d="M22 22l-1.5-1.5"/></svg>
+    </div>
+    <div class="min-w-0">
+      <p class="text-xs font-semibold uppercase tracking-widest text-text-muted">Medicacoes</p>
+      <p class="truncate text-sm font-bold text-text-strong">
+        {% if today_items %}{{ today_items|length }} dose{{ today_items|length|pluralize }} hoje{% else %}Nenhuma hoje{% endif %}
+      </p>
+    </div>
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="flex-shrink-0 text-text-muted"><path d="M9 18l6-6-6-6"/></svg>
+  </div>
+
+  <!-- Chip: Consultas -->
+  <div onclick="openRoutineModal('consultas')"
+       class="flex cursor-pointer items-center gap-3 rounded-xl border border-border bg-surface px-4 py-3 shadow-serene transition hover:border-golden hover:bg-linen/60">
+    <div class="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-linen border border-border">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-text-muted"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+    </div>
+    <div class="min-w-0">
+      <p class="text-xs font-semibold uppercase tracking-widest text-text-muted">Consultas</p>
+      <p class="truncate text-sm font-bold text-text-strong">
+        {% if upcoming_appointments %}{{ upcoming_appointments.0.get_type_display }} · {{ upcoming_appointments.0.scheduled_at|date:"d/m" }}{% else %}Nenhuma agendada{% endif %}
+      </p>
+    </div>
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="flex-shrink-0 text-text-muted"><path d="M9 18l6-6-6-6"/></svg>
+  </div>
+
+  <!-- Chip: + Tarefa -->
+  <div onclick="openRoutineModal('tarefa')"
+       class="flex cursor-pointer items-center gap-3 rounded-xl border border-border bg-surface px-4 py-3 shadow-serene transition hover:border-golden hover:bg-linen/60">
+    <div class="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-linen border border-border">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-text-muted"><path d="M12 5v14M5 12h14"/></svg>
+    </div>
+    <div class="min-w-0">
+      <p class="text-xs font-semibold uppercase tracking-widest text-text-muted">Tarefas</p>
+      <p class="truncate text-sm font-bold text-text-strong">
+        {% with pending=tasks|length %}
+          {% if pending %}{{ pending }} tarefa{{ pending|pluralize }}{% else %}Adicionar tarefa{% endif %}
+        {% endwith %}
+      </p>
+    </div>
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="flex-shrink-0 text-text-muted"><path d="M9 18l6-6-6-6"/></svg>
+  </div>
+
+</div>
+
+<!-- CALENDÁRIO FULLWIDTH -->
+<article class="amare-card overflow-hidden p-0">
+  <div class="border-b border-border bg-white/70 p-4 sm:p-5">
+    <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+      <div>
+        <p class="amare-kicker">Calendario</p>
+        <h2 class="mt-1 font-serif text-2xl font-medium text-text-strong">
+          {{ routine_calendar.month_label|date:"F \\d\\e Y" }}
+        </h2>
+      </div>
+      <div class="flex flex-wrap gap-2 text-xs font-semibold text-text-muted">
+        <span class="inline-flex items-center gap-1.5 rounded-lg bg-white px-2.5 py-1.5">
+          <span class="h-2 w-2 rounded-full bg-golden"></span>Consulta
+        </span>
+        <span class="inline-flex items-center gap-1.5 rounded-lg bg-white px-2.5 py-1.5">
+          <span class="h-2 w-2 rounded-full bg-lesbian-green"></span>Medicacao
+        </span>
+        <span class="inline-flex items-center gap-1.5 rounded-lg bg-white px-2.5 py-1.5">
+          <span class="h-2 w-2 rounded-full bg-warning"></span>Tarefa
+        </span>
+        <span class="amare-chip">So visualizacao</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="p-2 sm:p-4">
+    <!-- Cabecalho dias da semana -->
+    <div class="grid grid-cols-7 border-b border-border text-center text-xs font-semibold uppercase tracking-[0.12em] text-text-muted">
+      {% for weekday in routine_calendar.weekdays %}
+        <div class="px-1 pb-2">
+          <span class="sm:hidden">{{ weekday|slice:":1" }}</span>
+          <span class="hidden sm:inline">{{ weekday }}</span>
+        </div>
+      {% endfor %}
+    </div>
+
+    <!-- Celulas -->
+    <div class="grid grid-cols-7 border-l border-border" style="grid-auto-rows: minmax(5.5rem, auto)">
+      {% for week in routine_calendar.weeks %}
+        {% for day in week %}
+          <section class="flex h-full min-w-0 flex-col border-b border-r border-border bg-white/70 p-1 sm:p-2 {% if not day.in_month %}opacity-40{% endif %}">
+            <div class="mb-1 flex shrink-0 items-center justify-between">
+              <span class="inline-flex h-6 w-6 items-center justify-center rounded-full text-xs font-semibold {% if day.is_today %}bg-golden text-white{% else %}text-text-strong{% endif %}">
+                {{ day.number }}
+              </span>
+              {% if day.event_count %}
+                <span class="hidden text-[10px] font-semibold text-text-muted sm:inline">{{ day.event_count }}</span>
+              {% endif %}
+            </div>
+
+            <div class="min-h-0 flex-1 space-y-1 overflow-hidden">
+              <!-- Mobile: bolinhas -->
+              <div class="flex flex-wrap gap-0.5 sm:hidden">
+                {% for _ in day.appointments %}<span class="h-1.5 w-1.5 rounded-full bg-golden"></span>{% endfor %}
+                {% for _ in day.medications|slice:":3" %}<span class="h-1.5 w-1.5 rounded-full bg-lesbian-green"></span>{% endfor %}
+                {% for _ in day.tasks|slice:":3" %}<span class="h-1.5 w-1.5 rounded-full bg-warning"></span>{% endfor %}
+              </div>
+
+              <!-- Desktop: etiquetas -->
+              <div class="hidden space-y-1 sm:block">
+                {% for appointment in day.appointments %}
+                  <div class="truncate rounded bg-golden px-1.5 py-0.5 text-[10px] font-semibold leading-4 text-white" title="{{ appointment.get_type_display }} {{ appointment.scheduled_at|date:'H:i' }}">
+                    {{ appointment.scheduled_at|date:"H:i" }} {{ appointment.get_type_display }}
+                  </div>
+                {% endfor %}
+                {% for medication in day.medications|slice:":2" %}
+                  <div class="truncate rounded bg-lesbian-green/25 px-1.5 py-0.5 text-[10px] font-semibold leading-4 text-text-strong" title="{{ medication.name }}">
+                    {{ medication.scheduled_for|date:"H:i" }} {{ medication.name }}
+                  </div>
+                {% endfor %}
+                {% for task in day.tasks|slice:":2" %}
+                  <div class="truncate rounded bg-warning/15 px-1.5 py-0.5 text-[10px] font-semibold leading-4 text-text-strong" title="{{ task.title }}">
+                    {% if task.due_at %}{{ task.due_at|date:"H:i" }} {% endif %}{{ task.title }}
+                  </div>
+                {% endfor %}
+                {% if day.event_count > 4 %}
+                  <p class="px-1 text-[10px] font-semibold text-text-muted">+{{ day.event_count|add:"-4" }}</p>
+                {% endif %}
+              </div>
+            </div>
+          </section>
+        {% endfor %}
+      {% endfor %}
+    </div>
+  </div>
+</article>
+
+<!-- ═══════════════════════════════════════════════
+     MODAIS
+════════════════════════════════════════════════ -->
+
+<!-- Modal: Agora -->
+<div id="modal-agora" class="amare-modal" onclick="closeRoutineModal()">
+  <div class="modal-card" onclick="event.stopPropagation()">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
+      <span class="modal-kicker">Rotina</span>
+      <button class="modal-close" onclick="closeRoutineModal()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <p class="modal-title">Primeiro cuidado do dia</p>
+    <div style="margin-top:16px">
+      {% if now_item %}
+        {% include "patient/partials/medication_row.html" with medication=now_item %}
+      {% else %}
+        <p class="text-sm leading-6 text-text-muted">Nao ha dose pendente para este momento. Verifique sua agenda ou tarefas pessoais.</p>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Medicacoes -->
+<div id="modal-meds" class="amare-modal" onclick="closeRoutineModal()">
+  <div class="modal-card" onclick="event.stopPropagation()">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
+      <span class="modal-kicker">Rotina</span>
+      <button class="modal-close" onclick="closeRoutineModal()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <p class="modal-title">Medicacoes</p>
+    <div style="margin-top:16px;display:flex;flex-direction:column;gap:20px">
+      <div>
+        <p class="amare-kicker" style="margin-bottom:10px">Restante de hoje</p>
+        <div class="space-y-3">
+          {% if today_items %}
+            {% for medication in today_items %}
+              {% include "patient/partials/medication_row.html" with medication=medication %}
+            {% endfor %}
+          {% else %}
+            <p class="text-sm leading-6 text-text-muted">Nao ha outras doses hoje.</p>
+          {% endif %}
+        </div>
+      </div>
+      <div>
+        <p class="amare-kicker" style="margin-bottom:10px">Proximas doses</p>
+        <div class="space-y-3">
+          {% if upcoming_items %}
+            {% for medication in upcoming_items %}
+              {% include "patient/partials/medication_row.html" with medication=medication %}
+            {% endfor %}
+          {% else %}
+            <p class="text-sm leading-6 text-text-muted">Nenhuma dose futura cadastrada.</p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Consultas -->
+<div id="modal-consultas" class="amare-modal" onclick="closeRoutineModal()">
+  <div class="modal-card" onclick="event.stopPropagation()">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
+      <span class="modal-kicker">Agenda</span>
+      <button class="modal-close" onclick="closeRoutineModal()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <p class="modal-title">Proximas consultas e exames</p>
+    <div style="margin-top:16px;display:flex;flex-direction:column;gap:10px">
+      {% for appointment in upcoming_appointments %}
+        <article class="rounded-lg border border-border bg-white p-3">
+          <p class="text-sm font-semibold text-text-strong">{{ appointment.get_type_display }}</p>
+          <p class="mt-1 text-xs font-semibold uppercase tracking-[0.08em] text-text-muted">
+            {{ appointment.scheduled_at|date:"d/m" }} as {{ appointment.scheduled_at|date:"H:i" }}
+          </p>
+          {% if appointment.details %}
+            <p class="mt-2 text-sm leading-5 text-text-muted">{{ appointment.details }}</p>
+          {% endif %}
+        </article>
+      {% empty %}
+        <p class="text-sm leading-6 text-text-muted">Nenhum compromisso futuro cadastrado.</p>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Tarefas -->
+<div id="modal-tarefa" class="amare-modal" onclick="closeRoutineModal()">
+  <div class="modal-card" onclick="event.stopPropagation()">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
+      <span class="modal-kicker">Tarefas pessoais</span>
+      <button class="modal-close" onclick="closeRoutineModal()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <p class="modal-title">Adicionar lembrete</p>
+    <form method="post" action="{% url 'core:task-create' %}" style="margin-top:16px">
+      {% csrf_token %}
+      <div style="margin-bottom:12px">
+        <label class="mb-1 block text-xs font-bold uppercase tracking-widest text-text-muted">Tarefa</label>
+        {{ task_form.title }}
+      </div>
+      <details style="margin-bottom:16px">
+        <summary class="cursor-pointer text-xs font-bold text-golden" style="margin-bottom:8px">Mais opcoes</summary>
+        <div style="display:flex;flex-direction:column;gap:10px;margin-top:10px">
+          <div>
+            <label class="mb-1 block text-xs font-bold uppercase tracking-widest text-text-muted">Observacao</label>
+            {{ task_form.notes }}
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+            <div>
+              <label class="mb-1 block text-xs font-bold uppercase tracking-widest text-text-muted">Data</label>
+              {{ task_form.due_date }}
+            </div>
+            <div>
+              <label class="mb-1 block text-xs font-bold uppercase tracking-widest text-text-muted">Hora</label>
+              {{ task_form.due_time }}
+            </div>
+          </div>
+        </div>
+      </details>
+      <button class="amare-button-primary w-full">Adicionar tarefa</button>
+    </form>
+
+    {% if tasks %}
+    <div style="margin-top:24px;border-top:1px solid #e8ddd1;padding-top:16px">
+      <p class="amare-kicker" style="margin-bottom:12px">Checklist pessoal</p>
+      <div class="space-y-3">
+        {% for task in tasks %}
+          <article class="rounded-xl border border-border bg-white/75 p-4">
+            <div class="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+              <div class="min-w-0">
+                <p class="font-bold text-text-strong">{{ task.title }}</p>
+                {% if task.notes %}<p class="mt-1 text-sm leading-5 text-text-muted">{{ task.notes }}</p>{% endif %}
+                <p class="mt-1 text-xs font-bold uppercase text-text-muted">
+                  {% if task.due_at %}{{ task.due_at|date:"d/m H:i" }}{% else %}Sem horario{% endif %}
+                </p>
+              </div>
+              <div class="flex shrink-0 flex-wrap gap-2">
+                {% include "components/status_badge.html" with status=task.status %}
+                {% if task.status == "pending" %}
+                  <form method="post" action="{% url 'core:task-complete' task.id %}">
+                    {% csrf_token %}
+                    <button class="amare-button-secondary">Concluir</button>
+                  </form>
+                {% endif %}
+              </div>
+            </div>
+            <details class="mt-3">
+              <summary class="cursor-pointer text-sm font-bold text-golden">Editar</summary>
+              <form method="post" action="{% url 'core:task-update' task.id %}" class="mt-3 grid gap-3 sm:grid-cols-2">
+                {% csrf_token %}
+                <input type="text" name="title" value="{{ task.title }}" aria-label="Tarefa" class="amare-input">
+                <input type="text" name="notes" value="{{ task.notes }}" aria-label="Observacao" class="amare-input">
+                <input type="date" name="due_date" value="{{ task.due_at|date:'Y-m-d' }}" aria-label="Data" class="amare-input">
+                <input type="time" name="due_time" value="{{ task.due_at|date:'H:i' }}" aria-label="Hora" class="amare-input">
+                <button class="amare-button-primary sm:col-span-2">Salvar</button>
+              </form>
+            </details>
+          </article>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+  </div>
+</div>
+
+<script>
+function openRoutineModal(id) {
+  var modal = document.getElementById('modal-' + id);
+  if (!modal) return;
+  if (modal.parentNode !== document.body) document.body.appendChild(modal);
+  modal.style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+  var card = modal.querySelector('.modal-card');
+  if (card) {
+    card.style.transition = 'none';
+    card.style.transform  = 'scale(0.95) translateY(10px)';
+    card.style.opacity    = '0';
+    requestAnimationFrame(function() {
+      requestAnimationFrame(function() {
+        card.style.transition = 'transform .22s cubic-bezier(.2,.8,.3,1), opacity .18s ease';
+        card.style.transform  = 'scale(1) translateY(0)';
+        card.style.opacity    = '1';
+      });
+    });
+  }
+}
+function closeRoutineModal() {
+  document.querySelectorAll('.amare-modal').forEach(function(m) { m.style.display = 'none'; });
+  document.body.style.overflow = '';
+}
+document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeRoutineModal(); });
+</script>
+
 {% endblock %}
