@@ -35,28 +35,17 @@
 .lp-root {
   position: relative;
   height: 100vh;
-  height: 100dvh; /* iOS Safari: dynamic viewport — endereça address bar */
+  height: 100dvh;
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  background: var(--lp-cream);
+  background:
+    radial-gradient(ellipse at top left, rgba(196, 125, 140, 0.12), transparent 42rem),
+    radial-gradient(ellipse at bottom right, rgba(141, 166, 154, 0.14), transparent 46rem),
+    linear-gradient(180deg, #ffffff 0%, #faf4e8 100%);
   color: var(--lp-ink);
   font-family: var(--lp-sans);
   -webkit-font-smoothing: antialiased;
-}
-
-/* gentle radial warmth — keeps cream from feeling flat */
-.lp-root::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 0;
-  background:
-    radial-gradient(120% 80% at 50% 30%, rgba(255, 251, 240, 0.6) 0%, transparent 60%),
-    radial-gradient(80% 60% at 20% 100%, rgba(230, 216, 189, 0.55) 0%, transparent 60%);
-  mix-blend-mode: multiply;
-  opacity: 0.8;
 }
 
 /* ── Header ─────────────────────────────────────────────────── */
