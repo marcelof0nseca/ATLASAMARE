@@ -34,7 +34,7 @@ class PartnerDashboardView(PartnerRequiredMixin, TemplateView):
         context = super().get_context_data(**kwargs)
         context.update(build_patient_dashboard(patient))
         context["linked_patient"] = patient
-        context["active_nav"] = "home"
+        context["active_nav"] = "partner"
         return context
 
 

@@ -1,7 +1,15 @@
 {% if messages %}
   <div class="fixed left-1/2 top-4 z-50 w-[min(32rem,calc(100vw-2rem))] -translate-x-1/2 space-y-2">
     {% for message in messages %}
-      <div class="rounded-xl border border-border bg-surface px-4 py-3 text-sm font-semibold text-text-strong shadow-serene">{{ message }}</div>
+      <div
+        x-data="{ show: true }"
+        x-show="show"
+        x-init="setTimeout(() => show = false, 4000)"
+        x-transition:leave="transition ease-in duration-500"
+        x-transition:leave-start="opacity-100 scale-100"
+        x-transition:leave-end="opacity-0 -translate-y-2 scale-95"
+        class="rounded-xl border border-border bg-surface px-4 py-3 text-sm font-semibold text-text-strong shadow-serene"
+      >{{ message }}</div>
     {% endfor %}
   </div>
 {% endif %}

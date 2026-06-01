@@ -1,34 +1,64 @@
 {% extends "layouts/patient_base.html" %}
+{% load static %}
 
-{% block title %}Perfil | Clinica AMARE{% endblock %}
-{% block page_title %}Conta e preferencias{% endblock %}
-{% block page_intro %}Dados basicos, lembretes e privacidade em um lugar simples de revisar.{% endblock %}
+{% block title %}Perfil | Clínica AMARE{% endblock %}
+{% block page_title %}Conta e preferências{% endblock %}
+{% block page_intro %}Dados pessoais, notificações e segurança em um lugar simples de revisar.{% endblock %}
 
 {% block content %}
-  <section class="grid gap-5 lg:grid-cols-[0.9fr_1.1fr]">
-    <aside class="space-y-5">
+<form method="post" enctype="multipart/form-data" class="space-y-5">
+  {% csrf_token %}
+
+  <div class="grid gap-5 lg:grid-cols-[0.9fr_1.1fr]">
+
+    {# ── Coluna esquerda ──────────────────────────────────────────────────── #}
+    <div class="space-y-5">
+
+      {# Conta #}
       <article class="amare-card p-6">
         <p class="amare-kicker">Conta</p>
-        <dl class="mt-5 space-y-4 text-sm">
-          <div>
-            <dt class="font-bold text-text-muted">Nome</dt>
-            <dd class="mt-1 font-bold text-text-strong">{{ request.user.full_name }}</dd>
+
+        {# Avatar #}
+        <div class="mt-5 flex items-center gap-4">
+          <div class="relative h-16 w-16 flex-shrink-0">
+            {% if request.user.avatar %}
+              <img id="avatar-preview" src="{{ request.user.avatar.url }}" alt="Foto de perfil"
+                   class="h-16 w-16 rounded-full object-cover border border-border">
+            {% else %}
+              <div id="avatar-preview-placeholder" class="flex h-16 w-16 items-center justify-center rounded-full bg-linen border border-border text-2xl font-serif font-bold text-text-muted select-none">
+                {{ request.user.full_name|first|upper }}
+              </div>
+              <img id="avatar-preview" src="" alt="Foto de perfil"
+                   class="h-16 w-16 rounded-full object-cover border border-border hidden">
+            {% endif %}
           </div>
           <div>
+            <label for="{{ form.avatar.id_for_label }}" class="amare-button-secondary cursor-pointer text-xs">
+              Trocar foto
+            </label>
+            {{ form.avatar }}
+          </div>
+        </div>
+
+        <dl class="mt-5 space-y-3 text-sm">
+          <div>
             <dt class="font-bold text-text-muted">Email</dt>
-            <dd class="mt-1 font-bold text-text-strong">{{ request.user.email }}</dd>
+            <dd class="mt-0.5 font-bold text-text-strong">{{ request.user.email }}</dd>
           </div>
           <div>
             <dt class="font-bold text-text-muted">Acesso</dt>
-            <dd class="mt-1 font-bold text-text-strong">{{ request.user.get_role_display }}</dd>
+            <dd class="mt-0.5 font-bold text-text-strong">{{ request.user.get_role_display }}</dd>
           </div>
         </dl>
+
         <form method="post" action="{% url 'users:logout' %}" class="mt-6">
           {% csrf_token %}
-          <button class="amare-button-secondary w-full">Sair com seguranca</button>
+          <button class="amare-button-secondary w-full">Sair com segurança</button>
         </form>
       </article>
 
+      {# Meus relatos #}
+      {% if request.user.is_patient %}
       <article class="amare-card p-6">
         <p class="amare-kicker">Comunidade</p>
         <h2 class="mt-2 font-serif text-2xl font-bold">Meus relatos</h2>
@@ -39,35 +69,150 @@
               <p class="mt-3 text-sm leading-6 text-text-muted">{{ post.body|truncatechars:130 }}</p>
             </div>
           {% empty %}
-            <p class="text-sm leading-6 text-text-muted">Voce ainda nao enviou relatos para revisao.</p>
+            <p class="text-sm leading-6 text-text-muted">Você ainda não enviou relatos para revisão.</p>
           {% endfor %}
         </div>
       </article>
-    </aside>
+      {% endif %}
 
-    <article class="amare-card p-6">
-      <p class="amare-kicker">Preferencias</p>
-      <h2 class="mt-2 font-serif text-2xl font-bold">Como a plataforma acompanha voce</h2>
-      <form method="post" class="mt-6 space-y-4">
-        {% csrf_token %}
-        <div>
-          <label for="{{ form.full_name.id_for_label }}" class="mb-2 block text-sm font-bold text-text-strong">Nome</label>
-          {{ form.full_name }}
+    </div>
+
+    {# ── Coluna direita ───────────────────────────────────────────────────── #}
+    <div class="space-y-5">
+
+      {# Dados pessoais #}
+      <article class="amare-card p-6">
+        <p class="amare-kicker">Dados pessoais</p>
+        <h2 class="mt-2 font-serif text-2xl font-bold">Suas informações básicas</h2>
+        <div class="mt-6 space-y-4">
+          <div>
+            <label for="{{ form.full_name.id_for_label }}" class="mb-2 block text-sm font-bold text-text-strong">Nome</label>
+            {{ form.full_name }}
+          </div>
+          <div class="grid gap-4 sm:grid-cols-2">
+            <div>
+              <label for="{{ form.phone.id_for_label }}" class="mb-2 block text-sm font-bold text-text-strong">Telefone</label>
+              {{ form.phone }}
+            </div>
+            <div>
+              <label for="{{ form.date_of_birth.id_for_label }}" class="mb-2 block text-sm font-bold text-text-strong">Data de nascimento</label>
+              {{ form.date_of_birth }}
+            </div>
+          </div>
         </div>
-        <div class="rounded-xl border border-border bg-white/75 px-4 py-4">
-          <label for="{{ form.wants_in_app_reminders.id_for_label }}" class="flex items-start gap-3 text-sm leading-6 text-text-strong">
+      </article>
+
+      {# Contato de emergência #}
+      <article class="amare-card p-6">
+        <p class="amare-kicker">Emergência</p>
+        <h2 class="mt-2 font-serif text-2xl font-bold">Contato de emergência</h2>
+        <p class="mt-2 text-sm leading-6 text-text-muted">Pessoa de confiança a ser contatada em situações de urgência.</p>
+        <div class="mt-5 grid gap-4 sm:grid-cols-2">
+          <div>
+            <label for="{{ form.emergency_contact_name.id_for_label }}" class="mb-2 block text-sm font-bold text-text-strong">Nome</label>
+            {{ form.emergency_contact_name }}
+          </div>
+          <div>
+            <label for="{{ form.emergency_contact_phone.id_for_label }}" class="mb-2 block text-sm font-bold text-text-strong">Telefone</label>
+            {{ form.emergency_contact_phone }}
+          </div>
+        </div>
+      </article>
+
+      {# Notificações #}
+      <article class="amare-card p-6">
+        <p class="amare-kicker">Notificações</p>
+        <h2 class="mt-2 font-serif text-2xl font-bold">Como a plataforma avisa você</h2>
+
+        <div class="mt-5 space-y-3">
+          <p class="text-xs font-bold uppercase tracking-widest text-text-muted">Lembretes no aplicativo</p>
+          <label class="flex items-start gap-3 rounded-xl border border-border bg-white/75 px-4 py-3 text-sm leading-6 text-text-strong">
             {{ form.wants_in_app_reminders }}
-            <span>Quero receber lembretes dentro do aplicativo para acompanhar minha rotina.</span>
+            <span>{{ form.wants_in_app_reminders.label }}</span>
           </label>
         </div>
-        <div class="rounded-xl border border-border bg-lesbian-green/20 px-4 py-4">
+
+        <div class="mt-5 space-y-3">
+          <p class="text-xs font-bold uppercase tracking-widest text-text-muted">Notificações por e-mail</p>
+          {% for field in form %}
+            {% if field.name in "email_reminders_appointments,email_reminders_journey,email_reminders_maya" %}
+            <label class="flex items-start gap-3 rounded-xl border border-border bg-white/75 px-4 py-3 text-sm leading-6 text-text-strong">
+              {{ field }}
+              <span>{{ field.label }}</span>
+            </label>
+            {% endif %}
+          {% endfor %}
+        </div>
+
+        <div class="mt-5">
+          <label for="{{ form.reminder_frequency.id_for_label }}" class="mb-2 block text-sm font-bold text-text-strong">{{ form.reminder_frequency.label }}</label>
+          {{ form.reminder_frequency }}
+        </div>
+
+        <div class="mt-5 rounded-xl border border-border bg-linen/60 px-4 py-4">
           <p class="text-sm font-bold text-text-strong">Privacidade da comunidade</p>
           <p class="mt-2 text-sm leading-6 text-text-muted">
-            Seus relatos aparecem como Paciente AMARE quando aprovados. Sua identidade real nao fica visivel no feed.
+            Seus relatos aparecem como Paciente AMARE quando aprovados. Sua identidade real não fica visível no feed.
           </p>
         </div>
-        <button type="submit" class="amare-button-primary">Salvar preferencias</button>
-      </form>
-    </article>
-  </section>
+      </article>
+
+      <button type="submit" class="amare-button-primary w-full">Salvar preferências</button>
+
+    </div>
+  </div>
+</form>
+
+{# ── Alterar senha (form separado) ────────────────────────────────────────── #}
+<article class="amare-card mt-5 p-6">
+  <p class="amare-kicker">Segurança</p>
+  <h2 class="mt-2 font-serif text-2xl font-bold">Alterar senha</h2>
+  <p class="mt-2 text-sm leading-6 text-text-muted">Use uma senha com ao menos 8 caracteres.</p>
+
+  <form method="post" action="{% url 'users:change-password' %}" class="mt-6">
+    {% csrf_token %}
+    <div class="grid gap-4 sm:grid-cols-3">
+      <div>
+        <label for="id_current_password" class="mb-2 block text-sm font-bold text-text-strong">Senha atual</label>
+        <input type="password" name="current_password" id="id_current_password"
+               autocomplete="current-password" required
+               class="amare-input w-full">
+      </div>
+      <div>
+        <label for="id_new_password" class="mb-2 block text-sm font-bold text-text-strong">Nova senha</label>
+        <input type="password" name="new_password" id="id_new_password"
+               autocomplete="new-password" required minlength="8"
+               class="amare-input w-full">
+      </div>
+      <div>
+        <label for="id_confirm_password" class="mb-2 block text-sm font-bold text-text-strong">Confirmar nova senha</label>
+        <input type="password" name="confirm_password" id="id_confirm_password"
+               autocomplete="new-password" required minlength="8"
+               class="amare-input w-full">
+      </div>
+    </div>
+    <button type="submit" class="amare-button-secondary mt-5">Alterar senha</button>
+  </form>
+</article>
+
+{# Avatar preview JS #}
+<script>
+(function () {
+  var input = document.getElementById('{{ form.avatar.id_for_label }}');
+  if (!input) return;
+  input.classList.add('hidden');
+  input.addEventListener('change', function () {
+    var file = this.files[0];
+    if (!file) return;
+    var reader = new FileReader();
+    reader.onload = function (e) {
+      var preview = document.getElementById('avatar-preview');
+      var placeholder = document.getElementById('avatar-preview-placeholder');
+      if (preview) { preview.src = e.target.result; preview.classList.remove('hidden'); }
+      if (placeholder) placeholder.classList.add('hidden');
+    };
+    reader.readAsDataURL(file);
+  });
+})();
+</script>
 {% endblock %}

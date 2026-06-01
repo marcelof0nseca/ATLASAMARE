@@ -43,6 +43,30 @@ class User(AbstractUser):
         verbose_name=_("paciente acompanhado"),
     )
     wants_in_app_reminders = models.BooleanField(default=True)
+
+    # ── Dados pessoais ────────────────────────────────────────────────────────
+    avatar = models.ImageField(upload_to="avatars/", null=True, blank=True)
+    phone = models.CharField(max_length=20, blank=True, default="", verbose_name=_("telefone"))
+    date_of_birth = models.DateField(null=True, blank=True, verbose_name=_("data de nascimento"))
+    emergency_contact_name = models.CharField(max_length=150, blank=True, default="", verbose_name=_("nome do contato de emergência"))
+    emergency_contact_phone = models.CharField(max_length=20, blank=True, default="", verbose_name=_("telefone do contato de emergência"))
+
+    # ── Notificações por e-mail ───────────────────────────────────────────────
+    class ReminderFrequency(models.TextChoices):
+        ON_UPDATE = "on_update", _("Apenas quando houver novidade")
+        DAILY     = "daily",     _("Diariamente")
+        WEEKLY    = "weekly",    _("Semanalmente")
+
+    email_reminders_appointments = models.BooleanField(default=True, verbose_name=_("lembretes de consulta por e-mail"))
+    email_reminders_journey      = models.BooleanField(default=True, verbose_name=_("atualizações da jornada por e-mail"))
+    email_reminders_maya         = models.BooleanField(default=False, verbose_name=_("resumos da Maya por e-mail"))
+    reminder_frequency = models.CharField(
+        max_length=20,
+        choices=ReminderFrequency.choices,
+        default=ReminderFrequency.ON_UPDATE,
+        verbose_name=_("frequência dos lembretes"),
+    )
+
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

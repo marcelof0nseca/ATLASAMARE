@@ -10,7 +10,7 @@ from django.views.generic import DetailView, FormView, ListView, UpdateView, Vie
 from core.mixins import DoctorRequiredMixin
 from core.models import CommunityPost
 
-from .forms import DoctorPatientCreateForm, LoginForm, PasswordResetRequestForm, ProfileForm
+from .forms import ChangePasswordForm, DoctorPatientCreateForm, LoginForm, PasswordResetRequestForm, ProfileForm
 from .models import User
 from .services import build_doctor_patient_context, get_managed_patient
 
@@ -64,6 +64,21 @@ class ProfileView(LoginRequiredMixin, UpdateView):
     def get_object(self, queryset=None):
         return self.request.user
 
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        form = self.get_form()
+        # handle avatar separately so existing avatar isn't cleared when not re-uploading
+        if not request.FILES.get("avatar") and self.object.avatar:
+            form.fields["avatar"].required = False
+        if form.is_valid():
+            return self.form_valid(form)
+        return self.form_invalid(form)
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs["files"] = self.request.FILES
+        return kwargs
+
     def form_valid(self, form):
         messages.success(self.request, "Suas preferências foram atualizadas com cuidado.")
         return super().form_valid(form)
@@ -71,9 +86,23 @@ class ProfileView(LoginRequiredMixin, UpdateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["active_nav"] = "profile"
+        context["password_form"] = ChangePasswordForm(user=self.request.user)
         if self.request.user.is_patient:
             context["community_posts"] = CommunityPost.objects.filter(author=self.request.user)[:5]
         return context
+
+
+class ChangePasswordView(LoginRequiredMixin, View):
+    def post(self, request, *args, **kwargs):
+        form = ChangePasswordForm(user=request.user, data=request.POST)
+        if form.is_valid():
+            form.save(request)
+            messages.success(request, "Senha alterada com sucesso.")
+        else:
+            for field_errors in form.errors.values():
+                for error in field_errors:
+                    messages.error(request, error)
+        return redirect("users:profile")
 
 
 class DoctorPatientListView(DoctorRequiredMixin, ListView):

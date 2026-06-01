@@ -1,5 +1,5 @@
 from django import forms
-from django.contrib.auth import authenticate
+from django.contrib.auth import authenticate, update_session_auth_hash
 
 from .models import User
 
@@ -44,11 +44,73 @@ class PasswordResetRequestForm(forms.Form):
 class ProfileForm(forms.ModelForm):
     class Meta:
         model = User
-        fields = ["full_name", "wants_in_app_reminders"]
+        fields = [
+            "avatar",
+            "full_name",
+            "phone",
+            "date_of_birth",
+            "emergency_contact_name",
+            "emergency_contact_phone",
+            "wants_in_app_reminders",
+            "email_reminders_appointments",
+            "email_reminders_journey",
+            "email_reminders_maya",
+            "reminder_frequency",
+        ]
         labels = {
+            "avatar": "Foto de perfil",
             "full_name": "Nome",
-            "wants_in_app_reminders": "Receber lembretes dentro do aplicativo",
+            "phone": "Telefone",
+            "date_of_birth": "Data de nascimento",
+            "emergency_contact_name": "Nome do contato",
+            "emergency_contact_phone": "Telefone do contato",
+            "wants_in_app_reminders": "Lembretes dentro do aplicativo",
+            "email_reminders_appointments": "Consultas",
+            "email_reminders_journey": "Atualizações da jornada",
+            "email_reminders_maya": "Resumos da Maya",
+            "reminder_frequency": "Frequência",
         }
+        widgets = {
+            "date_of_birth": forms.DateInput(attrs={"type": "date"}),
+            "reminder_frequency": forms.Select(),
+        }
+
+
+class ChangePasswordForm(forms.Form):
+    current_password = forms.CharField(
+        label="Senha atual",
+        widget=forms.PasswordInput(attrs={"autocomplete": "current-password"}),
+    )
+    new_password = forms.CharField(
+        label="Nova senha",
+        min_length=8,
+        widget=forms.PasswordInput(attrs={"autocomplete": "new-password"}),
+    )
+    confirm_password = forms.CharField(
+        label="Confirmar nova senha",
+        widget=forms.PasswordInput(attrs={"autocomplete": "new-password"}),
+    )
+
+    def __init__(self, user, *args, **kwargs):
+        self.user = user
+        super().__init__(*args, **kwargs)
+
+    def clean_current_password(self):
+        pwd = self.cleaned_data.get("current_password")
+        if not self.user.check_password(pwd):
+            raise forms.ValidationError("Senha atual incorreta.")
+        return pwd
+
+    def clean(self):
+        cleaned = super().clean()
+        if cleaned.get("new_password") != cleaned.get("confirm_password"):
+            raise forms.ValidationError({"confirm_password": "As senhas não coincidem."})
+        return cleaned
+
+    def save(self, request):
+        self.user.set_password(self.cleaned_data["new_password"])
+        self.user.save()
+        update_session_auth_hash(request, self.user)
 
 
 class DoctorPatientCreateForm(forms.ModelForm):
