@@ -85,7 +85,7 @@
           {% for example in prompt_examples|slice:":2" %}
             <button
               type="button"
-              class="rounded-full border border-border bg-white px-4 py-2.5 text-xs font-semibold text-text-muted transition hover:border-golden hover:text-golden"
+              class="max-w-[180px] truncate rounded-full border border-border bg-white px-4 py-2.5 text-xs font-semibold text-text-muted transition hover:border-golden hover:text-golden"
               onclick="document.getElementById('id_question').value='{{ example|escapejs }}'; document.getElementById('id_question').focus();"
             >
               {{ example }}

@@ -464,35 +464,93 @@
 
 /* ── Mobile: single column (< 768px) ───────────────────────── */
 @media (max-width: 767px) {
+  /* Root: scrollável, sem altura fixa */
   .lp-root {
     height: auto;
-    min-height: 100vh;
+    min-height: 100dvh;
     overflow-y: auto;
     overflow-x: hidden;
   }
+
+  /* Header: logo compacto */
+  .lp-header {
+    padding: 16px 20px 0;
+    animation: none;
+    opacity: 1;
+  }
+  .lp-logo {
+    height: clamp(28px, 6vw, 36px);
+  }
+
+  /* Main: coluna única, espaçamento compacto */
   .lp-main {
     grid-template-columns: 1fr;
+    padding: 20px 20px 28px;
+    gap: 20px;
     overflow: visible;
     align-items: start;
-    padding-top: clamp(20px, 3vh, 32px);
-    gap: clamp(24px, 4vh, 40px);
   }
+
+  /* Hero: headline menor para caber acima do fold */
   .lp-headline {
-    font-size: clamp(42px, 12vw, 72px);
+    font-size: clamp(38px, 10vw, 50px);
+    line-height: 1.0;
+  }
+  .hl-mask {
+    padding: 0.04em 0.04em 0.16em;
+    margin-bottom: -0.14em;
+  }
+  .lp-intro {
+    font-size: clamp(16px, 4.5vw, 20px);
+    margin-bottom: 8px;
   }
   .lp-blurb {
-    display: none; /* compact on mobile */
+    display: none;
   }
+
+  /* Form: largura total */
   .lp-form {
     max-width: 100%;
   }
+
+  /* Inputs: proporcional ao mobile */
+  .lp-field-wrap input,
+  .lp-field-wrap input:focus,
+  .lp-field-wrap input:hover,
+  .lp-field-wrap input:active {
+    font-size: 22px !important;
+  }
+  .lp-field label {
+    font-size: 12px;
+  }
+  .lp-toggle-pwd {
+    font-size: 13px;
+  }
+  .lp-field-error {
+    font-size: 14px;
+  }
+
+  /* Ações: botão fullwidth com touch target adequado */
   .lp-actions {
     flex-direction: column;
-    align-items: flex-start;
+    align-items: stretch;
     gap: 16px;
+    margin-top: 20px;
   }
   .lp-submit {
     width: 100%;
+    min-height: 52px;
+    font-size: 18px;
+    justify-content: center;
+  }
+  .lp-recover {
+    text-align: center;
+    font-size: 16px;
+  }
+
+  /* Footer: ocultar em mobile — libera espaço vertical */
+  .lp-footer {
+    display: none;
   }
 }
 

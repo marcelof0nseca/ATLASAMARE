@@ -20,7 +20,7 @@
         <p class="text-sm font-semibold text-text-strong">Foto e nome</p>
         <p class="truncate text-xs text-text-muted">{{ request.user.full_name }}</p>
       </div>
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="flex-shrink-0 text-text-muted"><path d="M9 18l6-6-6-6"/></svg>
+      <span class="flex h-11 w-11 flex-shrink-0 items-center justify-center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-text-muted"><path d="M9 18l6-6-6-6"/></svg></span>
     </div>
     <div onclick="openModal('personal')" class="flex cursor-pointer items-center gap-4 px-5 py-4 transition hover:bg-linen/60">
       <div class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full border border-border bg-linen">
@@ -30,7 +30,7 @@
         <p class="text-sm font-semibold text-text-strong">Dados pessoais</p>
         <p class="truncate text-xs text-text-muted">{% if request.user.phone %}{{ request.user.phone }}{% else %}Não informado{% endif %}</p>
       </div>
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="flex-shrink-0 text-text-muted"><path d="M9 18l6-6-6-6"/></svg>
+      <span class="flex h-11 w-11 flex-shrink-0 items-center justify-center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-text-muted"><path d="M9 18l6-6-6-6"/></svg></span>
     </div>
     <div onclick="openModal('emergency')" class="flex cursor-pointer items-center gap-4 px-5 py-4 transition hover:bg-linen/60">
       <div class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full border border-border bg-linen">
@@ -40,7 +40,7 @@
         <p class="text-sm font-semibold text-text-strong">Contato de emergencia</p>
         <p class="truncate text-xs text-text-muted">{% if request.user.emergency_contact_name %}{{ request.user.emergency_contact_name }}{% else %}Não informado{% endif %}</p>
       </div>
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="flex-shrink-0 text-text-muted"><path d="M9 18l6-6-6-6"/></svg>
+      <span class="flex h-11 w-11 flex-shrink-0 items-center justify-center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-text-muted"><path d="M9 18l6-6-6-6"/></svg></span>
     </div>
   </div>
 </section>
@@ -75,7 +75,7 @@
         <p class="text-sm font-semibold text-text-strong">Alterar senha</p>
         <p class="text-xs text-text-muted">Atualizar sua senha de acesso</p>
       </div>
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="flex-shrink-0 text-text-muted"><path d="M9 18l6-6-6-6"/></svg>
+      <span class="flex h-11 w-11 flex-shrink-0 items-center justify-center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-text-muted"><path d="M9 18l6-6-6-6"/></svg></span>
     </div>
   </div>
 </section>
@@ -92,7 +92,7 @@
         <p class="text-xs text-text-muted">Lembretes e alertas dentro da plataforma</p>
       </div>
       <span style="margin-right:8px;border-radius:9999px;padding:2px 8px;font-size:11px;font-weight:600;{% if request.user.wants_in_app_reminders %}background:#dcfce7;color:#15803d{% else %}background:#f3e9d7;color:#9a876f{% endif %}">{% if request.user.wants_in_app_reminders %}ativo{% else %}inativo{% endif %}</span>
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="flex-shrink-0 text-text-muted"><path d="M9 18l6-6-6-6"/></svg>
+      <span class="flex h-11 w-11 flex-shrink-0 items-center justify-center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-text-muted"><path d="M9 18l6-6-6-6"/></svg></span>
     </div>
     <div onclick="openModal('notif_email')" class="flex cursor-pointer items-center gap-4 px-5 py-4 transition hover:bg-linen/60">
       <div class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full border border-border bg-linen">
@@ -102,7 +102,7 @@
         <p class="text-sm font-semibold text-text-strong">Por e-mail</p>
         <p class="text-xs text-text-muted">Frequencia: {{ request.user.get_reminder_frequency_display }}</p>
       </div>
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="flex-shrink-0 text-text-muted"><path d="M9 18l6-6-6-6"/></svg>
+      <span class="flex h-11 w-11 flex-shrink-0 items-center justify-center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-text-muted"><path d="M9 18l6-6-6-6"/></svg></span>
     </div>
 
     <div onclick="openModal('push')" class="flex cursor-pointer items-center gap-4 px-5 py-4 transition hover:bg-linen/60">
@@ -116,7 +116,7 @@
       <span style="margin-right:8px;border-radius:9999px;padding:2px 8px;font-size:11px;font-weight:600;{% if request.user.push_notifications_enabled %}background:#dcfce7;color:#15803d{% else %}background:#f3e9d7;color:#9a876f{% endif %}">
         {% if request.user.push_notifications_enabled %}ativo{% else %}inativo{% endif %}
       </span>
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="flex-shrink-0 text-text-muted"><path d="M9 18l6-6-6-6"/></svg>
+      <span class="flex h-11 w-11 flex-shrink-0 items-center justify-center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-text-muted"><path d="M9 18l6-6-6-6"/></svg></span>
     </div>
   </div>
 </section>
@@ -133,7 +133,7 @@
         <p class="text-sm font-semibold text-text-strong">Meus relatos</p>
         <p class="text-xs text-text-muted">{{ community_posts|length }} relato{{ community_posts|length|pluralize }}</p>
       </div>
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="flex-shrink-0 text-text-muted"><path d="M9 18l6-6-6-6"/></svg>
+      <span class="flex h-11 w-11 flex-shrink-0 items-center justify-center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-text-muted"><path d="M9 18l6-6-6-6"/></svg></span>
     </div>
   </div>
 </section>

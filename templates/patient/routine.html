@@ -21,9 +21,9 @@
   }
   .modal-card {
     position: relative;
-    width: 100%; max-width: 32rem;
-    max-height: calc(100vh - 32px); overflow-y: auto;
-    background: #fff; border-radius: 1rem; padding: 1.5rem;
+    width: 100%; max-width: min(32rem, calc(100vw - 24px));
+    max-height: calc(100vh - 24px); overflow-y: auto;
+    background: #fff; border-radius: 0.875rem; padding: clamp(1rem, 4vw, 1.5rem);
     box-shadow: 0 25px 60px -12px rgba(0,0,0,0.45);
   }
   .modal-kicker {
@@ -43,7 +43,7 @@
 </style>
 
 <!-- BARRA DE AÇÕES COMPACTA -->
-<div class="mb-4 flex flex-wrap gap-3">
+<div class="mb-4 grid grid-cols-2 gap-3 sm:flex sm:flex-wrap">
 
   <!-- Chip: Agora -->
   <div onclick="openRoutineModal('agora')"
@@ -146,7 +146,7 @@
     </div>
 
     <!-- Celulas -->
-    <div class="grid grid-cols-7 border-l border-border" style="grid-auto-rows: minmax(5.5rem, auto)">
+    <div class="grid grid-cols-7 border-l border-border" style="grid-auto-rows: minmax(4rem, auto)">
       {% for week in routine_calendar.weeks %}
         {% for day in week %}
           <section class="flex h-full min-w-0 flex-col border-b border-r border-border bg-white/70 p-1 sm:p-2 {% if not day.in_month %}opacity-40{% endif %}">
@@ -162,9 +162,9 @@
             <div class="min-h-0 flex-1 space-y-1 overflow-hidden">
               <!-- Mobile: bolinhas -->
               <div class="flex flex-wrap gap-0.5 sm:hidden">
-                {% for _ in day.appointments %}<span class="h-1.5 w-1.5 rounded-full bg-golden"></span>{% endfor %}
-                {% for _ in day.medications|slice:":3" %}<span class="h-1.5 w-1.5 rounded-full bg-lesbian-green"></span>{% endfor %}
-                {% for _ in day.tasks|slice:":3" %}<span class="h-1.5 w-1.5 rounded-full bg-warning"></span>{% endfor %}
+                {% for _ in day.appointments %}<span class="h-2 w-2 rounded-full bg-golden"></span>{% endfor %}
+                {% for _ in day.medications|slice:":3" %}<span class="h-2 w-2 rounded-full bg-lesbian-green"></span>{% endfor %}
+                {% for _ in day.tasks|slice:":3" %}<span class="h-2 w-2 rounded-full bg-warning"></span>{% endfor %}
               </div>
 
               <!-- Desktop: etiquetas -->
