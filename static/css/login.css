@@ -35,6 +35,7 @@
 .lp-root {
   position: relative;
   height: 100vh;
+  height: 100dvh; /* iOS Safari: dynamic viewport — endereça address bar */
   overflow: hidden;
   display: flex;
   flex-direction: column;

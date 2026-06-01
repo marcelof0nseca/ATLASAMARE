@@ -27,43 +27,52 @@
         </div>
       </div>
 
-      <div class="grid gap-0 xl:grid-cols-[1fr_18rem]">
-        <div class="overflow-x-auto p-4 sm:p-6">
-          <div class="min-w-[44rem]">
-            <div class="grid grid-cols-7 border-b border-border text-center text-xs font-semibold uppercase tracking-[0.12em] text-text-muted">
-              {% for weekday in routine_calendar.weekdays %}
-                <div class="px-2 pb-3">{{ weekday }}</div>
-              {% endfor %}
-            </div>
+      <div class="grid gap-0 lg:grid-cols-[1fr_18rem]">
+        <div class="p-2 sm:p-4">
+          <!-- Cabecalho dias -->
+          <div class="grid grid-cols-7 border-b border-border text-center text-xs font-semibold uppercase tracking-[0.12em] text-text-muted">
+            {% for weekday in routine_calendar.weekdays %}
+              <div class="px-1 pb-2">
+                <span class="sm:hidden">{{ weekday|slice:":1" }}</span>
+                <span class="hidden sm:inline">{{ weekday }}</span>
+              </div>
+            {% endfor %}
+          </div>
 
-            <div class="grid auto-rows-[9.5rem] grid-cols-7 border-l border-border">
-              {% for week in routine_calendar.weeks %}
-                {% for day in week %}
-                  <section class="flex h-full min-w-0 flex-col border-b border-r border-border bg-white/70 p-2 {% if not day.in_month %}opacity-45{% endif %}">
-                    <div class="mb-2 flex h-7 shrink-0 items-center justify-between">
-                      <span class="inline-flex h-7 w-7 items-center justify-center rounded-full text-sm font-semibold {% if day.is_today %}bg-golden text-white{% else %}text-text-strong{% endif %}">
-                        {{ day.number }}
-                      </span>
-                      {% if day.event_count %}
-                        <span class="text-[11px] font-semibold text-text-muted">{{ day.event_count }}</span>
-                      {% endif %}
+          <!-- Celulas -->
+          <div class="grid grid-cols-7 border-l border-border" style="grid-auto-rows:minmax(5rem,auto)">
+            {% for week in routine_calendar.weeks %}
+              {% for day in week %}
+                <section class="flex h-full min-w-0 flex-col border-b border-r border-border bg-white/70 p-1 sm:p-2 {% if not day.in_month %}opacity-45{% endif %}">
+                  <div class="mb-1 flex shrink-0 items-center justify-between">
+                    <span class="inline-flex h-7 w-7 items-center justify-center rounded-full text-xs font-semibold {% if day.is_today %}bg-golden text-white{% else %}text-text-strong{% endif %}">
+                      {{ day.number }}
+                    </span>
+                    {% if day.event_count %}
+                      <span class="hidden text-[10px] font-semibold text-text-muted sm:inline">{{ day.event_count }}</span>
+                    {% endif %}
+                  </div>
+                  <div class="min-h-0 flex-1 space-y-1 overflow-hidden">
+                    <!-- Mobile: bolinhas -->
+                    <div class="flex flex-wrap gap-0.5 sm:hidden">
+                      {% for _ in day.appointments %}<span class="h-1.5 w-1.5 rounded-full bg-golden"></span>{% endfor %}
                     </div>
-
-                    <div class="min-h-0 flex-1 space-y-1.5 overflow-hidden">
+                    <!-- Desktop: etiquetas -->
+                    <div class="hidden space-y-1 sm:block">
                       {% for appointment in day.appointments %}
-                        <div class="h-6 truncate rounded-md bg-golden px-2 py-1 text-[11px] font-semibold leading-4 text-white" title="{{ appointment.get_type_display }} - {{ appointment.scheduled_at|date:'H:i' }}">
+                        <div class="truncate rounded bg-golden px-1.5 py-0.5 text-[10px] font-semibold leading-4 text-white" title="{{ appointment.get_type_display }} {{ appointment.scheduled_at|date:'H:i' }}">
                           {{ appointment.scheduled_at|date:"H:i" }} {{ appointment.get_type_display }}
                         </div>
                       {% endfor %}
                     </div>
-                  </section>
-                {% endfor %}
+                  </div>
+                </section>
               {% endfor %}
-            </div>
+            {% endfor %}
           </div>
         </div>
 
-        <aside class="border-t border-border bg-linen/55 p-5 xl:border-l xl:border-t-0">
+        <aside class="border-t border-border bg-linen/55 p-5 lg:border-l lg:border-t-0">
           <p class="amare-kicker">Próximos</p>
           <h3 class="mt-2 font-serif text-xl font-medium text-text-strong">Compromissos</h3>
           <div class="mt-4 space-y-3">

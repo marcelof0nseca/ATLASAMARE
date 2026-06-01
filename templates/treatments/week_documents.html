@@ -12,8 +12,25 @@
 
     <article class="amare-card overflow-hidden">
       {% if documents %}
-        <div class="overflow-x-auto">
-          <table class="w-full min-w-[44rem] text-left text-sm">
+        <!-- Mobile: cards empilhados -->
+        <div class="sm:hidden divide-y divide-border">
+          {% for document in documents %}
+            <div class="flex items-center justify-between p-4 gap-3">
+              <div class="min-w-0 flex-1">
+                <p class="truncate font-bold text-sm text-text-strong">{{ document.name }}</p>
+                <p class="mt-0.5 text-xs text-text-muted">{{ document.uploaded_at|date:"d/m/Y" }} · {{ document.size_label }}</p>
+              </div>
+              <a href="{{ document.get_download_url }}" target="_blank" rel="noopener noreferrer"
+                 class="inline-flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-lg text-golden transition hover:bg-linen"
+                 aria-label="Baixar {{ document.name }}">
+                <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>
+              </a>
+            </div>
+          {% endfor %}
+        </div>
+        <!-- Desktop: tabela -->
+        <div class="hidden sm:block overflow-x-auto">
+          <table class="w-full text-left text-sm">
             <thead class="border-b border-border bg-linen/55 text-text-muted">
               <tr>
                 <th class="px-4 py-4 font-bold">Arquivo</th>
@@ -30,11 +47,7 @@
                   <td class="px-4 py-4 text-text-muted">{{ document.size_label }}</td>
                   <td class="px-4 py-4">
                     <a href="{{ document.get_download_url }}" target="_blank" rel="noopener noreferrer" class="mx-auto inline-flex h-10 w-10 items-center justify-center rounded-lg text-golden transition hover:border-golden hover:bg-linen" aria-label="Baixar {{ document.name }}">
-                      <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-                        <path d="M12 3v12"/>
-                        <path d="m7 10 5 5 5-5"/>
-                        <path d="M5 21h14"/>
-                      </svg>
+                      <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>
                     </a>
                   </td>
                 </tr>
