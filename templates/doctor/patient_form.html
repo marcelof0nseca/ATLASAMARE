@@ -2,7 +2,7 @@
 
 {% block title %}Nova paciente | Clinica AMARE{% endblock %}
 {% block page_title %}Nova paciente{% endblock %}
-{% block page_intro %}Cadastre uma paciente e vincule automaticamente ao seu acompanhamento medico.{% endblock %}
+{% block page_intro %}Cadastre uma paciente e vincule automaticamente ao seu acompanhamento médico.{% endblock %}
 
 {% block content %}
   <section class="grid gap-5 lg:grid-cols-[0.85fr_1.15fr]">
@@ -10,11 +10,11 @@
       <p class="text-sm font-semibold text-text-strong">Vinculo do cadastro</p>
       <dl class="mt-5 space-y-4 text-sm">
         <div>
-          <dt class="text-text-muted">Medica responsavel</dt>
+          <dt class="text-text-muted">Médica responsável</dt>
           <dd class="mt-1 font-medium text-text-strong">{{ request.user.full_name }}</dd>
         </div>
         <div>
-          <dt class="text-text-muted">Area da paciente</dt>
+          <dt class="text-text-muted">Área da paciente</dt>
           <dd class="mt-1 font-medium text-text-strong">Acesso por email e senha inicial</dd>
         </div>
       </dl>

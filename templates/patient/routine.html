@@ -2,7 +2,7 @@
 
 {% block title %}Rotina | Clinica AMARE{% endblock %}
 {% block page_title %}Sua rotina de cuidado{% endblock %}
-{% block page_intro %}Consultas, exames, medicacoes e tarefas pessoais em um so lugar.{% endblock %}
+{% block page_intro %}Consultas, exames, medicações e tarefas pessoais em um só lugar.{% endblock %}
 
 {% block content %}
 
@@ -60,14 +60,14 @@
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="flex-shrink-0 text-text-muted"><path d="M9 18l6-6-6-6"/></svg>
   </div>
 
-  <!-- Chip: Medicacoes -->
+  <!-- Chip: Medicações -->
   <div onclick="openRoutineModal('meds')"
        class="flex cursor-pointer items-center gap-3 rounded-xl border border-border bg-surface px-4 py-3 shadow-serene transition hover:border-golden hover:bg-linen/60">
     <div class="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-linen border border-border">
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-text-muted"><path d="M10.5 20H4a2 2 0 0 1-2-2V5c0-1.1.9-2 2-2h3.93a2 2 0 0 1 1.66.9l.82 1.2a2 2 0 0 0 1.66.9H20a2 2 0 0 1 2 2v3"/><circle cx="18" cy="18" r="3"/><path d="M22 22l-1.5-1.5"/></svg>
     </div>
     <div class="min-w-0">
-      <p class="text-xs font-semibold uppercase tracking-widest text-text-muted">Medicacoes</p>
+      <p class="text-xs font-semibold uppercase tracking-widest text-text-muted">Medicações</p>
       <p class="truncate text-sm font-bold text-text-strong">
         {% if today_items %}{{ today_items|length }} dose{{ today_items|length|pluralize }} hoje{% else %}Nenhuma hoje{% endif %}
       </p>
@@ -124,12 +124,12 @@
           <span class="h-2 w-2 rounded-full bg-golden"></span>Consulta
         </span>
         <span class="inline-flex items-center gap-1.5 rounded-lg bg-white px-2.5 py-1.5">
-          <span class="h-2 w-2 rounded-full bg-lesbian-green"></span>Medicacao
+          <span class="h-2 w-2 rounded-full bg-lesbian-green"></span>Medicação
         </span>
         <span class="inline-flex items-center gap-1.5 rounded-lg bg-white px-2.5 py-1.5">
           <span class="h-2 w-2 rounded-full bg-warning"></span>Tarefa
         </span>
-        <span class="amare-chip">So visualizacao</span>
+        <span class="amare-chip">Só visualização</span>
       </div>
     </div>
   </div>
@@ -220,7 +220,7 @@
   </div>
 </div>
 
-<!-- Modal: Medicacoes -->
+<!-- Modal: Medicações -->
 <div id="modal-meds" class="amare-modal" onclick="closeRoutineModal()">
   <div class="modal-card" onclick="event.stopPropagation()">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
@@ -229,7 +229,7 @@
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg>
       </button>
     </div>
-    <p class="modal-title">Medicacoes</p>
+    <p class="modal-title">Medicações</p>
     <div style="margin-top:16px;display:flex;flex-direction:column;gap:20px">
       <div>
         <p class="amare-kicker" style="margin-bottom:10px">Restante de hoje</p>
@@ -239,12 +239,12 @@
               {% include "patient/partials/medication_row.html" with medication=medication %}
             {% endfor %}
           {% else %}
-            <p class="text-sm leading-6 text-text-muted">Nao ha outras doses hoje.</p>
+            <p class="text-sm leading-6 text-text-muted">Não há outras doses hoje.</p>
           {% endif %}
         </div>
       </div>
       <div>
-        <p class="amare-kicker" style="margin-bottom:10px">Proximas doses</p>
+        <p class="amare-kicker" style="margin-bottom:10px">Próximas doses</p>
         <div class="space-y-3">
           {% if upcoming_items %}
             {% for medication in upcoming_items %}
@@ -304,10 +304,10 @@
         {{ task_form.title }}
       </div>
       <details style="margin-bottom:16px">
-        <summary class="cursor-pointer text-xs font-bold text-golden" style="margin-bottom:8px">Mais opcoes</summary>
+        <summary class="cursor-pointer text-xs font-bold text-golden" style="margin-bottom:8px">Mais opções</summary>
         <div style="display:flex;flex-direction:column;gap:10px;margin-top:10px">
           <div>
-            <label class="mb-1 block text-xs font-bold uppercase tracking-widest text-text-muted">Observacao</label>
+            <label class="mb-1 block text-xs font-bold uppercase tracking-widest text-text-muted">Observação</label>
             {{ task_form.notes }}
           </div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
@@ -354,7 +354,7 @@
               <form method="post" action="{% url 'core:task-update' task.id %}" class="mt-3 grid gap-3 sm:grid-cols-2">
                 {% csrf_token %}
                 <input type="text" name="title" value="{{ task.title }}" aria-label="Tarefa" class="amare-input">
-                <input type="text" name="notes" value="{{ task.notes }}" aria-label="Observacao" class="amare-input">
+                <input type="text" name="notes" value="{{ task.notes }}" aria-label="Observação" class="amare-input">
                 <input type="date" name="due_date" value="{{ task.due_at|date:'Y-m-d' }}" aria-label="Data" class="amare-input">
                 <input type="time" name="due_time" value="{{ task.due_at|date:'H:i' }}" aria-label="Hora" class="amare-input">
                 <button class="amare-button-primary sm:col-span-2">Salvar</button>

@@ -152,7 +152,7 @@
 <div id="modal-notif_app" class="amare-modal" onclick="closeModal()">
   <div class="modal-card" onclick="event.stopPropagation()">
     <div style="display:flex;align-items:center;justify-content:space-between">
-      <span class="modal-kicker">Notificacoes</span>
+      <span class="modal-kicker">Notificações</span>
       <button class="modal-close" onclick="closeModal()"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
     </div>
     <p class="modal-title">No aplicativo</p>
@@ -166,7 +166,7 @@
         <input type="checkbox" name="wants_in_app_reminders" {% if request.user.wants_in_app_reminders %}checked{% endif %} style="margin-top:2px;width:16px;height:16px;flex-shrink:0">
         <div>
           <p style="font-weight:600;margin-bottom:2px">Lembretes dentro do aplicativo</p>
-          <p style="font-size:12px;color:#9a876f">Alertas enquanto voce usa a plataforma.</p>
+          <p style="font-size:12px;color:#9a876f">Alertas enquanto você usa a plataforma.</p>
         </div>
       </label>
       <button type="submit" class="amare-button-primary" style="width:100%">Salvar</button>
@@ -178,7 +178,7 @@
 <div id="modal-notif_email" class="amare-modal" onclick="closeModal()">
   <div class="modal-card" onclick="event.stopPropagation()">
     <div style="display:flex;align-items:center;justify-content:space-between">
-      <span class="modal-kicker">Notificacoes</span>
+      <span class="modal-kicker">Notificações</span>
       <button class="modal-close" onclick="closeModal()"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
     </div>
     <p class="modal-title">Por e-mail</p>
@@ -212,14 +212,14 @@
   </div>
 </div>
 
-<!-- Modal: Notificacoes web -->
+<!-- Modal: Notificações web -->
 <div id="modal-push" class="amare-modal" onclick="closeModal()">
   <div class="modal-card" onclick="event.stopPropagation()">
     <div style="display:flex;align-items:center;justify-content:space-between">
-      <span class="modal-kicker">Notificacoes</span>
+      <span class="modal-kicker">Notificações</span>
       <button class="modal-close" onclick="closeModal()"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
     </div>
-    <p class="modal-title">Notificacoes web</p>
+    <p class="modal-title">Notificações web</p>
     <p style="margin-top:4px;font-size:13px;color:#9a876f">Alertas de medicacoes, consultas e jornada diretamente no seu navegador.</p>
     <form method="post" action="{% url 'users:profile-update' 'push' %}" style="margin-top:20px">
       {% csrf_token %}
@@ -229,7 +229,7 @@
                id="push-toggle"
                style="margin-top:2px;width:16px;height:16px;flex-shrink:0">
         <div>
-          <p style="font-weight:600;margin-bottom:2px">Ativar notificacoes neste dispositivo</p>
+          <p style="font-weight:600;margin-bottom:2px">Ativar notificações neste dispositivo</p>
           <p style="font-size:12px;color:#9a876f">O browser pedira permissao ao salvar.</p>
         </div>
       </label>
@@ -254,7 +254,7 @@
           <p style="margin-top:8px;font-size:13px;line-height:1.6;color:#5f4b3a">{{ post.body|truncatechars:160 }}</p>
         </div>
       {% empty %}
-        <p style="font-size:14px;color:#9a876f">Voce ainda nao enviou relatos para revisao.</p>
+        <p style="font-size:14px;color:#9a876f">Você ainda não enviou relatos para revisão.</p>
       {% endfor %}
     </div>
   </div>

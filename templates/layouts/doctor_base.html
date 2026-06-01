@@ -7,9 +7,9 @@
   <aside class="amare-patient-sidebar">
     <div class="mb-8 flex items-center justify-between gap-3 px-2">
       <a href="{% url 'users:doctor-patient-list' %}" class="amare-brand-link">
-        <img src="{% static 'images/amare-logo.png' %}" alt="Clinica Amare" class="amare-brand-logo amare-brand-logo-sidebar">
+        <img src="{% static 'images/amare-logo.png' %}" alt="Clínica Amare" class="amare-brand-logo amare-brand-logo-sidebar">
       </a>
-      <span class="rounded-lg bg-linen px-2 py-1 text-[11px] font-semibold uppercase tracking-[0.12em] text-text-muted">Medica</span>
+      <span class="rounded-lg bg-linen px-2 py-1 text-[11px] font-semibold uppercase tracking-[0.12em] text-text-muted">Médica</span>
     </div>
 
     <nav aria-label="Navegacao da medica">
@@ -43,19 +43,19 @@
 
     <div class="absolute inset-x-3 bottom-5 rounded-xl border border-border bg-linen/80 p-4">
       <p class="amare-kicker">ATLAS</p>
-      <p class="mt-2 font-serif text-sm font-medium leading-5 text-text-strong">Gerencie pacientes, jornada e conteudo em um unico lugar.</p>
+      <p class="mt-2 font-serif text-sm font-medium leading-5 text-text-strong">Gerencie pacientes, jornada e conteúdo em um único lugar.</p>
     </div>
   </aside>
 
   {# ── Navbar (top) ────────────────────────────────────────────────────────── #}
   <header class="amare-patient-navbar">
     <a href="{% url 'users:doctor-patient-list' %}" class="amare-brand-link lg:hidden">
-      <img src="{% static 'images/amare-logo.png' %}" alt="Clinica Amare" class="amare-brand-logo amare-brand-logo-topbar">
+      <img src="{% static 'images/amare-logo.png' %}" alt="Clínica Amare" class="amare-brand-logo amare-brand-logo-topbar">
     </a>
     <div class="hidden min-w-0 items-center gap-4 lg:flex">
       <div>
-        <p class="amare-kicker">Clinica Amare</p>
-        <p class="mt-1 text-sm font-medium text-text-muted">Painel Medico</p>
+        <p class="amare-kicker">Clínica Amare</p>
+        <p class="mt-1 text-sm font-medium text-text-muted">Painel Médico</p>
       </div>
     </div>
 
@@ -73,7 +73,7 @@
   {# ── Main content ────────────────────────────────────────────────────────── #}
   <main class="amare-shell">
     <section class="mb-8 border-b border-border pb-6">
-      <p class="amare-kicker">Medica</p>
+      <p class="amare-kicker">Área médica</p>
       <h1 class="amare-patient-page-title mt-3">{% block page_title %}{% endblock %}</h1>
       <p class="mt-3 max-w-3xl font-serif text-lg leading-8 text-text-muted">{% block page_intro %}{% endblock %}</p>
     </section>

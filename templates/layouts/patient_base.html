@@ -10,7 +10,7 @@
       <span class="rounded-lg bg-linen px-2 py-1 text-[11px] font-semibold uppercase tracking-[0.12em] text-text-muted">Paciente</span>
     </div>
 
-    <nav aria-label="Navegacao da paciente">
+    <nav aria-label="Navegação da paciente">
       <ul class="space-y-1">
         <li>
           <a class="amare-nav-link {% if active_nav == 'home' %}amare-nav-link-active{% endif %}" href="{% url 'core:dashboard' %}">
@@ -65,7 +65,7 @@
 
     <div class="absolute inset-x-3 bottom-5 rounded-xl border border-border bg-linen/80 p-4">
       <p class="amare-kicker">ATLAS</p>
-      <p class="mt-2 font-serif text-sm font-medium leading-5 text-text-strong">Sua jornada, rotina e apoio em um unico lugar.</p>
+      <p class="mt-2 font-serif text-sm font-medium leading-5 text-text-strong">Sua jornada, rotina e apoio em um único lugar.</p>
     </div>
   </aside>
 
@@ -128,7 +128,7 @@
       <p style="text-align:center;font-family:'Cormorant Garamond',Georgia,serif;font-size:1.4rem;font-weight:700;color:#2a1f15;margin-bottom:8px">Quer receber lembretes?</p>
       <p style="text-align:center;font-size:14px;line-height:1.6;color:#9a876f;margin-bottom:24px">Ative as notificações para receber alertas de medicações, consultas e atualizações da sua jornada diretamente neste dispositivo.</p>
       <button onclick="allowNotifPopup()" class="amare-button-primary" style="width:100%;margin-bottom:10px">Permitir notificações</button>
-      <button onclick="dismissNotifPopup()" style="width:100%;background:none;border:none;cursor:pointer;font-size:14px;color:#9a876f;padding:8px;font-family:inherit">Agora nao</button>
+      <button onclick="dismissNotifPopup()" style="width:100%;background:none;border:none;cursor:pointer;font-size:14px;color:#9a876f;padding:8px;font-family:inherit">Agora não</button>
     </div>
   </div>
 
@@ -168,7 +168,7 @@
         // Notificacao de confirmacao
         setTimeout(function() {
           new Notification('Tudo configurado 😉', {
-            body: 'Voce vai receber lembretes da sua jornada aqui.',
+            body: 'Você vai receber lembretes da sua jornada aqui.',
             icon: '/static/images/amare-logo.png'
           });
         }, 600);

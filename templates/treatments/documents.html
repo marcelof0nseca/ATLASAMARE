@@ -2,7 +2,7 @@
 
 {% block title %}Documentos | Jornada | Clinica AMARE{% endblock %}
 {% block page_title %}Documentos{% endblock %}
-{% block page_intro %}Aqui estao armazenados todos os documentos disponibilizados pela clinica durante sua jornada.{% endblock %}
+{% block page_intro %}Aqui estão armazenados todos os documentos disponibilizados pela clínica durante sua jornada.{% endblock %}
 
 {% block content %}
   <section class="space-y-5">
@@ -14,7 +14,7 @@
               <div>
                 <p class="amare-kicker">Desbloqueado</p>
                 <h2 class="mt-3 font-serif text-2xl font-bold">Semana {{ week.number }}</h2>
-                <p class="mt-3 text-sm leading-6 text-text-muted">Documentos disponiveis para consulta e download.</p>
+                <p class="mt-3 text-sm leading-6 text-text-muted">Documentos disponíveis para consulta e download.</p>
               </div>
               <span class="amare-icon-tile text-golden" aria-hidden="true">
                 <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -25,12 +25,12 @@
             </div>
           </a>
         {% else %}
-          <article class="amare-card p-6 opacity-45" title="Documentos ainda nao disponiveis.">
+          <article class="amare-card p-6 opacity-45" title="Documentos ainda não disponíveis.">
             <div class="flex items-start justify-between gap-4">
               <div>
                 <p class="amare-kicker">Bloqueado</p>
                 <h2 class="mt-3 font-serif text-2xl font-bold">Semana {{ week.number }}</h2>
-                <p class="mt-3 text-sm leading-6 text-text-muted">Documentos ainda nao disponiveis.</p>
+                <p class="mt-3 text-sm leading-6 text-text-muted">Documentos ainda não disponíveis.</p>
               </div>
               <span class="amare-icon-tile" aria-hidden="true">
                 <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">

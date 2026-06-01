@@ -1,6 +1,6 @@
 {% extends "layouts/patient_base.html" %}
 
-{% block title %}Home | Clinica AMARE{% endblock %}
+{% block title %}Home | Clínica AMARE{% endblock %}
 {% block page_title %}Oi, {{ request.user.full_name|default:"paciente" }}{% endblock %}
 {% block page_intro %}Um resumo simples do que importa agora: sua jornada, sua rotina e os apoios que podem deixar o dia mais leve.{% endblock %}
 
@@ -11,7 +11,7 @@
       {% if treatment and current_step %}
         <h2 class="mt-3 font-display text-5xl font-semibold leading-none text-golden">{{ current_step.name }}</h2>
         <p class="mt-4 max-w-2xl text-sm leading-6 text-text-muted">
-          Esta e a etapa em andamento. A proxima parte fica visivel para voce se organizar sem precisar guardar tudo de cabeca.
+          Esta é a etapa em andamento. A próxima parte fica visível para você se organizar sem precisar guardar tudo de cabeça.
         </p>
         <div class="mt-6 grid gap-4 sm:grid-cols-2">
           <div class="amare-panel p-5">
@@ -32,24 +32,24 @@
       {% elif treatment %}
         <h2 class="mt-3 font-display text-5xl font-semibold leading-none text-golden">Tratamento preparado</h2>
         <p class="mt-4 max-w-2xl text-sm leading-6 text-text-muted">
-          As etapas ja estao organizadas. Quando a equipe iniciar a primeira etapa, ela aparece aqui com destaque.
+          As etapas já estão organizadas. Quando a equipe iniciar a primeira etapa, ela aparece aqui com destaque.
         </p>
         <a href="{% url 'treatments:timeline' %}" class="amare-button-primary mt-6">Ver estrutura</a>
       {% else %}
-        {% include "components/empty_state.html" with title="Sua jornada ainda nao comecou por aqui" copy="Quando a equipe ativar seu tratamento, a etapa atual e o proximo passo vao aparecer nesta area." %}
+        {% include "components/empty_state.html" with title="Sua jornada ainda não começou por aqui" copy="Quando a equipe ativar seu tratamento, a etapa atual e o próximo passo vão aparecer nesta área." %}
       {% endif %}
     </article>
 
     <aside class="space-y-5">
       <article class="amare-card p-6">
         <p class="amare-kicker">Hoje</p>
-        <h2 class="mt-2 font-serif text-2xl font-bold">Seu proximo cuidado</h2>
+        <h2 class="mt-2 font-serif text-2xl font-bold">Seu próximo cuidado</h2>
         <div class="mt-5 space-y-3">
           <div class="amare-panel p-4">
-            <p class="text-xs font-bold uppercase text-text-muted">Medicacao</p>
+            <p class="text-xs font-bold uppercase text-text-muted">Medicação</p>
             <p class="mt-2 text-sm font-bold text-text-strong">
               {% if next_medication %}
-                {{ next_medication.name }} as {{ next_medication.scheduled_for|date:"H:i" }}
+                {{ next_medication.name }} às {{ next_medication.scheduled_for|date:"H:i" }}
               {% else %}
                 Nenhuma dose pendente agora
               {% endif %}
@@ -59,9 +59,9 @@
             <p class="text-xs font-bold uppercase text-text-muted">Compromisso</p>
             <p class="mt-2 text-sm font-bold text-text-strong">
               {% if next_appointment %}
-                {{ next_appointment.get_type_display }} em {{ next_appointment.scheduled_at|date:"d/m" }} as {{ next_appointment.scheduled_at|date:"H:i" }}
+                {{ next_appointment.get_type_display }} em {{ next_appointment.scheduled_at|date:"d/m" }} às {{ next_appointment.scheduled_at|date:"H:i" }}
               {% else %}
-                Nenhum compromisso proximo
+                Nenhum compromisso próximo
               {% endif %}
             </p>
           </div>
@@ -75,12 +75,12 @@
 
       <article class="amare-card p-6">
         <p class="amare-kicker">Laudo</p>
-        <h2 class="mt-2 font-serif text-2xl font-bold">Pos-tratamento</h2>
+        <h2 class="mt-2 font-serif text-2xl font-bold">Pós-tratamento</h2>
         <p class="mt-3 text-sm leading-6 text-text-muted">
           {% if report %}
-            {% if report.is_available %}Seu laudo ja foi liberado pela equipe.{% else %}O download aparece quando a equipe liberar a leitura.{% endif %}
+            {% if report.is_available %}Seu laudo já foi liberado pela equipe.{% else %}O download aparece quando a equipe liberar a leitura.{% endif %}
           {% else %}
-            Quando houver um laudo cadastrado, ele aparecera aqui.
+            Quando houver um laudo cadastrado, ele aparecerá aqui.
           {% endif %}
         </p>
         {% if report %}
@@ -94,17 +94,17 @@
     <a href="{% url 'assistant:chat' %}" class="amare-card block p-6 transition hover:border-golden">
       <p class="amare-kicker">Maya</p>
       <h2 class="mt-2 font-serif text-2xl font-bold">Perguntas com trilhos seguros</h2>
-      <p class="mt-3 text-sm leading-6 text-text-muted">Tratamento, rotina e sentimentos em conversas separadas para nao misturar tudo.</p>
+      <p class="mt-3 text-sm leading-6 text-text-muted">Tratamento, rotina e sentimentos em conversas separadas para não misturar tudo.</p>
     </a>
     <a href="{% url 'core:communities' %}" class="amare-card block p-6 transition hover:border-golden">
       <p class="amare-kicker">Comunidades</p>
       <h2 class="mt-2 font-serif text-2xl font-bold">Apoio para tentantes</h2>
-      <p class="mt-3 text-sm leading-6 text-text-muted">Forum anonimo e relatos reais para trocar experiencias fora da plataforma.</p>
+      <p class="mt-3 text-sm leading-6 text-text-muted">Fórum anônimo e relatos reais para trocar experiências fora da plataforma.</p>
     </a>
     <a href="{% url 'core:partners' %}" class="amare-card block p-6 transition hover:border-golden">
       <p class="amare-kicker">Parceiros</p>
       <h2 class="mt-2 font-serif text-2xl font-bold">Rede multidisciplinar</h2>
-      <p class="mt-3 text-sm leading-6 text-text-muted">Profissionais e servicos complementares com contato externo.</p>
+      <p class="mt-3 text-sm leading-6 text-text-muted">Profissionais e serviços complementares com contato externo.</p>
     </a>
   </section>
 {% endblock %}
