@@ -1,6 +1,8 @@
 import os
 from pathlib import Path
 
+import dj_database_url
+
 
 BASE_DIR = Path(__file__).resolve().parents[2]
 
@@ -13,7 +15,7 @@ def load_env_file(path: Path) -> None:
         if not line or line.startswith("#") or "=" not in line:
             continue
         key, value = line.split("=", 1)
-        os.environ[key.strip()] = value.strip().strip('"').strip("'")
+        os.environ.setdefault(key.strip(), value.strip().strip('"').strip("'"))
 
 
 load_env_file(BASE_DIR / ".env")
@@ -29,6 +31,10 @@ def env_list(name: str, default: str = "") -> list[str]:
 
 
 def build_database_config() -> dict[str, str | Path]:
+    database_url = os.getenv("DATABASE_URL")
+    if database_url:
+        return dj_database_url.parse(database_url, conn_max_age=600, conn_health_checks=True)
+
     postgres_db = os.getenv("POSTGRES_DB")
     if postgres_db:
         return {
