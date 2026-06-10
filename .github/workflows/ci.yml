@@ -1,0 +1,105 @@
+name: CI
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+      - development
+  pull_request:
+    branches:
+      - main
+      - development
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  django-tests:
+    name: Django tests
+    runs-on: ubuntu-latest
+
+    env:
+      DJANGO_SETTINGS_MODULE: config.settings.test
+      DJANGO_SECRET_KEY: ci-secret-key-only-for-automated-tests
+      MAYA_LLM_PROVIDER: openai
+      OPENAI_API_KEY: disabled-for-tests
+      OPENAI_MODEL: disabled-for-tests
+      OPENAI_BASE_URL: http://127.0.0.1:1
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version-file: .python-version
+          cache: pip
+
+      - name: Install Python dependencies
+        run: pip install -r requirements.txt
+
+      - name: Check Django configuration
+        run: python manage.py check
+
+      - name: Run Django tests
+        run: python manage.py test
+
+  cypress-tests:
+    name: Cypress E2E tests
+    runs-on: ubuntu-latest
+
+    env:
+      DJANGO_SETTINGS_MODULE: config.settings.development
+      DJANGO_SECRET_KEY: ci-secret-key-only-for-automated-tests
+      DJANGO_ALLOWED_HOSTS: 127.0.0.1,localhost
+      MAYA_LLM_PROVIDER: openai
+      OPENAI_API_KEY: disabled-for-tests
+      OPENAI_MODEL: disabled-for-tests
+      OPENAI_BASE_URL: http://127.0.0.1:1
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version-file: .python-version
+          cache: pip
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install Python dependencies
+        run: pip install -r requirements.txt
+
+      - name: Prepare demo database
+        run: |
+          python manage.py migrate --noinput
+          python manage.py seed_amare_demo
+
+      - name: Run Cypress tests
+        uses: cypress-io/github-action@v6
+        with:
+          start: python manage.py runserver 127.0.0.1:8000 --noreload
+          wait-on: http://127.0.0.1:8000/landing/
+          wait-on-timeout: 120
+          browser: electron
+
+      - name: Upload Cypress screenshots
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cypress-screenshots
+          path: cypress/screenshots
+          if-no-files-found: ignore
+          retention-days: 7
