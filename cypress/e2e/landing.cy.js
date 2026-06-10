@@ -29,4 +29,12 @@ describe("Landing publica", () => {
       .should("be.visible")
       .and("have.attr", "href", "https://www.instagram.com/clinicaamare/");
   });
+
+  it("apresenta perguntas frequentes alinhadas às funcionalidades reais", () => {
+    cy.contains(".faq-question-text", "Para quem é a plataforma AMARE?").should("exist");
+    cy.contains(".faq-question-text", "O que a paciente consegue acompanhar?").should("exist");
+    cy.contains(".faq-question-text", "O que o acompanhante pode acessar?").should("exist");
+    cy.contains(".faq-question-text", "Como é feita a cobrança").should("not.exist");
+    cy.contains(".faq-question-text", "Há treinamento incluído").should("not.exist");
+  });
 });

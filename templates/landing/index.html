@@ -29,14 +29,12 @@
     "@context": "https://schema.org",
     "@type": "FAQPage",
     "mainEntity": [
-      {"@type":"Question","name":"O ATLAS substitui o prontuário eletrônico?","acceptedAnswer":{"@type":"Answer","text":"Não. O ATLAS é uma plataforma de acompanhamento do tratamento que complementa o prontuário eletrônico, focando na comunicação e experiência entre médica, paciente e acompanhante."}},
-      {"@type":"Question","name":"Como funciona o acesso do acompanhante?","acceptedAnswer":{"@type":"Answer","text":"A paciente convida o acompanhante pela plataforma. Ele recebe acesso limitado à timeline, agenda compartilhada e IA Maya, sem visualizar dados clínicos sensíveis."}},
-      {"@type":"Question","name":"Os dados das pacientes são seguros e conformes à LGPD?","acceptedAnswer":{"@type":"Answer","text":"Sim. Todos os dados são criptografados em trânsito e em repouso. A plataforma é totalmente conforme à LGPD e segue as melhores práticas de segurança."}},
-      {"@type":"Question","name":"A IA Maya substitui o apoio psicológico profissional?","acceptedAnswer":{"@type":"Answer","text":"Não. A Maya é uma assistente de suporte emocional e informativo. Ela incentiva sempre a busca de apoio profissional quando necessário."}},
-      {"@type":"Question","name":"Posso personalizar as etapas da timeline para meu protocolo?","acceptedAnswer":{"@type":"Answer","text":"Sim, no plano Profissional e Enterprise você pode personalizar completamente as etapas da timeline conforme seu protocolo clínico."}},
-      {"@type":"Question","name":"Quais integrações estão disponíveis na plataforma?","acceptedAnswer":{"@type":"Answer","text":"Atualmente integramos com os principais sistemas de prontuário eletrônico. No plano Enterprise, integrações customizadas são disponibilizadas via API."}},
-      {"@type":"Question","name":"Há treinamento incluído para a equipe médica?","acceptedAnswer":{"@type":"Answer","text":"Todos os planos incluem materiais de onboarding e vídeos tutoriais. O plano Enterprise inclui treinamento presencial para toda a equipe."}},
-      {"@type":"Question","name":"Como é feita a cobrança e posso cancelar a qualquer momento?","acceptedAnswer":{"@type":"Answer","text":"A cobrança é mensal ou anual por cartão de crédito. Você pode cancelar a qualquer momento sem multa. O acesso permanece até o final do período pago."}}
+      {"@type":"Question","name":"Para quem é a plataforma AMARE?","acceptedAnswer":{"@type":"Answer","text":"A plataforma conecta médica, paciente e acompanhante durante a jornada de reprodução assistida, oferecendo uma experiência específica para cada perfil."}},
+      {"@type":"Question","name":"Como a paciente recebe acesso à plataforma?","acceptedAnswer":{"@type":"Answer","text":"A equipe médica cadastra a paciente e organiza seu acompanhamento. Depois, ela acessa a plataforma com o email e a senha informados pela clínica."}},
+      {"@type":"Question","name":"O que a paciente consegue acompanhar?","acceptedAnswer":{"@type":"Answer","text":"A paciente acompanha a timeline do tratamento, rotina, agenda, medicações, documentos, vídeos, comunidades de apoio, parceiros e conversas com a Maya."}},
+      {"@type":"Question","name":"O que o acompanhante pode acessar?","acceptedAnswer":{"@type":"Answer","text":"O acompanhante acessa a jornada compartilhada, compromissos, medicações e a Maya, com permissões próprias que preservam os espaços pessoais da paciente."}},
+      {"@type":"Question","name":"Como a equipe médica utiliza a plataforma?","acceptedAnswer":{"@type":"Answer","text":"A equipe médica acompanha pacientes, visualiza e atualiza etapas do tratamento e gerencia documentos e vídeos disponibilizados durante a jornada."}},
+      {"@type":"Question","name":"A Maya substitui a equipe médica ou o apoio psicológico?","acceptedAnswer":{"@type":"Answer","text":"Não. A Maya oferece acolhimento e orientações gerais, mas decisões clínicas, sintomas importantes e necessidades de apoio profissional devem seguir com a equipe responsável."}}
     ]
   }
   </script>
@@ -682,72 +680,61 @@
 
       <div class="faq-item">
         <button class="faq-question" aria-expanded="false" type="button">
-          <span class="faq-question-text">O ATLAS substitui o prontuário eletrônico?</span>
+          <span class="faq-question-text">Para quem é a plataforma AMARE?</span>
           <i class="ph ph-plus faq-icon" aria-hidden="true"></i>
         </button>
         <div class="faq-answer" role="region">
-          <p class="faq-answer-inner">Não. O ATLAS é uma plataforma de acompanhamento do tratamento que complementa o prontuário eletrônico, focando na comunicação e experiência entre médica, paciente e acompanhante. Os dois sistemas coexistem e se complementam.</p>
+          <p class="faq-answer-inner">A plataforma conecta médica, paciente e acompanhante durante a jornada de reprodução assistida. Cada perfil possui uma experiência própria, com informações e funcionalidades adequadas ao seu papel no acompanhamento.</p>
         </div>
       </div>
 
       <div class="faq-item">
         <button class="faq-question" aria-expanded="false" type="button">
-          <span class="faq-question-text">Como funciona o acesso do acompanhante?</span>
+          <span class="faq-question-text">Como a paciente recebe acesso à plataforma?</span>
           <i class="ph ph-plus faq-icon" aria-hidden="true"></i>
         </button>
         <div class="faq-answer" role="region">
-          <p class="faq-answer-inner">A paciente convida o acompanhante diretamente pela plataforma. Ele recebe acesso limitado à timeline, agenda compartilhada e IA Maya, sem visualizar dados clínicos sensíveis — sempre respeitando a privacidade da paciente.</p>
+          <p class="faq-answer-inner">A equipe médica cadastra a paciente e organiza seu acompanhamento. Depois, ela acessa a plataforma com o email e a senha informados pela clínica.</p>
         </div>
       </div>
 
       <div class="faq-item">
         <button class="faq-question" aria-expanded="false" type="button">
-          <span class="faq-question-text">Os dados das pacientes são seguros e conformes à LGPD?</span>
+          <span class="faq-question-text">O que a paciente consegue acompanhar?</span>
           <i class="ph ph-plus faq-icon" aria-hidden="true"></i>
         </button>
         <div class="faq-answer" role="region">
-          <p class="faq-answer-inner">Sim. Todos os dados são criptografados em trânsito (TLS 1.3) e em repouso (AES-256). A plataforma é totalmente conforme à LGPD, com controles de consentimento, direito ao esquecimento e relatórios de auditoria disponíveis.</p>
+          <p class="faq-answer-inner">A paciente acompanha a timeline do tratamento, rotina, agenda, medicações, documentos e vídeos liberados pela clínica. Também encontra comunidades de apoio, parceiros multidisciplinares e a assistente Maya.</p>
         </div>
       </div>
 
       <div class="faq-item">
         <button class="faq-question" aria-expanded="false" type="button">
-          <span class="faq-question-text">A IA Maya substitui o apoio psicológico profissional?</span>
+          <span class="faq-question-text">O que o acompanhante pode acessar?</span>
           <i class="ph ph-plus faq-icon" aria-hidden="true"></i>
         </button>
         <div class="faq-answer" role="region">
-          <p class="faq-answer-inner">Não. A Maya é uma assistente de suporte emocional e informativo que complementa o cuidado profissional. Ela sempre incentiva a busca por apoio psicológico especializado quando identifica necessidade, conectando a paciente aos parceiros da clínica.</p>
+          <p class="faq-answer-inner">O acompanhante acessa a jornada compartilhada, compromissos, medicações e a Maya. Suas permissões são próprias e preservam espaços pessoais da paciente, como recordações e informações de acesso restrito.</p>
         </div>
       </div>
 
       <div class="faq-item">
         <button class="faq-question" aria-expanded="false" type="button">
-          <span class="faq-question-text">Posso personalizar as etapas da timeline para meu protocolo?</span>
+          <span class="faq-question-text">Como a equipe médica utiliza a plataforma?</span>
           <i class="ph ph-plus faq-icon" aria-hidden="true"></i>
         </button>
         <div class="faq-answer" role="region">
-          <p class="faq-answer-inner">Sim, você pode personalizar completamente as etapas da timeline conforme seu protocolo clínico — definindo nomes, descrições, documentos anexos e critérios de desbloqueio para cada etapa.</p>
-        </div>
-      </div>
-
-
-      <div class="faq-item">
-        <button class="faq-question" aria-expanded="false" type="button">
-          <span class="faq-question-text">Há treinamento incluído para a equipe médica?</span>
-          <i class="ph ph-plus faq-icon" aria-hidden="true"></i>
-        </button>
-        <div class="faq-answer" role="region">
-          <p class="faq-answer-inner">Sim. Todos os planos incluem materiais de onboarding, vídeos tutoriais e uma base de conhecimento completa, além de sessões de treinamento online ao vivo para a equipe.</p>
+          <p class="faq-answer-inner">A equipe médica acompanha pacientes, visualiza e atualiza etapas do tratamento e gerencia documentos e vídeos disponibilizados durante a jornada.</p>
         </div>
       </div>
 
       <div class="faq-item">
         <button class="faq-question" aria-expanded="false" type="button">
-          <span class="faq-question-text">Como é feita a cobrança e posso cancelar a qualquer momento?</span>
+          <span class="faq-question-text">A Maya substitui a equipe médica ou o apoio psicológico?</span>
           <i class="ph ph-plus faq-icon" aria-hidden="true"></i>
         </button>
         <div class="faq-answer" role="region">
-          <p class="faq-answer-inner">A cobrança é mensal ou anual via cartão de crédito, com emissão de nota fiscal. Você pode cancelar a qualquer momento sem multa ou taxa de cancelamento. O acesso permanece ativo até o final do período já pago.</p>
+          <p class="faq-answer-inner">Não. A Maya oferece acolhimento e orientações gerais, mas decisões clínicas, sintomas importantes e necessidades de apoio profissional devem seguir com a equipe responsável.</p>
         </div>
       </div>
 
