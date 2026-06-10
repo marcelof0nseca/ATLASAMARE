@@ -7,7 +7,7 @@
 {% block content %}
   <section class="grid gap-5 xl:grid-cols-[1.08fr_0.92fr]">
     <article class="amare-card overflow-hidden p-6 sm:p-8">
-      <p class="amare-kicker">Jornada atual de {{ linked_patient.first_name }}</p>
+      <p class="amare-kicker">Jornada atual de {{ linked_patient.preferred_name }}</p>
       {% if treatment and current_step %}
         <h2 class="mt-3 font-display text-5xl font-semibold leading-none text-[#8DA69A]">{{ current_step.name }}</h2>
         <p class="mt-4 max-w-2xl text-sm leading-6 text-text-muted">
@@ -43,7 +43,7 @@
     <aside class="space-y-5">
       <article class="amare-card p-6">
         <p class="amare-kicker">Hoje</p>
-        <h2 class="mt-2 font-serif text-2xl font-bold">Próximo cuidado de {{ linked_patient.first_name }}</h2>
+        <h2 class="mt-2 font-serif text-2xl font-bold">Próximo cuidado de {{ linked_patient.preferred_name }}</h2>
         <div class="mt-5 space-y-3">
           <div class="amare-panel p-4">
             <p class="text-xs font-bold uppercase text-text-muted">Medicação</p>
@@ -74,7 +74,7 @@
       </article>
 
       <article class="amare-card p-6">
-        <p class="amare-kicker">Laudo de {{ linked_patient.first_name }}</p>
+        <p class="amare-kicker">Laudo de {{ linked_patient.preferred_name }}</p>
         <h2 class="mt-2 font-serif text-2xl font-bold">Pós-tratamento</h2>
         <p class="mt-3 text-sm leading-6 text-text-muted">
           {% if report %}
@@ -94,7 +94,7 @@
     <a href="{% url 'partner:maya' %}" class="amare-card block p-6 transition hover:border-[#8DA69A]/40">
       <p class="amare-kicker">Maya</p>
       <h2 class="mt-2 font-serif text-2xl font-bold text-text-strong">Orientação & Apoio</h2>
-      <p class="mt-3 text-sm leading-6 text-text-muted">Dúvidas sobre o tratamento, rotina e formas de oferecer suporte emocional a {{ linked_patient.first_name }}.</p>
+      <p class="mt-3 text-sm leading-6 text-text-muted">Dúvidas sobre o tratamento, rotina e formas de oferecer suporte emocional a {{ linked_patient.preferred_name }}.</p>
     </a>
     <a href="{% url 'partner:routine' %}" class="amare-card block p-6 transition hover:border-[#8DA69A]/40">
       <p class="amare-kicker">Rotina</p>

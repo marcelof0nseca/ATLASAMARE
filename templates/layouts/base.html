@@ -79,14 +79,16 @@
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.1/dist/cdn.min.js" defer></script>
     <script src="{% static 'js/amare.js' %}" defer></script>
     <script>
-      // Envia o CSRF token em todos os requests HTMX (necessário para POST com hx-boost)
-      document.body.addEventListener("htmx:configRequest", function(evt) {
-        const csrfToken = document.cookie.split(";")
-          .map(c => c.trim())
-          .find(c => c.startsWith("csrftoken="));
-        if (csrfToken) {
-          evt.detail.headers["X-CSRFToken"] = csrfToken.split("=")[1];
-        }
+      document.addEventListener("DOMContentLoaded", function() {
+        // Envia o CSRF token em todos os requests HTMX (necessário para POST com hx-boost)
+        document.body.addEventListener("htmx:configRequest", function(evt) {
+          const csrfToken = document.cookie.split(";")
+            .map(c => c.trim())
+            .find(c => c.startsWith("csrftoken="));
+          if (csrfToken) {
+            evt.detail.headers["X-CSRFToken"] = csrfToken.split("=")[1];
+          }
+        });
       });
     </script>
   </head>

@@ -102,7 +102,7 @@ class PartnerRoutineView(PartnerRequiredMixin, TemplateView):
                 notes=unexpected_symptoms[:220],
                 due_at=timezone.now(),
             )
-            messages.success(request, f"Sintoma inesperado registrado com sucesso na rotina de {patient.first_name}.")
+            messages.success(request, f"Sintoma inesperado registrado com sucesso na rotina de {patient.preferred_name}.")
         else:
             messages.error(request, "A descrição do sintoma não pode estar vazia.")
         return redirect("partner:routine")
@@ -123,12 +123,12 @@ class PartnerMayaView(PartnerRequiredMixin, TemplateView):
         # Custom examples tailored for partner user
         partner_examples = {
             "treatment": [
-                f"Como posso apoiar {patient.first_name} na etapa atual?",
+                f"Como posso apoiar {patient.preferred_name} na etapa atual?",
                 "O que acontece depois dessa fase do tratamento?",
                 "Quais cuidados ela precisa ter agora?",
             ],
             "routine": [
-                f"Como posso ajudar com as medicações de {patient.first_name}?",
+                f"Como posso ajudar com as medicações de {patient.preferred_name}?",
                 "O que devo fazer quando ela se esquecer de um remédio?",
                 "Como organizar a rotina dela nesta semana?",
             ],
@@ -139,7 +139,7 @@ class PartnerMayaView(PartnerRequiredMixin, TemplateView):
             ],
         }
         examples = partner_examples.get(selected.kind, [
-            f"Como posso apoiar {patient.first_name}?",
+            f"Como posso apoiar {patient.preferred_name}?",
             "Como ajudo com a rotina?",
             "Como ajudar nos sentimentos?",
         ])

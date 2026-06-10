@@ -1,8 +1,8 @@
 {% extends "layouts/partner_base.html" %}
 
 {% block title %}Jornada | Modo Acompanhante | Clínica AMARE{% endblock %}
-{% block page_title %}Jornada de {{ linked_patient.first_name }}{% endblock %}
-{% block page_intro %}Acompanhe as etapas e a linha do tempo do tratamento de {{ linked_patient.first_name }} em tempo real.{% endblock %}
+{% block page_title %}Jornada de {{ linked_patient.preferred_name }}{% endblock %}
+{% block page_intro %}Acompanhe as etapas e a linha do tempo do tratamento de {{ linked_patient.preferred_name }} em tempo real.{% endblock %}
 
 {% block content %}
   <section class="grid gap-5 xl:grid-cols-[1fr_0.42fr]">
@@ -43,7 +43,7 @@
         <p class="amare-kicker">Documentos</p>
         <h2 class="mt-2 font-serif text-2xl font-bold">Arquivos da jornada</h2>
         <p class="mt-3 text-sm leading-6 text-text-muted">
-          Acesse os documentos liberados pela clínica para acompanhar cada semana de {{ linked_patient.first_name }}.
+          Acesse os documentos liberados pela clínica para acompanhar cada semana de {{ linked_patient.preferred_name }}.
         </p>
         <a href="{% url 'treatments:partner-documents' %}" class="amare-button-primary mt-5 w-full" style="background-color:#8DA69A;">Acessar documentos</a>
       </article>
@@ -64,7 +64,7 @@
       </article>
 
       <article class="amare-card p-6">
-        <p class="amare-kicker">Laudo de {{ linked_patient.first_name }}</p>
+        <p class="amare-kicker">Laudo de {{ linked_patient.preferred_name }}</p>
         <h2 class="mt-2 font-serif text-2xl font-bold">Pós-tratamento</h2>
         <p class="mt-3 text-sm leading-6 text-text-muted">
           O download permanece bloqueado até a equipe confirmar que a leitura está pronta para vocês.

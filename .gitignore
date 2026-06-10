@@ -9,3 +9,5 @@ media/
 .env
 dist/
 runserver*.log
+cypress/screenshots/
+cypress/videos/

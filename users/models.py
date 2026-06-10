@@ -85,6 +85,10 @@ class User(AbstractUser):
         return self.full_name
 
     @property
+    def preferred_name(self) -> str:
+        return self.full_name.split()[0] if self.full_name else ""
+
+    @property
     def is_patient(self) -> bool:
         return self.role == self.Role.PATIENT
 
