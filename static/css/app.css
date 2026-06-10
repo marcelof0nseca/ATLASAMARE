@@ -1791,6 +1791,10 @@ button:focus-visible,
   border-top-width: 1px;
 }
 
+.border-dashed {
+  border-style: dashed;
+}
+
 .border-\[\#8DA69A\] {
   --tw-border-opacity: 1;
   border-color: rgb(141 166 154 / var(--tw-border-opacity, 1));
@@ -1981,6 +1985,11 @@ button:focus-visible,
   padding-right: 0.625rem;
 }
 
+.px-3 {
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+}
+
 .px-4 {
   padding-left: 1rem;
   padding-right: 1rem;
@@ -2144,6 +2153,10 @@ button:focus-visible,
   font-weight: 500;
 }
 
+.font-normal {
+  font-weight: 400;
+}
+
 .font-semibold {
   font-weight: 600;
 }
@@ -2223,6 +2236,10 @@ button:focus-visible,
 
 .text-green-700\/80 {
   color: rgb(21 128 61 / 0.8);
+}
+
+.text-success {
+  color: var(--success);
 }
 
 .text-text-muted {

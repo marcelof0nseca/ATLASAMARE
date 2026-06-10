@@ -16,10 +16,12 @@ def get_managed_patient(doctor: User, patient_id: int) -> User:
 def build_doctor_patient_context(patient: User) -> dict:
     treatment = Treatment.objects.filter(patient=patient, is_active=True).prefetch_related("steps").first()
     appointments = Appointment.objects.filter(patient=patient).order_by("scheduled_at")[:5]
+    partners = patient.partners.order_by("full_name")
     return {
         "patient": patient,
         "treatment": treatment,
         "current_step": treatment.current_step if treatment else None,
         "next_step": treatment.next_step if treatment else None,
         "appointments": appointments,
+        "partners": partners,
     }

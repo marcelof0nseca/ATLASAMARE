@@ -24,6 +24,21 @@ describe("Funcionalidades da médica", () => {
     cy.contains("button", "Cadastrar paciente").should("exist");
   });
 
+  it("acessa a criação de acompanhante a partir da paciente", () => {
+    cy.visit("/doctor/patients/");
+    cy.contains("Ana Beatriz").click();
+    cy.contains("Acesso dos acompanhantes").should("exist");
+    cy.contains("a", "Criar acesso").click();
+
+    cy.contains("h1", "Criar acesso de acompanhante").should("exist");
+    cy.contains("Paciente acompanhada").should("exist");
+    cy.get('input[name="full_name"]').should("exist");
+    cy.get('input[name="email"]').should("exist");
+    cy.get('input[name="phone"]').should("exist");
+    cy.get('input[name="initial_password"]').should("exist");
+    cy.contains("button", "Criar acesso").should("exist");
+  });
+
   it("gerencia a biblioteca de vídeos da jornada", () => {
     cy.visit("/doctor/jornada/videos/");
     cy.contains("h1", "Gerenciar vídeos da Jornada").should("exist");

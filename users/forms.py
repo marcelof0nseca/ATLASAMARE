@@ -195,3 +195,35 @@ class DoctorPatientCreateForm(forms.ModelForm):
         if commit:
             patient.save()
         return patient
+
+
+class DoctorPartnerCreateForm(forms.ModelForm):
+    initial_password = forms.CharField(
+        label="Senha inicial",
+        min_length=8,
+        widget=forms.PasswordInput(attrs={"autocomplete": "new-password"}),
+        help_text="O acompanhante poderá trocar a senha depois pelo próprio perfil.",
+    )
+
+    class Meta:
+        model = User
+        fields = ["full_name", "email", "phone", "wants_in_app_reminders"]
+        labels = {
+            "full_name": "Nome completo",
+            "email": "Email",
+            "phone": "Telefone",
+            "wants_in_app_reminders": "Receber lembretes dentro do aplicativo",
+        }
+
+    def __init__(self, *args, patient=None, **kwargs):
+        self.patient = patient
+        super().__init__(*args, **kwargs)
+
+    def save(self, commit=True):
+        partner = super().save(commit=False)
+        partner.role = User.Role.PARTNER
+        partner.linked_patient = self.patient
+        partner.set_password(self.cleaned_data["initial_password"])
+        if commit:
+            partner.save()
+        return partner

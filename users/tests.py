@@ -67,6 +67,66 @@ class DoctorPatientPermissionTests(TestCase):
         response = self.client.get("/doctor/patients/new/")
         self.assertEqual(response.status_code, 403)
 
+    def test_doctor_can_create_partner_linked_to_managed_patient(self):
+        self.client.force_login(self.doctor)
+        response = self.client.post(
+            reverse("users:doctor-partner-create", args=[self.patient.id]),
+            {
+                "full_name": "Acompanhante da Paciente",
+                "email": "acompanhante@amare.local",
+                "phone": "(81) 99999-9999",
+                "initial_password": "amare123!",
+                "wants_in_app_reminders": "on",
+            },
+        )
+
+        partner = User.objects.get(email="acompanhante@amare.local")
+        self.assertRedirects(response, reverse("users:doctor-patient-detail", args=[self.patient.id]))
+        self.assertEqual(partner.role, User.Role.PARTNER)
+        self.assertEqual(partner.linked_patient, self.patient)
+        self.assertTrue(partner.check_password("amare123!"))
+
+    def test_doctor_cannot_create_partner_for_unmanaged_patient(self):
+        self.client.force_login(self.doctor)
+        response = self.client.get(reverse("users:doctor-partner-create", args=[self.other_patient.id]))
+        self.assertEqual(response.status_code, 404)
+
+    def test_patient_cannot_create_partner_from_doctor_area(self):
+        self.client.force_login(self.patient)
+        response = self.client.get(reverse("users:doctor-partner-create", args=[self.patient.id]))
+        self.assertEqual(response.status_code, 403)
+
+    def test_patient_detail_lists_linked_partner(self):
+        partner = User.objects.create_user(
+            email="linked-partner@amare.local",
+            password="amare123!",
+            full_name="Acompanhante Vinculado",
+            role=User.Role.PARTNER,
+            linked_patient=self.patient,
+        )
+        self.client.force_login(self.doctor)
+
+        response = self.client.get(reverse("users:doctor-patient-detail", args=[self.patient.id]))
+
+        self.assertContains(response, partner.full_name)
+        self.assertContains(response, partner.email)
+        self.assertContains(response, "Criar acesso")
+
+    def test_partner_email_must_be_unique(self):
+        self.client.force_login(self.doctor)
+        response = self.client.post(
+            reverse("users:doctor-partner-create", args=[self.patient.id]),
+            {
+                "full_name": "Email Repetido",
+                "email": self.patient.email,
+                "initial_password": "amare123!",
+            },
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("email", response.context["form"].errors)
+        self.assertFalse(User.objects.filter(full_name="Email Repetido").exists())
+
 
 class PartnerModeTests(TestCase):
     def setUp(self):

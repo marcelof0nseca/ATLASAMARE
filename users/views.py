@@ -12,6 +12,7 @@ from core.models import CommunityPost
 
 from .forms import (
     ChangePasswordForm,
+    DoctorPartnerCreateForm,
     DoctorPatientCreateForm,
     ProfilePushForm,
     LoginForm,
@@ -190,6 +191,36 @@ class DoctorPatientDetailView(DoctorRequiredMixin, DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context.update(build_doctor_patient_context(self.object))
+        context["active_nav"] = "patients"
+        return context
+
+
+class DoctorPartnerCreateView(DoctorRequiredMixin, FormView):
+    template_name = "doctor/partner_form.html"
+    form_class = DoctorPartnerCreateForm
+
+    def get_patient(self):
+        if not hasattr(self, "_patient"):
+            self._patient = get_managed_patient(self.request.user, self.kwargs["patient_id"])
+        return self._patient
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs["patient"] = self.get_patient()
+        return kwargs
+
+    def form_valid(self, form):
+        partner = form.save()
+        patient = self.get_patient()
+        messages.success(
+            self.request,
+            f"Acesso de {partner.full_name} criado e vinculado a {patient.full_name}.",
+        )
+        return HttpResponseRedirect(reverse("users:doctor-patient-detail", args=[patient.id]))
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["patient"] = self.get_patient()
         context["active_nav"] = "patients"
         return context
 

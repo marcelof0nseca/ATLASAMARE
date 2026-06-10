@@ -1,0 +1,76 @@
+{% extends "layouts/doctor_base.html" %}
+
+{% block title %}Novo acompanhante | Clínica AMARE{% endblock %}
+{% block page_title %}Criar acesso de acompanhante{% endblock %}
+{% block page_intro %}Cadastre uma pessoa autorizada a acompanhar a jornada de {{ patient.full_name }}.{% endblock %}
+
+{% block content %}
+  <section class="grid gap-5 lg:grid-cols-[0.85fr_1.15fr]">
+    <aside class="space-y-5">
+      <article class="amare-card p-6">
+        <p class="text-sm font-semibold text-text-strong">Vínculo do acesso</p>
+        <dl class="mt-5 space-y-4 text-sm">
+          <div>
+            <dt class="text-text-muted">Paciente acompanhada</dt>
+            <dd class="mt-1 font-medium text-text-strong">{{ patient.full_name }}</dd>
+          </div>
+          <div>
+            <dt class="text-text-muted">Médica responsável</dt>
+            <dd class="mt-1 font-medium text-text-strong">{{ request.user.full_name }}</dd>
+          </div>
+        </dl>
+      </article>
+
+      <article class="rounded-3xl border border-rose bg-rose-soft/30 p-6">
+        <p class="text-sm font-semibold text-text-strong">Antes de criar o acesso</p>
+        <p class="mt-3 text-sm leading-6 text-text-muted">
+          Confirme a autorização da paciente. O acompanhante poderá consultar informações da jornada,
+          apoiar a rotina e registrar cuidados em nome dela.
+        </p>
+      </article>
+    </aside>
+
+    <article class="amare-card p-6">
+      <form method="post" class="space-y-4">
+        {% csrf_token %}
+        {% if form.non_field_errors %}
+          <div class="rounded-2xl border border-danger bg-white px-4 py-3 text-sm text-text-strong">{{ form.non_field_errors }}</div>
+        {% endif %}
+
+        <div>
+          <label for="{{ form.full_name.id_for_label }}" class="mb-2 block text-sm font-medium text-text-strong">Nome completo</label>
+          {{ form.full_name }}
+          {% for error in form.full_name.errors %}<p class="mt-2 text-sm text-danger">{{ error }}</p>{% endfor %}
+        </div>
+        <div>
+          <label for="{{ form.email.id_for_label }}" class="mb-2 block text-sm font-medium text-text-strong">Email</label>
+          {{ form.email }}
+          {% for error in form.email.errors %}<p class="mt-2 text-sm text-danger">{{ error }}</p>{% endfor %}
+        </div>
+        <div>
+          <label for="{{ form.phone.id_for_label }}" class="mb-2 block text-sm font-medium text-text-strong">Telefone <span class="font-normal text-text-muted">(opcional)</span></label>
+          {{ form.phone }}
+          {% for error in form.phone.errors %}<p class="mt-2 text-sm text-danger">{{ error }}</p>{% endfor %}
+        </div>
+        <div>
+          <label for="{{ form.initial_password.id_for_label }}" class="mb-2 block text-sm font-medium text-text-strong">Senha inicial</label>
+          {{ form.initial_password }}
+          <p class="mt-2 text-sm text-text-muted">{{ form.initial_password.help_text }}</p>
+          {% for error in form.initial_password.errors %}<p class="mt-2 text-sm text-danger">{{ error }}</p>{% endfor %}
+        </div>
+        <div class="rounded-2xl border border-border bg-white px-4 py-4">
+          <label for="{{ form.wants_in_app_reminders.id_for_label }}" class="flex items-start gap-3 text-sm leading-6 text-text-strong">
+            {{ form.wants_in_app_reminders }}
+            <span>Ativar lembretes dentro do aplicativo para este acompanhante.</span>
+          </label>
+          {% for error in form.wants_in_app_reminders.errors %}<p class="mt-2 text-sm text-danger">{{ error }}</p>{% endfor %}
+        </div>
+
+        <div class="flex flex-col gap-3 sm:flex-row">
+          <button type="submit" class="amare-button-primary">Criar acesso</button>
+          <a href="{% url 'users:doctor-patient-detail' patient.id %}" class="amare-button-secondary text-center">Cancelar</a>
+        </div>
+      </form>
+    </article>
+  </section>
+{% endblock %}
