@@ -1755,6 +1755,39 @@ button { cursor: pointer; border: none; background: none; font-family: var(--fon
   color: rgba(255,255,255,0.45);
 }
 
+.footer-bottom-brand {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+
+.footer-instagram {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 32px;
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: rgba(255,255,255,0.65);
+  transition: color 150ms ease-out, transform 150ms ease-out;
+}
+
+.footer-instagram i {
+  font-size: 20px;
+}
+
+.footer-instagram:hover {
+  color: #fff;
+  transform: translateY(-1px);
+}
+
+.footer-instagram:focus-visible {
+  outline: 2px solid var(--color-theme-patient);
+  outline-offset: 4px;
+  border-radius: 4px;
+}
+
 /* ============================================================
    MOBILE DRAWER (Vaul-style)
    ============================================================ */
