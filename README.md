@@ -4,7 +4,7 @@
 
 # Clínica AMARE
 
-Sistema Web para Acompanhamento da Jornada de Fertilidade
+Sistema Web para Acompanhamento da Jornada de Fertilidade.
 
 ## Sobre o Projeto
 
