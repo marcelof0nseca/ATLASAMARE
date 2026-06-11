@@ -4,159 +4,53 @@
 
 # Clínica AMARE
 
-Sistema Web para Acompanhamento da Jornada de Fertilidade
-
-## Sobre o Projeto
-
-A Clínica AMARE é uma aplicação web desenvolvida para apoiar pacientes e equipe médica no acompanhamento da jornada de fertilidade com mais clareza, acolhimento e baixa carga cognitiva.
+Plataforma de acompanhamento da jornada de fertilidade para pacientes, acompanhantes e equipe médica.
 
 ## Integrantes
 
-- MARIA CLARA SAMPAIO - `mcsm@cesar.school`
-- MARCELO FONSECA - `maf@cesar.school`
-- VINICIUS CEZAR - `vcrc@cesar.school`
-- MARIA YVNA TAVARES - `mytra@cesar.school`
-- PEDRO COUTINHO - `pcs4@cesar.school`
-- MATEUS REINAUX - `mrbm@cesar.school`
-- GUILHERME LINDEMBERG - `gllb@cesar.school`
-- LUIZ VIEIRA - `lhcv@cesar.school`
-- EDUARDO ESTEVES - `eea@cesar.school`
-- ARTHUR QUEIROZ - `aqs@cesar.school`
-- GUILHERME BALTAR - `gcb@cesar.school`
+- Maria Clara Sampaio — `mcsm@cesar.school`
+- Marcelo Fonseca — `maf@cesar.school`
+- Vinicius Cezar — `vcrc@cesar.school`
+- Maria Yvna Tavares — `mytra@cesar.school`
+- Pedro Coutinho — `pcs4@cesar.school`
+- Mateus Reinaux — `mrbm@cesar.school`
+- Guilherme Lindemberg — `gllb@cesar.school`
+- Luiz Vieira — `lhcv@cesar.school`
+- Eduardo Esteves — `eea@cesar.school`
+- Arthur Queiroz — `aqs@cesar.school`
+- Guilherme Baltar — `gcb@cesar.school`
 
-## Links Uteis
+## Links Principais
 
-- Jira (Gerenciamento do Projeto): [Quadro do Jira](https://amareatlas.atlassian.net/jira/software/projects/SCRUM/boards/1/backlog?atlOrigin=eyJpIjoiNmRmNTk3YjE2ZWUzNDYxZWI1NzAzN2UzNjU2MjU4ZDUiLCJwIjoiaiJ9)
-- Prototipo no Figma: [Figma](https://www.figma.com/board/0drDpxBiH4rUQTa6yFmHH8/Projeto-2--Desk-Research?t=9AgZTqvyzbBd5Blc-1)
-- Documento do Projeto: [Docs](https://docs.google.com/document/d/1Z7tOHnQnHAWp8qSUGCK6GjeTYqohZI3kN0sLbOmQRzI/edit?usp=sharing)
-- Link deploy: Em breve
+- [Quadro e backlog no Jira](https://amareatlas.atlassian.net/jira/software/projects/SCRUM/boards/1/backlog?atlOrigin=eyJpIjoiNmRmNTk3YjE2ZWUzNDYxZWI1NzAzN2UzNjU2MjU4ZDUiLCJwIjoiaiJ9)
+- [Protótipo Lo-Fi no Figma](https://www.figma.com/design/bJ9MX9WeR8haKYAh5MPCZA/LO-fi-AMARE?node-id=61-343&t=Z4pjQUTJStwCSW37-1)
+- [Documento das histórias](https://docs.google.com/document/d/1Z7tOHnQnHAWp8qSUGCK6GjeTYqohZI3kN0sLbOmQRzI/edit?usp=sharing)
+- [Sistema em produção](https://atlas-amare.onrender.com)
 
-## Entregas do Projeto
+## Entrega 01 — Histórias e Protótipos
 
-- SR1
-- SR2
+- Histórias de usuário com cenários de validação BDD.
+- Backlog e quadro da Sprint no Jira.
+- Protótipos de baixa fidelidade no Figma.
+- Screencast do protótipo: **link pendente**.
 
-## Licenca
+## Entrega 02 — Primeiras Histórias e Deploy
 
-Projeto academico desenvolvido para fins educacionais.  
-Disciplina: Projetos 2
+- Implementação da jornada, rotina e assistente Maya da paciente.
+- Adaptação da identidade visual e dos layouts da plataforma.
+- Versionamento, acompanhamento de Issues e deploy em produção.
+- Screencast do sistema em produção: **link pendente**.
 
-## O que já está implementado
+## Entrega 03 — Novas Histórias e Testes E2E
 
-- Monolito Django com areas web para paciente e medico
-- API REST em `/api/v1` com DRF
-- Apps separados: `users`, `treatments`, `appointments`, `medications`, `assistant`, `core`
-- Login por sessao, redirecionamento por papel e perfil basico
-- Timeline de tratamento com regras de consistencia
-- Agenda cronologica de consultas e exames
-- Medicacoes por dose agendada com confirmacao unica por ciclo
-- Maya com conversas guiadas, fallback educativo e integracao opcional com LLM
-- Dados demo via comando de seed
-- Testes para permissoes e fluxos criticos
+- Implementação das áreas da médica e do acompanhante.
+- Testes automatizados das funcionalidades dos diferentes perfis.
+- [Screencast da execução dos testes E2E](https://youtu.be/jjoOCNcgriI?is=9TmetjJp4pc4S80G)
 
-## Stack
+## Entrega 04 — Histórias Finais e CI/CD
 
-- Backend: Django 6
-- API: Django REST Framework
-- Banco: PostgreSQL por variaveis de ambiente, com SQLite como fallback local
-- Frontend: Django Templates + HTMX + Alpine.js + Tailwind CSS
-
-## Estrutura
-
-```text
-config/
-core/
-users/
-treatments/
-appointments/
-medications/
-assistant/
-templates/
-static/
-assets/
-docs/
-```
-
-## Principais rotas web
-
-- `/login/`
-- `/dashboard/`
-- `/treatment/`
-- `/routine/appointments/`
-- `/routine/medications/`
-- `/maya/`
-- `/maya/treatment/`
-- `/maya/routine/`
-- `/maya/feelings/`
-- `/profile/`
-- `/doctor/patients/`
-- `/doctor/patients/<id>/`
-
-## Principais endpoints API
-
-- `POST /api/v1/auth/login`
-- `POST /api/v1/auth/logout`
-- `GET /api/v1/auth/me`
-- `POST /api/v1/auth/password-reset-request`
-- `GET /api/v1/dashboard`
-- `GET /api/v1/treatments/current`
-- `GET /api/v1/appointments`
-- `GET /api/v1/medications`
-- `POST /api/v1/medications/<id>/complete`
-- `GET /api/v1/assistant/conversations`
-- `GET|POST /api/v1/assistant/interactions`
-- `GET /api/v1/doctor/patients`
-- `GET /api/v1/doctor/patients/<id>`
-- `POST /api/v1/doctor/treatments/<treatment_id>/steps/<step_id>/start`
-- `POST /api/v1/doctor/treatments/<treatment_id>/steps/<step_id>/complete`
-
-## Setup local
-
-1. Crie e ative o ambiente virtual.
-2. Instale dependencias Python:
-   `pip install -r requirements.txt`
-3. Instale o frontend:
-   `npm install`
-4. Copie `.env.example` para `.env` e ajuste se quiser usar PostgreSQL ou LLM.
-5. Rode as migracoes:
-   `python manage.py migrate`
-6. Gere o CSS:
-   `npm run build:css`
-7. Popule dados demo:
-   `python manage.py seed_amare_demo`
-8. Inicie o servidor:
-   `python manage.py runserver`
-
-Durante desenvolvimento, use o comando abaixo para iniciar o Django e deixar o Tailwind recompilando automaticamente quando templates ou estilos mudarem:
-
-`npm run dev`
-
-## Dados demo
-
-O comando `seed_amare_demo` cria:
-
-- 1 medica responsavel
-- 3 pacientes com estados diferentes de jornada
-- timeline plausivel de fertilidade
-- compromissos futuros e passados
-- doses agendadas para hoje e amanha
-- historico curto da Maya em conversas guiadas
-
-Senha padrao dos usuarios demo: `amare123!`
-
-## Maya
-
-- Organiza a experiência em três conversas guiadas:
-  - `Meu tratamento`
-  - `Minha rotina`
-  - `Como estou me sentindo`
-- Classifica cada pergunta por intencao e risco antes de responder
-- Usa respostas educativas, acolhedoras e com baixa carga cognitiva
-- Mantém histórico separado por conversa para a paciente não se perder
-- Se `OPENAI_API_KEY` e `OPENAI_MODEL` estiverem definidos, tenta responder via API antes do fallback
-- Perguntas com sintomas, urgencia ou decisao clinica sao redirecionadas para a equipe medica
-
-## Documentacao complementar
-
-- [Arquitetura](docs/architecture.md)
-- [UX e Design Tokens](docs/ux.md)
+- Criação do acesso de acompanhante pela médica.
+- Refinamento da landing page e dos canais de contato.
+- Pipeline de integração contínua com execução automática dos testes.
+- Deploy contínuo pela branch `main`.
+- [Screencast do processo de CI/CD](https://youtu.be/K2j--gXw9bA?is=7jtGagkUcvDJQ3gg)
