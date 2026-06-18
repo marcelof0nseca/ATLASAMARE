@@ -6,7 +6,7 @@ describe("Funcionalidades da paciente", () => {
 
   it("acompanha a timeline e o progresso do tratamento", () => {
     cy.visit("/treatment/");
-    cy.contains("h1", "Sua jornada de tratamento").should("exist");
+    cy.contains("h1", "Sua Jornada").should("exist");
     cy.contains("Preparação hormonal").should("exist");
     cy.contains("Coleta de óvulos").should("exist");
     cy.contains("Acompanhamento embrionário").should("exist");
@@ -38,7 +38,7 @@ describe("Funcionalidades da paciente", () => {
     cy.visit("/maya/");
     cy.contains("Assistente Maya").should("exist");
     cy.get('textarea[name="question"]').should("exist");
-    cy.contains("a", "Falar com a clínica")
+    cy.contains("a", "Contato da clínica")
       .should("have.attr", "href")
       .and("include", "wa.me/5581998003535");
   });

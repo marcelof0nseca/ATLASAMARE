@@ -132,7 +132,7 @@
 
   <script>
   (function() {
-    if (window.Cypress) return;
+    if (window.Cypress || window.__AMARE_E2E__ || navigator.userAgent.indexOf("Cypress") !== -1) return;
     var userId = document.body.getAttribute('data-user-id');
     if (!userId) return;
     var key = 'amare_notif_asked_' + userId;
