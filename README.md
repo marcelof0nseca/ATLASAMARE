@@ -39,7 +39,7 @@ Plataforma de acompanhamento da jornada de fertilidade para pacientes, acompanha
 - Implementação da jornada, rotina e assistente Maya da paciente.
 - Adaptação da identidade visual e dos layouts da plataforma.
 - Versionamento, acompanhamento de Issues e deploy em produção.
-- Screencast do sistema em produção: **link pendente**.
+- [Screencast do sistema em produção](https://youtu.be/vqWH5peDPlg?si=qoob2ue8Y7QYGWbq)
 
 ## Entrega 03 — Novas Histórias e Testes E2E
 
