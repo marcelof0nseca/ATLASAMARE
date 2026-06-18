@@ -287,7 +287,7 @@ class Command(BaseCommand):
                 "fórum,anônimo,tentantes",
                 True,
                 "https://brasil.babycenter.com/comunidade",
-                "Conhecer Comunidade",
+                "Acessar comunidade",
             ),
             (
                 "Relatos reais e acolhimento",

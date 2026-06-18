@@ -1,8 +1,8 @@
 {% extends "layouts/patient_base.html" %}
 
 {% block title %}Rotina | Clínica AMARE{% endblock %}
-{% block page_title %}Sua rotina de cuidado{% endblock %}
-{% block page_intro %}Consultas, exames, medicações e tarefas pessoais em um só lugar.{% endblock %}
+{% block page_title %}Sua Rotina{% endblock %}
+{% block page_intro %}Organize consultas, medicações e tarefas em um único lugar.{% endblock %}
 
 {% block content %}
 
@@ -52,7 +52,7 @@
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-text-muted"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
     </div>
     <div class="min-w-0">
-      <p class="text-xs font-semibold uppercase tracking-widest text-text-muted">Agora</p>
+      <p class="text-xs font-semibold uppercase tracking-widest text-text-muted">Hoje</p>
       <p class="truncate text-sm font-bold text-text-strong">
         {% if now_item %}{{ now_item.name }}{% else %}Sem dose pendente{% endif %}
       </p>

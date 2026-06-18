@@ -1,13 +1,13 @@
 {% extends "layouts/partner_base.html" %}
 
-{% block title %}Home | Modo Acompanhante | Clínica AMARE{% endblock %}
-{% block page_title %}Oi, {{ request.user.full_name|default:"acompanhante" }}{% endblock %}
+{% block title %}Início | Modo Acompanhante | Clínica AMARE{% endblock %}
+{% block page_title %}Olá, {{ request.user.full_name|default:"acompanhante" }}{% endblock %}
 {% block page_intro %}Acompanhe o progresso e ajude a gerenciar a rotina de {{ linked_patient.full_name }}.{% endblock %}
 
 {% block content %}
   <section class="grid gap-5 xl:grid-cols-[1.08fr_0.92fr]">
     <article class="amare-card overflow-hidden p-6 sm:p-8">
-      <p class="amare-kicker">Jornada atual de {{ linked_patient.preferred_name }}</p>
+      <p class="amare-kicker">Sua Jornada</p>
       {% if treatment and current_step %}
         <h2 class="mt-3 font-display text-5xl font-semibold leading-none text-[#8DA69A]">{{ current_step.name }}</h2>
         <p class="mt-4 max-w-2xl text-sm leading-6 text-text-muted">
@@ -34,7 +34,7 @@
         <p class="mt-4 max-w-2xl text-sm leading-6 text-text-muted">
           As etapas já estão organizadas. Quando a equipe iniciar a primeira etapa, ela aparecerá aqui em destaque.
         </p>
-        <a href="{% url 'partner:treatment' %}" class="amare-button-primary mt-6" style="background-color:#8DA69A;">Ver estrutura</a>
+        <a href="{% url 'partner:treatment' %}" class="amare-button-primary mt-6" style="background-color:#8DA69A;">Ver jornada</a>
       {% else %}
         {% include "components/empty_state.html" with title="A jornada ainda não começou" copy="Quando a equipe ativar o tratamento de Ana Beatriz, a etapa atual e o próximo passo aparecerão nesta área." %}
       {% endif %}
@@ -70,12 +70,12 @@
             <p class="mt-2 text-sm font-bold text-text-strong">{{ pending_tasks_count }} pendente{{ pending_tasks_count|pluralize }}</p>
           </div>
         </div>
-        <a href="{% url 'partner:routine' %}" class="amare-button-secondary mt-5 w-full hover:border-[#8DA69A]/40">Abrir rotina</a>
+        <a href="{% url 'partner:routine' %}" class="amare-button-secondary mt-5 w-full hover:border-[#8DA69A]/40">Ver rotina</a>
       </article>
 
       <article class="amare-card p-6">
         <p class="amare-kicker">Laudo de {{ linked_patient.preferred_name }}</p>
-        <h2 class="mt-2 font-serif text-2xl font-bold">Pós-tratamento</h2>
+        <h2 class="mt-2 font-serif text-2xl font-bold">Documentos</h2>
         <p class="mt-3 text-sm leading-6 text-text-muted">
           {% if report %}
             {% if report.is_available %}O laudo pós-tratamento já está liberado pela equipe médica.{% else %}O download aparecerá quando a equipe liberar a leitura.{% endif %}

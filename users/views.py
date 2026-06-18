@@ -117,7 +117,7 @@ class ProfileSectionView(LoginRequiredMixin, View):
     def post(self, request, section):
         form_class = _SECTION_FORMS.get(section)
         if not form_class:
-            return redirect("users:profile")
+            return redirect("partner:profile" if request.user.is_partner else "users:profile")
         form = form_class(request.POST, request.FILES, instance=request.user)
         if form.is_valid():
             form.save()
@@ -126,7 +126,7 @@ class ProfileSectionView(LoginRequiredMixin, View):
             for errs in form.errors.values():
                 for e in errs:
                     messages.error(request, e)
-        return redirect("users:profile")
+        return redirect("partner:profile" if request.user.is_partner else "users:profile")
 
 
 class ChangePasswordView(LoginRequiredMixin, View):
@@ -139,7 +139,7 @@ class ChangePasswordView(LoginRequiredMixin, View):
             for field_errors in form.errors.values():
                 for error in field_errors:
                     messages.error(request, error)
-        return redirect("users:profile")
+        return redirect("partner:profile" if request.user.is_partner else "users:profile")
 
 
 class DoctorPatientListView(DoctorRequiredMixin, ListView):

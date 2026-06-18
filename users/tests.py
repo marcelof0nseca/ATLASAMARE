@@ -172,6 +172,24 @@ class PartnerModeTests(TestCase):
         self.assertContains(response, "João Santos")
         self.assertContains(response, "Ana Beatriz")
 
+    def test_partner_profile_uses_settings_layout(self):
+        self.client.force_login(self.partner)
+        response = self.client.get(reverse("partner:profile"))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Foto e nome")
+        self.assertContains(response, "Paciente acompanhada")
+        self.assertContains(response, "Ana Beatriz")
+
+    def test_partner_profile_section_redirects_to_partner_profile(self):
+        self.client.force_login(self.partner)
+        response = self.client.post(
+            reverse("users:profile-update", args=["personal"]),
+            {"phone": "(81) 98888-7777", "date_of_birth": ""},
+        )
+        self.assertRedirects(response, reverse("partner:profile"))
+        self.partner.refresh_from_db()
+        self.assertEqual(self.partner.phone, "(81) 98888-7777")
+
     def test_partner_cannot_access_patient_dashboard(self):
         self.client.force_login(self.partner)
         response = self.client.get("/dashboard/")

@@ -1,86 +1,207 @@
 {% extends "layouts/partner_base.html" %}
+{% load static %}
 
 {% block title %}Perfil | Modo Acompanhante | Clínica AMARE{% endblock %}
-{% block page_title %}Seu perfil{% endblock %}
-{% block page_intro %}Gerencie suas informações e preferências como acompanhante de {{ linked_patient.preferred_name }}.{% endblock %}
+{% block page_title %}Configuracoes{% endblock %}
+{% block page_intro %}Gerencie seus dados, notificações e segurança.{% endblock %}
 
 {% block content %}
-  <section class="grid gap-5 lg:grid-cols-[0.9fr_1.1fr]">
-    {# Left side card #}
-    <aside class="space-y-5">
-      <article class="amare-card p-6">
-        <p class="amare-kicker">Conta</p>
-        <dl class="mt-5 space-y-4 text-sm">
-          <div>
-            <dt class="font-bold text-text-muted">Nome</dt>
-            <dd class="mt-1 font-bold text-text-strong">{{ request.user.full_name }}</dd>
-          </div>
-          <div>
-            <dt class="font-bold text-text-muted">Email</dt>
-            <dd class="mt-1 font-bold text-text-strong">{{ request.user.email }}</dd>
-          </div>
-          <div>
-            <dt class="font-bold text-text-muted">Papel</dt>
-            <dd class="mt-1 font-bold text-text-strong">Acompanhante</dd>
-          </div>
-          <div>
-            <dt class="font-bold text-text-muted">Acompanhando</dt>
-            <dd class="mt-1 font-bold text-text-strong">{{ linked_patient.full_name }}</dd>
-          </div>
-        </dl>
-        <form method="post" action="{% url 'users:logout' %}" class="mt-6">
-          {% csrf_token %}
-          <button class="amare-button-secondary w-full hover:border-[#8DA69A]/40">Sair com segurança</button>
-        </form>
-      </article>
-    </aside>
 
-    {# Right side card #}
-    <article class="amare-card p-6">
-      <p class="amare-kicker">Preferências</p>
-      <h2 class="mt-2 font-serif text-2xl font-bold">Como a plataforma acompanha você</h2>
-      
-      <form method="post" class="mt-6 space-y-5">
-        {% csrf_token %}
-        
-        {# Section 1: Editar Nome #}
-        <div>
-          <label for="id_full_name" class="mb-2 block text-sm font-bold text-text-strong">Nome</label>
-          <input type="text" id="id_full_name" name="full_name" value="{{ request.user.full_name }}" required class="w-full focus:border-[#8DA69A] focus:ring-[#8DA69A]/40">
+<section class="mb-6">
+  <p class="amare-kicker mb-2 px-1">Perfil</p>
+  <div class="amare-card divide-y divide-border overflow-hidden">
+    <div onclick="openModal('name')" class="flex cursor-pointer items-center gap-4 px-5 py-4 transition hover:bg-linen/60">
+      <div class="flex h-11 w-11 flex-shrink-0 items-center justify-center overflow-hidden rounded-full border border-border bg-linen">
+        {% if request.user.avatar %}<img src="{{ request.user.avatar.url }}" class="h-10 w-10 object-cover" alt="">
+        {% else %}<span class="font-serif text-base font-bold text-text-muted">{{ request.user.full_name|first|upper }}</span>{% endif %}
+      </div>
+      <div class="min-w-0 flex-1">
+        <p class="text-sm font-semibold text-text-strong">Foto e nome</p>
+        <p class="truncate text-xs text-text-muted">{{ request.user.full_name }}</p>
+      </div>
+      <span class="flex h-11 w-11 flex-shrink-0 items-center justify-center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-text-muted"><path d="M9 18l6-6-6-6"/></svg></span>
+    </div>
+    <div onclick="openModal('personal')" class="flex cursor-pointer items-center gap-4 px-5 py-4 transition hover:bg-linen/60">
+      <div class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full border border-border bg-linen">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-text-muted"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+      </div>
+      <div class="min-w-0 flex-1">
+        <p class="text-sm font-semibold text-text-strong">Dados pessoais</p>
+        <p class="truncate text-xs text-text-muted">{% if request.user.phone %}{{ request.user.phone }}{% else %}Não informado{% endif %}</p>
+      </div>
+      <span class="flex h-11 w-11 flex-shrink-0 items-center justify-center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-text-muted"><path d="M9 18l6-6-6-6"/></svg></span>
+    </div>
+    <div onclick="openModal('emergency')" class="flex cursor-pointer items-center gap-4 px-5 py-4 transition hover:bg-linen/60">
+      <div class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full border border-border bg-linen">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-text-muted"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.8 19.8 0 0 1-3.07-8.67A2 2 0 0 1 3.6 1.27h3a2 2 0 0 1 2 1.72c.128.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.91A16 16 0 0 0 15.1 16.1l.91-.91a2 2 0 0 1 2.11-.45c.907.339 1.85.572 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+      </div>
+      <div class="min-w-0 flex-1">
+        <p class="text-sm font-semibold text-text-strong">Contato de emergencia</p>
+        <p class="truncate text-xs text-text-muted">{% if request.user.emergency_contact_name %}{{ request.user.emergency_contact_name }}{% else %}Não informado{% endif %}</p>
+      </div>
+      <span class="flex h-11 w-11 flex-shrink-0 items-center justify-center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-text-muted"><path d="M9 18l6-6-6-6"/></svg></span>
+    </div>
+  </div>
+</section>
+
+<section class="mb-6">
+  <p class="amare-kicker mb-2 px-1">Acesso</p>
+  <div class="amare-card divide-y divide-border overflow-hidden">
+    <div class="flex items-center gap-4 px-5 py-4">
+      <div class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full border border-border bg-linen">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-text-muted"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+      </div>
+      <div class="min-w-0 flex-1">
+        <p class="text-sm font-semibold text-text-strong">Email</p>
+        <p class="truncate text-xs text-text-muted">{{ request.user.email }}</p>
+      </div>
+      <span class="rounded-full bg-linen px-2 py-0.5 text-[11px] font-semibold text-text-muted">fixo</span>
+    </div>
+    <div class="flex items-center gap-4 px-5 py-4">
+      <div class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full border border-border bg-linen">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-text-muted"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      </div>
+      <div class="min-w-0 flex-1">
+        <p class="text-sm font-semibold text-text-strong">Papel</p>
+        <p class="text-xs text-text-muted">{{ request.user.get_role_display }}</p>
+      </div>
+    </div>
+    <div onclick="openModal('password')" class="flex cursor-pointer items-center gap-4 px-5 py-4 transition hover:bg-linen/60">
+      <div class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full border border-border bg-linen">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-text-muted"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+      </div>
+      <div class="min-w-0 flex-1">
+        <p class="text-sm font-semibold text-text-strong">Alterar senha</p>
+        <p class="text-xs text-text-muted">Atualizar sua senha de acesso</p>
+      </div>
+      <span class="flex h-11 w-11 flex-shrink-0 items-center justify-center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-text-muted"><path d="M9 18l6-6-6-6"/></svg></span>
+    </div>
+  </div>
+</section>
+
+<section class="mb-6">
+  <p class="amare-kicker mb-2 px-1">Acompanhamento</p>
+  <div class="amare-card divide-y divide-border overflow-hidden">
+    <div class="flex items-center gap-4 px-5 py-4">
+      <div class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full border border-border bg-linen">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-text-muted"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      </div>
+      <div class="min-w-0 flex-1">
+        <p class="text-sm font-semibold text-text-strong">Paciente acompanhada</p>
+        <p class="truncate text-xs text-text-muted">{{ linked_patient.full_name }}</p>
+      </div>
+    </div>
+    <div class="flex items-center gap-4 px-5 py-4">
+      <div class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full border border-border bg-linen">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-text-muted"><path d="M12 21s8-4 8-10V5l-8-3-8 3v6c0 6 8 10 8 10Z"/></svg>
+      </div>
+      <div class="min-w-0 flex-1">
+        <p class="text-sm font-semibold text-text-strong">Permissão</p>
+        <p class="text-xs text-text-muted">Acesso autorizado pela equipe para apoiar a jornada</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="mb-6">
+  <p class="amare-kicker mb-2 px-1">Notificações</p>
+  <div class="amare-card divide-y divide-border overflow-hidden">
+    <div onclick="openModal('notif_app')" class="flex cursor-pointer items-center gap-4 px-5 py-4 transition hover:bg-linen/60">
+      <div class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full border border-border bg-linen">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-text-muted"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+      </div>
+      <div class="min-w-0 flex-1">
+        <p class="text-sm font-semibold text-text-strong">No aplicativo</p>
+        <p class="text-xs text-text-muted">Lembretes e alertas dentro da plataforma</p>
+      </div>
+      <span style="margin-right:8px;border-radius:9999px;padding:2px 8px;font-size:11px;font-weight:600;{% if request.user.wants_in_app_reminders %}background:#dcfce7;color:#15803d{% else %}background:#f3e9d7;color:#9a876f{% endif %}">{% if request.user.wants_in_app_reminders %}ativo{% else %}inativo{% endif %}</span>
+      <span class="flex h-11 w-11 flex-shrink-0 items-center justify-center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-text-muted"><path d="M9 18l6-6-6-6"/></svg></span>
+    </div>
+    <div onclick="openModal('notif_email')" class="flex cursor-pointer items-center gap-4 px-5 py-4 transition hover:bg-linen/60">
+      <div class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full border border-border bg-linen">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-text-muted"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+      </div>
+      <div class="min-w-0 flex-1">
+        <p class="text-sm font-semibold text-text-strong">Por e-mail</p>
+        <p class="text-xs text-text-muted">Frequencia: {{ request.user.get_reminder_frequency_display }}</p>
+      </div>
+      <span class="flex h-11 w-11 flex-shrink-0 items-center justify-center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-text-muted"><path d="M9 18l6-6-6-6"/></svg></span>
+    </div>
+    <div onclick="openModal('push')" class="flex cursor-pointer items-center gap-4 px-5 py-4 transition hover:bg-linen/60">
+      <div class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full border border-border bg-linen">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-text-muted"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+      </div>
+      <div class="min-w-0 flex-1">
+        <p class="text-sm font-semibold text-text-strong">Notificações web</p>
+        <p class="text-xs text-text-muted">Alertas no navegador deste dispositivo</p>
+      </div>
+      <span style="margin-right:8px;border-radius:9999px;padding:2px 8px;font-size:11px;font-weight:600;{% if request.user.push_notifications_enabled %}background:#dcfce7;color:#15803d{% else %}background:#f3e9d7;color:#9a876f{% endif %}">
+        {% if request.user.push_notifications_enabled %}ativo{% else %}inativo{% endif %}
+      </span>
+      <span class="flex h-11 w-11 flex-shrink-0 items-center justify-center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-text-muted"><path d="M9 18l6-6-6-6"/></svg></span>
+    </div>
+  </div>
+</section>
+
+<section class="mb-6">
+  <p class="amare-kicker mb-2 px-1">Sessão</p>
+  <div class="amare-card overflow-hidden">
+    <form method="post" action="{% url 'users:logout' %}">
+      {% csrf_token %}
+      <button type="submit" class="flex w-full cursor-pointer items-center gap-4 px-5 py-4 text-left transition hover:bg-linen/60">
+        <div class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full border border-border bg-linen">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-danger"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5"/><path d="M21 12H9"/></svg>
         </div>
-
-        {# Section 2: Editar Foto de Perfil #}
-        <div class="flex items-center gap-4 mt-6">
-          <div class="inline-flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-[#8DA69A] text-xl font-semibold text-white">
-            {{ request.user.full_name|first|upper }}
-          </div>
-          <div>
-            <p class="text-sm font-semibold text-text-strong">Foto de perfil</p>
-            <p class="mt-1 text-xs text-text-muted">Funcionalidade em breve</p>
-          </div>
+        <div class="min-w-0 flex-1">
+          <p class="text-sm font-semibold text-danger">Sair com segurança</p>
+          <p class="text-xs text-text-muted">Encerrar esta sessão</p>
         </div>
+      </button>
+    </form>
+  </div>
+</section>
 
-        {# Section 3: Histórico de Notificações #}
-        <div class="mt-6">
-          <p class="text-sm font-semibold text-text-strong mb-3">Histórico de Notificações</p>
-          {% include "components/empty_state.html" with title="Nenhuma notificação ainda" copy="Suas notificações aparecerão aqui." %}
-        </div>
+{% include "patient/profile_modals_v2.html" %}
 
-        {# Section 4: Permissões do Site #}
-        <div class="mt-6 rounded-2xl border border-border bg-white px-4 py-4">
-          <label class="flex items-start gap-3 text-sm leading-6 text-text-strong">
-            <input type="checkbox" name="wants_in_app_reminders" {% if request.user.wants_in_app_reminders %}checked{% endif %} class="rounded border-border text-[#8DA69A] focus:ring-[#8DA69A]/40">
-            <span>Receber lembretes dentro do aplicativo para acompanhar a rotina.</span>
-          </label>
-        </div>
+<script>
+function openModal(id) {
+  closeModal();
+  var modal = document.getElementById('modal-' + id);
+  if (!modal) return;
+  if (modal.parentNode !== document.body) {
+    document.body.appendChild(modal);
+  }
+  modal.style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+  var card = modal.querySelector('.modal-card');
+  if (card) {
+    card.style.transition = 'none';
+    card.style.transform  = 'scale(0.95) translateY(12px)';
+    card.style.opacity    = '0';
+    requestAnimationFrame(function() {
+      requestAnimationFrame(function() {
+        card.style.transition = 'transform .22s cubic-bezier(.2,.8,.3,1), opacity .18s ease';
+        card.style.transform  = 'scale(1) translateY(0)';
+        card.style.opacity    = '1';
+      });
+    });
+  }
+}
+function closeModal() {
+  document.querySelectorAll('.amare-modal').forEach(function(m) { m.style.display = 'none'; });
+  document.body.style.overflow = '';
+}
+document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeModal(); });
 
-        <button type="submit" class="amare-button-primary mt-6" style="background-color:#8DA69A;">Salvar preferências</button>
-
-        {# WhatsApp Emergency Link #}
-        <div class="mt-6 border-t border-border pt-5">
-          {% include "components/clinic_whatsapp_link.html" with label="Entre em contato diretamente conosco" caption="Somente em emergências — +55 81 99800-3535" class_name="amare-contact-link w-full justify-start border-[#8DA69A]/30 bg-[#8DA69A]/5" %}
-        </div>
-      </form>
-    </article>
-  </section>
+document.getElementById('id_av_file') && document.getElementById('id_av_file').addEventListener('change', function() {
+  if (!this.files[0]) return;
+  var r = new FileReader();
+  r.onload = function(e) {
+    var p = document.getElementById('av-preview'), ph = document.getElementById('av-placeholder');
+    if (p) { p.src = e.target.result; p.style.display = 'block'; }
+    if (ph) ph.style.display = 'none';
+  };
+  r.readAsDataURL(this.files[0]);
+});
+</script>
 {% endblock %}

@@ -122,7 +122,7 @@ class PatientExperienceTests(TestCase):
             audience="Tentantes",
             description="Comunidade BabyCenter Brasil.",
             support_type="BabyCenter Brasil",
-            contact_label="Conhecer Comunidade",
+            contact_label="Acessar comunidade",
             contact_url="https://brasil.babycenter.com/comunidade",
             is_active=True,
             sort_order=1,
