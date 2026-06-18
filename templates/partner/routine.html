@@ -57,7 +57,7 @@
   </div>
 
   {# ── TAB: Consultas (READ ONLY) ── #}
-  <div data-tab-panel="consultas" class="space-y-4" hidden>
+  <div data-tab-panel="consultas" class="space-y-4">
     <div class="mb-4 rounded-2xl border border-[#8DA69A]/30 bg-[#8DA69A]/5 px-4 py-3 text-sm text-text-muted">
       💡 Lembre {{ linked_patient.preferred_name }} 24h antes da consulta para evitar quebra de rotina.
     </div>
@@ -80,7 +80,7 @@
   </div>
 
   {# ── TAB: Diário de Sintomas (RESTRICTED) ── #}
-  <div data-tab-panel="sintomas" class="space-y-4" hidden>
+  <div data-tab-panel="sintomas" class="space-y-4">
     {# Warning notice #}
     <div class="mb-4 rounded-2xl border border-warning/40 bg-warning/10 px-4 py-3 text-sm text-text-strong">
       <p class="font-semibold">Acesso restrito a este diário.</p>
@@ -126,7 +126,7 @@
   </div>
 
   {# ── TAB: Lembretes ── #}
-  <div data-tab-panel="lembretes" class="space-y-4" hidden>
+  <div data-tab-panel="lembretes" class="space-y-4">
     <div class="mb-4 rounded-2xl border border-[#8DA69A]/30 bg-[#8DA69A]/5 px-4 py-3 text-sm text-text-muted">
       💡 Use lembretes para ajudar {{ linked_patient.preferred_name }} a não esquecer nada importante.
     </div>
@@ -142,7 +142,7 @@
   </div>
 
   {# ── TAB: Injeções ── #}
-  <div data-tab-panel="injecoes" class="space-y-4" hidden>
+  <div data-tab-panel="injecoes" class="space-y-4">
     <div class="mb-4 rounded-2xl border border-[#8DA69A]/30 bg-[#8DA69A]/5 px-4 py-3 text-sm text-text-muted">
       💡 Você pode ajudar {{ linked_patient.preferred_name }} registrando as injeções no horário certo.
     </div>
@@ -161,7 +161,7 @@
   </div>
 
   {# ── TAB: Recordações (NOT available for partner) ── #}
-  <div data-tab-panel="recordacoes" hidden>
+  <div data-tab-panel="recordacoes">
     <article class="amare-card p-6">
       <p class="text-sm font-semibold text-text-strong">Recordações</p>
       <p class="mt-3 text-sm leading-6 text-text-muted">
@@ -199,6 +199,8 @@
         activate(button.dataset.tabButton);
       });
     });
+
+    activate('medicamentos');
   });
 </script>
 {% endblock %}
