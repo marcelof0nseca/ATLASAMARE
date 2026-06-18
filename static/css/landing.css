@@ -37,6 +37,12 @@ html { scroll-behavior: smooth; }
 body {
   font-family: var(--font-body);
   background-color: var(--color-bg);
+  background-image:
+    linear-gradient(rgba(255,255,255,0.72), rgba(255,255,255,0.78)),
+    url("../images/brand/amare-fundo-site.jpeg");
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
   color: var(--color-text-primary);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -206,17 +212,17 @@ button { cursor: pointer; border: none; background: none; font-family: var(--fon
   display: inline-flex;
   align-items: center;
   flex-shrink: 0;
-  width: 110px;
-  height: 47px;
+  width: 150px;
+  height: 50px;
   overflow: hidden;
 }
 
 .nav-logo-img {
   display: block;
-  width: 110px;
-  height: 47px;
-  max-width: 110px;
-  max-height: 47px;
+  width: 150px;
+  height: 50px;
+  max-width: 150px;
+  max-height: 50px;
   object-fit: contain;
 }
 
@@ -292,11 +298,26 @@ button { cursor: pointer; border: none; background: none; font-family: var(--fon
   text-align: center;
   padding: 120px 24px 80px;
   background:
+    linear-gradient(rgba(255,255,255,0.74), rgba(250,244,232,0.88)),
+    url("../images/brand/amare-fundo-site.jpeg"),
     radial-gradient(ellipse at top left, rgba(196,125,140,0.12), transparent 55%),
     radial-gradient(ellipse at bottom right, rgba(141,166,154,0.14), transparent 55%),
     linear-gradient(180deg, #FFFFFF 0%, #FAF4E8 100%);
+  background-size: cover, cover, auto, auto, auto;
+  background-position: center;
   position: relative;
   overflow: hidden;
+}
+
+#hero::before {
+  content: "";
+  position: absolute;
+  inset: auto auto 7% 5%;
+  width: clamp(180px, 24vw, 360px);
+  aspect-ratio: 1;
+  background: url("../images/brand/amare-simbolo.png") center / contain no-repeat;
+  opacity: 0.08;
+  pointer-events: none;
 }
 
 .hero-eyebrow {
@@ -1664,11 +1685,10 @@ button { cursor: pointer; border: none; background: none; font-family: var(--fon
 }
 
 .footer-brand-logo {
-  font-family: var(--font-display);
-  font-size: 72px;
-  font-weight: 500;
-  line-height: 1;
-  color: rgba(255,255,255,0.9);
+  width: min(15rem, 78vw);
+  height: auto;
+  filter: brightness(0) invert(1);
+  opacity: 0.92;
   margin-bottom: 12px;
 }
 
@@ -2093,7 +2113,7 @@ button { cursor: pointer; border: none; background: none; font-family: var(--fon
 #main-nav {
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
-  background: rgba(255,255,255,0.97) !important;
+  background: rgba(255,255,255,0.94) !important;
 }
 
 /* Depoimentos: 12 cards com blur(12px) no carrossel animado */

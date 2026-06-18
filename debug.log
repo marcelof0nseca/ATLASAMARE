@@ -1,0 +1,4 @@
+[0618/164322.988:ERROR:third_party\crashpad\crashpad\util\win\registration_protocol_win.cc:108] CreateFile: Acesso negado. (0x5)
+[0618/164323.124:ERROR:third_party\crashpad\crashpad\client\crashpad_client_win.cc:869] not connected
+[0618/164346.183:ERROR:third_party\crashpad\crashpad\util\win\registration_protocol_win.cc:108] CreateFile: Acesso negado. (0x5)
+[0618/164346.241:ERROR:third_party\crashpad\crashpad\client\crashpad_client_win.cc:869] not connected

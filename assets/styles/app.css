@@ -46,9 +46,14 @@
     @apply bg-canvas text-text-strong font-sans antialiased;
     min-height: 100vh;
     background:
+      linear-gradient(rgba(255, 255, 255, 0.78), rgba(250, 244, 232, 0.86)),
+      url("../images/brand/amare-fundo-site.jpeg"),
       radial-gradient(ellipse at top left, rgba(196, 125, 140, 0.12), transparent 42rem),
       radial-gradient(ellipse at bottom right, rgba(141, 166, 154, 0.14), transparent 46rem),
       linear-gradient(180deg, #ffffff 0%, #faf4e8 100%);
+    background-size: cover, cover, auto, auto, auto;
+    background-position: center;
+    background-attachment: fixed;
   }
 
   h1 {
@@ -193,18 +198,67 @@
 
   .amare-brand-logo {
     @apply block h-auto w-auto object-contain;
-    max-width: min(10rem, 46vw);
-    max-height: 2.75rem;
-  }
-
-  .amare-brand-logo-sidebar {
-    max-width: 8.5rem;
+    max-width: min(11rem, 48vw);
     max-height: 3rem;
   }
 
+  .amare-brand-logo-sidebar {
+    max-width: 11.75rem;
+    max-height: 3.75rem;
+  }
+
   .amare-brand-logo-topbar {
-    max-width: min(9.5rem, 42vw);
-    max-height: 2.5rem;
+    max-width: min(11rem, 48vw);
+    max-height: 3rem;
+  }
+
+  .bg-amare-site {
+    background:
+      linear-gradient(rgba(255, 255, 255, 0.72), rgba(250, 244, 232, 0.82)),
+      url("../images/brand/amare-fundo-site.jpeg") center / cover no-repeat;
+  }
+
+  .amare-notif-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    box-sizing: border-box;
+    background: rgba(75, 61, 86, 0.52);
+  }
+
+  .amare-notif-card {
+    position: relative;
+    width: 100%;
+    max-width: min(24rem, calc(100vw - 24px));
+    max-height: calc(100dvh - 32px);
+    overflow: auto;
+    padding: clamp(1rem, 4vw, 1.5rem);
+    border: 1px solid rgba(196, 125, 140, 0.18);
+    border-radius: 1rem;
+    background:
+      linear-gradient(rgba(255, 255, 255, 0.91), rgba(255, 255, 255, 0.95)),
+      url("../images/brand/amare-fundo-site.jpeg") center / cover no-repeat;
+    box-shadow: 0 25px 60px -12px rgba(75, 61, 86, 0.42);
+  }
+
+  .amare-notif-brand {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 16px;
+  }
+
+  .amare-notif-logo {
+    display: block;
+    width: 72px;
+    height: 72px;
+    max-width: 72px;
+    max-height: 72px;
+    object-fit: contain;
+    filter: drop-shadow(0 8px 18px rgba(196, 125, 140, 0.24));
   }
 
   .amare-patient-page-title {

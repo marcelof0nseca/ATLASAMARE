@@ -10,7 +10,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Bitter:wght@400;500;600&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
     <noscript><link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Bitter:wght@400;500;600&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet"></noscript>
-    <link rel="icon" href="{% static 'images/amare-logo.png' %}">
+    <link rel="icon" type="image/png" href="{% static 'images/brand/amare-icone-atalho.png' %}">
+    <link rel="apple-touch-icon" href="{% static 'images/brand/amare-icone-atalho.png' %}">
     <link rel="stylesheet" href="{% static 'css/app.css' %}">
     <style>
       /* ── Barra de progresso de navegação ── */
@@ -94,6 +95,7 @@
   </head>
   <body class="relative" hx-boost="true" data-user-id="{% if request.user.is_authenticated %}{{ request.user.id }}{% endif %}">
     <div id="amare-progress"></div>
+    <div class="pointer-events-none fixed inset-0 -z-10 bg-amare-site"></div>
     <div class="pointer-events-none absolute inset-x-0 top-0 h-72 bg-gradient-to-b from-mandys-pink/20 via-linen to-transparent"></div>
     <div id="toast-root" class="fixed right-4 top-4 z-50 w-[min(20rem,calc(100vw-2rem))]"></div>
     <div id="modal-root" class="pointer-events-none fixed inset-0 z-40"></div>
