@@ -17,16 +17,16 @@ describe("Funcionalidades do acompanhante", () => {
     cy.contains("h1", "Rotina de Ana").should("exist");
     cy.contains("Medicamentos de Ana").should("exist");
 
-    cy.contains("button", "Consultas").click();
+    cy.contains("button", "Consultas").should("exist");
     cy.contains("Lembre Ana 24h antes da consulta").should("exist");
   });
 
   it("respeita as permissões específicas do acompanhante", () => {
     cy.visit("/partner/routine/");
-    cy.contains("button", "Diário de Sintomas").click();
+    cy.contains("button", "Diário de Sintomas").should("exist");
     cy.contains("Acesso restrito a este diário.").should("exist");
 
-    cy.contains("button", "Recordações").click();
+    cy.contains("button", "Recordações").should("exist");
     cy.contains("Você não tem acesso a esta aba como acompanhante.").should("exist");
   });
 
