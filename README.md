@@ -27,6 +27,19 @@ Plataforma de acompanhamento da jornada de fertilidade para pacientes, acompanha
 - [Documento das histórias](https://docs.google.com/document/d/1Z7tOHnQnHAWp8qSUGCK6GjeTYqohZI3kN0sLbOmQRzI/edit?usp=sharing)
 - [Sistema em produção](https://atlas-amare.onrender.com)
 
+<details>
+  <summary><strong>Quadro de sprints dos épicos</strong></summary>
+
+  - [Abrir quadro no Jira](https://amareatlas.atlassian.net/jira/software/projects/SCRUM/boards/1/backlog?atlOrigin=eyJpIjoiNmRmNTk3YjE2ZWUzNDYxZWI1NzAzN2UzNjU2MjU4ZDUiLCJwIjoiaiJ9)
+  - Épicos organizados por fluxo da plataforma:
+    - Compreender o tratamento
+    - Organizar rotina
+    - Receber suporte da Maya
+    - Acompanhar paciente
+    - Gerenciar jornada médica
+
+</details>
+
 ## Entrega 01 — Histórias e Protótipos
 
 - Histórias de usuário com cenários de validação BDD.
