@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="static/images/logoamare.png" alt="Logo da Clínica AMARE" width="360">
+  <img src="static/images/brand/amare-logotipo.png" alt="Logo da Clínica AMARE" width="360">
 </p>
 
 # Clínica AMARE
