@@ -61,9 +61,11 @@
     </ul>
 
     <div class="nav-actions">
-      <a href="{% url 'users:login' %}" class="btn btn-ghost-small">Entrar</a>
+      <a href="{% url 'users:login' %}" class="btn btn-login">Entrar</a>
       <a href="#features" class="btn btn-primary" style="font-size:13px;padding:10px 18px;">Conhecer a plataforma</a>
     </div>
+
+    <a href="{% url 'users:login' %}" class="btn btn-login btn-login-mobile">Entrar</a>
 
     <button class="hamburger" id="hamburger-btn" aria-label="Abrir menu" aria-expanded="false">
       <span></span><span></span><span></span>
