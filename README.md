@@ -26,7 +26,7 @@ Plataforma de acompanhamento da jornada de fertilidade para pacientes, acompanha
 - [Protótipo Lo-Fi no Figma](https://www.figma.com/design/bJ9MX9WeR8haKYAh5MPCZA/LO-fi-AMARE?node-id=61-343&t=Z4pjQUTJStwCSW37-1)
 - [Documento das histórias](https://docs.google.com/document/d/1Z7tOHnQnHAWp8qSUGCK6GjeTYqohZI3kN0sLbOmQRzI/edit?usp=sharing)
 - [Sistema em produção](https://atlas-amare.onrender.com)
-- [Screencast do sistema em produção](https://youtu.be/vqWH5peDPlg?si=qoob2ue8Y7QYGWbq)
+- [Screencast do sistema completo](https://youtu.be/vqWH5peDPlg?si=qoob2ue8Y7QYGWbq)
 
 <details>
   <summary><strong>Quadro de sprints dos épicos</strong></summary>
