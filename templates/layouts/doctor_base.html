@@ -5,11 +5,11 @@
 
   {# ── Sidebar (desktop) ──────────────────────────────────────────────────── #}
   <aside class="amare-patient-sidebar">
-    <div class="mb-8 flex items-center justify-between gap-3 px-2">
+    <div class="mb-8 flex flex-col items-start gap-3 px-2">
       <a href="{% url 'users:doctor-patient-list' %}" class="amare-brand-link">
         <img src="{% static 'images/brand/amare-logotipo.png' %}" alt="Clínica Amare" class="amare-brand-logo amare-brand-logo-sidebar">
       </a>
-      <span class="rounded-lg bg-linen px-2 py-1 text-[11px] font-semibold uppercase tracking-[0.12em] text-text-muted">Médica</span>
+      <span class="w-full rounded-lg bg-linen px-2 py-1 text-center text-[11px] font-semibold uppercase leading-4 tracking-[0.12em] text-text-muted">Médica</span>
     </div>
 
     <nav aria-label="Navegacao da medica">
