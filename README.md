@@ -31,7 +31,7 @@ Plataforma de acompanhamento da jornada de fertilidade para pacientes, acompanha
 <details>
   <summary><strong>Ver registro do quadro do Jira</strong></summary>
 
-  ![Registro do quadro do Jira](docs/assets/quadro-jira-amare.png)
+  ![Registro do quadro do Jira](docs/assets/quadro-jira-sprint-lista.png)
 </details>
 
 <details>
