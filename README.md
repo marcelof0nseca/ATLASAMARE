@@ -28,6 +28,8 @@ Plataforma de acompanhamento da jornada de fertilidade para pacientes, acompanha
 - [Sistema em produção](https://atlas-amare.onrender.com)
 - [Screencast do sistema completo](https://youtu.be/vqWH5peDPlg?si=qoob2ue8Y7QYGWbq)
 
+![Registro do quadro do Jira](docs/assets/quadro-jira-amare.png)
+
 <details>
   <summary><strong>Quadro de sprints dos épicos</strong></summary>
 
@@ -40,6 +42,12 @@ Plataforma de acompanhamento da jornada de fertilidade para pacientes, acompanha
     - Gerenciar jornada médica
 
 </details>
+
+## Relato de Pair Programming
+
+Durante a implementação das telas principais da plataforma, Marcelo, Pedro Coutinho e Mateus trabalharam em pair programming para manter a experiência dos perfis alinhada e reduzir divergências entre fluxos. A divisão foi feita por telas: Marcelo ficou responsável pela área da paciente, Pedro Coutinho pela área do acompanhante e Mateus pela área da médica. Mesmo com essa divisão, as decisões de navegação, identidade visual, padrões de formulário e comportamento das funcionalidades foram revisadas em conjunto.
+
+O trabalho em dupla/trio ajudou a comparar as telas durante o desenvolvimento, validar se os componentes estavam seguindo a mesma linguagem da AMARE e revisar pontos sensíveis antes da entrega, como jornada da paciente, acompanhamento familiar e gestão médica. Essa organização também facilitou a integração das funcionalidades, porque cada integrante tinha uma responsabilidade clara, mas as soluções eram discutidas e ajustadas coletivamente.
 
 ## Entrega 01 — Histórias e Protótipos
 
